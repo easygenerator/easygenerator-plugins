@@ -1,0 +1,22 @@
+{
+  "name": "easygenerator-plugins",
+  "description": "Collection of plugins to extend easygenerator templates functionality",
+  "authors": [
+    "easygenerator team"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "easygenerator",
+    "plugins",
+    "review"
+  ],
+  "moduleType": [],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
