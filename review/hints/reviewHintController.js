@@ -4,8 +4,8 @@
     review.ReviewHintController = function () {
         var constants = review.constants,
             clientContext = review.clientContext,
-            spotReviewHint = new review.ReviewHint('Click on icon near elements to leave the comment.', constants.css.spotReviewHint),
-            generalReviewHint = new review.ReviewHint('Click on icon near elements to leave the general comment.', constants.css.generalReviewHint);
+            spotReviewHint = new review.ReviewHint('Click on icon near elements to leave the comment.', constants.css.spotReviewHint + ' ' + constants.css.left),
+            generalReviewHint = new review.ReviewHint('Click on the panel here to leave the general comment.', constants.css.generalReviewHint + ' ' + constants.css.bottom);
 
         function showSpotReviewHint($spot) {
             spotReviewHint.show($spot, function () {
@@ -37,6 +37,10 @@
             return spotReviewHint.isShown;
         }
 
+        function isGeneralReviewHintShown() {
+            return generalReviewHint.isShown;
+        }
+
         function showHintsIfNeeded(spots) {
             if (spots.length > 0 && clientContext.get(constants.clientContextKeys.reviewSpotHintShown) !== true) {
                 showSpotReviewHint(spots[0]);
@@ -47,6 +51,7 @@
 
         return {
             isSpotReviewHintShown: isSpotReviewHintShown,
+            isGeneralReviewHintShown: isGeneralReviewHintShown,
             showSpotReviewHint: showSpotReviewHint,
             showGeneralReviewHint: showGeneralReviewHint,
             hideSpotReviewHint: hideSpotReviewHint,

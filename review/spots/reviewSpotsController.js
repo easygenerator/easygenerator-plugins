@@ -3,51 +3,39 @@
 
     review.ReviewSpotsController = function () {
         var constants = review.constants,
-            clientContext = review.clientContext,
-            hintController = new review.ReviewHintController(),
-            spotMarkup = '{{reviewSpot.html}}',
-            controller = {
-                spots: [],
-                isFirstRender: true
-            }
+            spotMarkup = '{{reviewSpot.html}}';
 
-        function renderSpots() {
+        function renderSpots(clickHandler) {
+            var spots = [];
             $(constants.selectors.reviewable).each(function () {
-                var $spot = renderSpotOnElement($(this));
+                var $spot = renderSpotOnElement($(this), clickHandler);
                 if ($spot) {
-                    controller.spots.push($spot);
+                    spots.push($spot);
                 }
             });
 
-            if (controller.isFirstRender) {
-                hintController.showHintsIfNeeded(spots);
-            }
-
-            spots.each(function () {
-                var $spot = $(this).find(constants.selectors.reviewSpot);
-                $spot.click(function () {
-                    if (hintController.isSpotReviewHintShown()) {
-                        hintController.hideSpotReviewHint();
-                    } else {
-                        dialog.show($spot);
-                    }
-                });
-            });
-
-            controller.isFirstRender = false;
+            return spots;
         }
 
         return {
             renderSpots: renderSpots
         };
 
-        function renderSpotOnElement($element) {
+        function renderSpotOnElement($element, clickHandler) {
             if ($element.children().find(constants.selectors.reviewSpot).length > 0)
                 return;
 
-            var $spot = $(spotMarkup);
-            $spot.appendTo($element);
-            return $spot;
+            var $spotWrapper = $(spotMarkup);
+            $spotWrapper.appendTo($element);
+
+            if (clickHandler) {
+                var $spot = $spotWrapper.find(constants.selectors.reviewSpot);
+                $spot.click(function () {
+                    clickHandler($spotWrapper);
+                });
+            }
+
+            return $spotWrapper;
         }
     };
 

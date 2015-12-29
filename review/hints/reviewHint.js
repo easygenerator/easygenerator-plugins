@@ -6,7 +6,7 @@
             html = $.parseHTML('{{reviewHint.html}}'),
             $hint = $(html),
             hint = {
-                 isShown: isShown,
+                 isShown: false,
                  show: show,
                  hide: hide
             };

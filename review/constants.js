@@ -4,7 +4,7 @@
     var constants = {};
 
     constants.patterns = {
-        patternEmail: /^([\w\.\-]+)@([\w\-]+)((\.(\w){2,15})+)$/
+        email: /^([\w\.\-]+)@([\w\-]+)((\.(\w){2,15})+)$/
     };
 
     constants.clientContextKeys = {
@@ -18,24 +18,64 @@
         reviewable: 'reviewable',
         reviewSpot: 'review-spot',
         reviewSpotWrapper: 'review-spot-wrapper',
+
         reviewDialog: 'review-dialog',
+        generalReviewDialog: 'general-review-dialog',
+        elementReviewDialog: 'element-review-dialog',
+        closeDialogBtn: 'close-dialog-btn',
+        commentStatusMessage: 'comment-status-message',
+        cancelBtn: 'cancel-btn',
+        commentBtn: 'comment-btn',
+        commentsHeader: 'comments-header',
+        message: 'message',
+        identifyUserWrapper: 'identify-user-wrapper',
+        messageWrapper: 'message-wrapper',
+        errorMessage: 'error-message',
+        mailInput: 'email-input',
+        nameInput: 'name-input',
 
         reviewHint: 'review-hint',
         reviewHintText: 'review-hint-text',
         reviewHitnBtn: 'review-hint-btn',
         spotReviewHint: 'spot-review-hint',
-        generalReviewHint: 'general-review-hint'
+        generalReviewHint: 'general-review-hint',
+
+        top: 'top',
+        left: 'left',
+        right: 'right',
+        bottom: 'bottom',
+        expanded: 'expanded',
+        error: 'error',
+        name: 'name',
+        email: 'email',
+        empty: 'empty',
+        shown: 'shown'
     };
 
     constants.selectors = {
         reviewable: '.' + constants.css.reviewable,
         reviewSpot: '.' + constants.css.reviewSpot,
         reviewSpotWrapper: '.' + constants.css.reviewSpotWrapper,
+
         reviewDialog: '.' + constants.css.reviewDialog,
+        closeDialogBtn: '.' + constants.css.closeDialogBtn,
+        commentStatusMessage: '.' + constants.css.commentStatusMessage,
+        cancelBtn: '.' + constants.css.cancelBtn,
+        commentBtn: '.' + constants.css.commentBtn,
+        commentsHeader: '.' + constants.css.commentsHeader,
+        message: '.' + constants.css.message,
+        identifyUserWrapper: '.' + constants.css.identifyUserWrapper,
+        messageWrapper: '.' + constants.css.messageWrapper,
+        errorMessage: '.' + constants.css.errorMessage,
+        mailInput: '.' + constants.css.mailInput,
+        nameInput: '.' + constants.css.nameInput,
 
         reviewHint: '.' + constants.css.reviewHint,
         reviewHintText: '.' + constants.css.reviewHintText,
-        reviewHitnBtn: '.' + constants.css.reviewHitnBtn
+        reviewHitnBtn: '.' + constants.css.reviewHitnBtn,
+
+        name: '.' + constants.css.name,
+        email: '.' + constants.css.email
     };
 
     review.constants = constants;
