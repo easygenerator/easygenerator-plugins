@@ -17,9 +17,7 @@
             spotReviewHint.hide();
             clientContext.set(constants.clientContextKeys.reviewSpotHintShown, true);
 
-            if (clientContext.get(constants.clientContextKeys.reviewGeneralHintShown) !== true) {
-                showGeneralReviewHint();
-            }
+            showHintsIfNeeded();
         }
 
         function showGeneralReviewHint() {
@@ -31,6 +29,8 @@
         function hideGeneralReviewHint() {
             generalReviewHint.hide();
             clientContext.set(constants.clientContextKeys.reviewGeneralHintShown, true);
+
+            showHintsIfNeeded();
         }
 
         function isSpotReviewHintShown() {
@@ -41,9 +41,18 @@
             return generalReviewHint.isShown;
         }
 
-        function showHintsIfNeeded(spots) {
-            if (spots.length > 0 && clientContext.get(constants.clientContextKeys.reviewSpotHintShown) !== true) {
-                showSpotReviewHint(spots[0]);
+        function showHintsIfNeeded() {
+            if (generalReviewHint.isShown)
+                return;
+
+            if (spotReviewHint.isShown) {
+                spotReviewHint.hide();
+            }
+
+            var $spots = $(constants.selectors.reviewSpotWrapper);
+
+            if ($spots.length > 0 && clientContext.get(constants.clientContextKeys.reviewSpotHintShown) !== true) {
+                showSpotReviewHint($spots[0]);
             } else if (clientContext.get(constants.clientContextKeys.reviewGeneralHintShown) !== true) {
                 showGeneralReviewHint();
             }

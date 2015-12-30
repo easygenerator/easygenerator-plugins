@@ -30,7 +30,9 @@ gulp.task('app', ['clean'], function () {
 
         gulp.src(['./review/**/*.js'])
           .pipe($.concat('review.js'))
-          .pipe(insertHtmlMarkupForFile('./review/dialogs/reviewDialog.html', '{{reviewDialog.html}}'))
+          .pipe(insertHtmlMarkupForFile('./review/dialogs/commentForm/commentForm.html', '{{commentForm.html}}'))
+          .pipe(insertHtmlMarkupForFile('./review/dialogs/elementReview/elementReviewDialog.html', '{{elementReviewDialog.html}}'))
+          .pipe(insertHtmlMarkupForFile('./review/dialogs/generalReview/generalReviewDialog.html', '{{generalReviewDialog.html}}'))
           .pipe(insertHtmlMarkupForFile('./review/hints/reviewHint.html', '{{reviewHint.html}}'))
           .pipe(insertHtmlMarkupForFile('./review/spots/reviewSpot.html', '{{reviewSpot.html}}'))
           .pipe(gulp.dest(output))

@@ -33,6 +33,7 @@
         errorMessage: 'error-message',
         mailInput: 'email-input',
         nameInput: 'name-input',
+        addCommentForm: 'add-comment-form',
 
         reviewHint: 'review-hint',
         reviewHintText: 'review-hint-text',
@@ -49,7 +50,9 @@
         name: 'name',
         email: 'email',
         empty: 'empty',
-        shown: 'shown'
+        shown: 'shown',
+        success: 'success',
+        fail: 'fail'
     };
 
     constants.selectors = {
@@ -69,13 +72,16 @@
         errorMessage: '.' + constants.css.errorMessage,
         mailInput: '.' + constants.css.mailInput,
         nameInput: '.' + constants.css.nameInput,
+        addCommentForm: '.' + constants.css.addCommentForm,
 
         reviewHint: '.' + constants.css.reviewHint,
         reviewHintText: '.' + constants.css.reviewHintText,
         reviewHitnBtn: '.' + constants.css.reviewHitnBtn,
 
         name: '.' + constants.css.name,
-        email: '.' + constants.css.email
+        email: '.' + constants.css.email,
+        success: '.' + constants.css.success,
+        fail: '.' + constants.css.fail
     };
 
     review.constants = constants;

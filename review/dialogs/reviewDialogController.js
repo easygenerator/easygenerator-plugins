@@ -3,10 +3,11 @@
 
     review.ReviewDialogController = function (courseId, hintController) {
         var constants = review.constants,
-            elementReviewDialog = review.ReviewDialog(courseId, hintController);
+            elementReviewDialog = new review.ElementReviewDialog(courseId),
+            generalReviewDialog = new review.GeneralReviewDialog(courseId, hintController);
 
         function showGeneralReviewDialog() {
-            review.ReviewDialog(courseId, hintController).show($('body'), constants.css.generalReviewDialog);
+            generalReviewDialog.show();
         }
 
         function showElementReviewDialog($spot) {

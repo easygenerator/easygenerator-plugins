@@ -50,6 +50,7 @@
         errorMessage: 'error-message',
         mailInput: 'email-input',
         nameInput: 'name-input',
+        addCommentForm: 'add-comment-form',
 
         reviewHint: 'review-hint',
         reviewHintText: 'review-hint-text',
@@ -66,7 +67,9 @@
         name: 'name',
         email: 'email',
         empty: 'empty',
-        shown: 'shown'
+        shown: 'shown',
+        success: 'success',
+        fail: 'fail'
     };
 
     constants.selectors = {
@@ -86,13 +89,16 @@
         errorMessage: '.' + constants.css.errorMessage,
         mailInput: '.' + constants.css.mailInput,
         nameInput: '.' + constants.css.nameInput,
+        addCommentForm: '.' + constants.css.addCommentForm,
 
         reviewHint: '.' + constants.css.reviewHint,
         reviewHintText: '.' + constants.css.reviewHintText,
         reviewHitnBtn: '.' + constants.css.reviewHitnBtn,
 
         name: '.' + constants.css.name,
-        email: '.' + constants.css.email
+        email: '.' + constants.css.email,
+        success: '.' + constants.css.success,
+        fail: '.' + constants.css.fail
     };
 
     review.constants = constants;
@@ -104,30 +110,20 @@
     review.ReviewPlugin = function () {
         var spotsController = new review.ReviewSpotsController(),
             hintController = new review.ReviewHintController(),
-            dialogController = null,
-            plugin = {
-                isFirstRender: true,
-                courseId: null
-            };
+            dialogController = null;
 
         function init(courseId) {
             if ($ === undefined) {
                 throw 'Easygenerator review requires jQuery';
             }
 
-            plugin.courseId = courseId;
             dialogController = new review.ReviewDialogController(courseId, hintController);
+            dialogController.showGeneralReviewDialog();
         }
 
         function render() {
-            var spots = spotsController.renderSpots(onSpotClick);
-
-            if (plugin.isFirstRender) {
-                hintController.showHintsIfNeeded(spots);
-                dialogController.showGeneralReviewDialog();
-            }
-
-            plugin.isFirstRender = false;
+            spotsController.renderSpots(onSpotClick);
+            hintController.showHintsIfNeeded();
         }
 
         function onSpotClick($spot) {
@@ -150,7 +146,11 @@
 
     review.PostCommentCommand = function (courseId) {
         function execute(message, username, useremail) {
-            alert(courseId + message + username + useremail);
+            return $.ajax({
+                url: 'http://localhost:666/api/comment/create',
+                data: { courseId: courseId, text: message.trim(), createdByName: username.trim(), createdBy: useremail.trim() },
+                type: 'POST'
+            });
         }
 
         return {
@@ -159,143 +159,161 @@
     }
 
 })(window.review = window.review || {});
-(function (review) {
-    'use strict';
+//(function (review) {
+//    'use strict';
 
-    review.ReviewDialog = function (courseId, hintController) {
-        var constants = review.constants,
-            clientContext = review.clientContext,
-            postCommentCommand = new review.PostCommentCommand(courseId),
-            html = $.parseHTML('<div class="review-dialog"> <div class="comments-header" data-bind="click: toggleVisiblity"> <div class="comment-header-text">Leave a comment</div> <div class="comments-expander" data-bind="css: { \'collapsed\': !isExpanded(), \'expanded\': isExpanded() }"></div> </div> <button class="close-dialog-btn"></button> <form class="add-comment-form"> <div class="message-wrapper"> <div class="add-comment-form-title">Leave a comment</div> <div class="comment-text-block-wrapper"> <textarea class="comment-text-block message" placeholder="Type your comment here..."></textarea> </div> </div> <div class="identify-user-wrapper"> <div class="identify-user-title">Please idenitfy yourself</div> <div class="identify-user-row"> <input class="name-input" type="text"/> <label>Name</label> <span class="error-message name">Enter your name</span> </div> <div class="identify-user-row"> <input class="email-input" type="email"/> <label>Email</label> <span class="error-message email">Invalid email</span> </div> </div> <div class="comment-action-wrapper"> <div class="comment-status-message success" title="Comment was sent"> Comment was sent </div> <div class="comment-status-message fail" title="Comment was not sent"> Comment was not sent. <br /> Try again. </div> <div class="comment-actions"> <button title="Cancel" class="cancel-btn"> <span class="btn-title">Cancel</span> </button> <button title="Post comment" class="comment-btn"> <span class="btn-title">Post comment</span> </button> </div> </div> </form> </div>'),
-            $dialog = $(html),
-            dialog = {
-                show: show,
-                isShown: false,
-                hide: hide
-            },
-            controls = new review.ReviewDialogControls($dialog);
+//    review.ReviewDialog = function (courseId, hintController) {
+//        var constants = review.constants,
+//            clientContext = review.clientContext,
+//            postCommentCommand = new review.PostCommentCommand(courseId),
+//            html = $.parseHTML('{{reviewDialog.html}}'),
+//            $dialog = $(html),
+//            dialog = {
+//                show: show,
+//                isShown: false,
+//                hide: hide
+//            },
+//            controls = new review.ReviewDialogControls($dialog);
 
-        subscribeOnEvents();
-        return dialog;
+//        subscribeOnEvents();
+//        return dialog;
 
-        function show($parent, css) {
-            $dialog.appendTo($parent);
-            $dialog.addClass(css);
-            clear();
+//        function show($parent, css) {
+//            $dialog.hide();
+//            $dialog.appendTo($parent);
+//            $dialog.addClass(css);
+//            clear();
 
-            $dialog.show();
-            dialog.isShown = true;
-        }
+//            $dialog.fadeIn('fast').addClass(constants.css.shown);
+//            dialog.isShown = true;
+//        }
 
-        function hide() {
-            $dialog.detach();
-            dialog.isShown = false;
-        }
+//        function hide() {           
+//            $dialog.removeClass(constants.css.shown).fadeOut('fast', function(){
+//                $dialog.detach();
+//            });
+            
+//            dialog.isShown = false;
+//        }
 
-        function submit() {
-            debugger;
-            if (!controls.identifyForm.isShown) {
-                if (controls.messageForm.messageField.getValue().trim().length === 0) {
-                    controls.messageForm.messageField.setErrorMark();
-                    return;
-                }
-            } else {
-                if (!validateIdentifyUserForm()) {
-                    return;
-                }
+//        function submit() {
+//            if (!controls.identifyForm.isShown) {
+//                if (controls.messageForm.messageField.getValue().trim().length === 0) {
+//                    controls.messageForm.messageField.setErrorMark();
+//                    return;
+//                }
+//            }
+//            else {
+//                if (!validateIdentifyUserForm())
+//                    return;
 
-                clientContext.set(constants.clientContextKeys.userName, controls.identifyForm.nameField.getValue().trim());
-                clientContext.set(constants.clientContextKeys.userMail, controls.identifyForm.mailField.getValue().trim());
-            }
+//                clientContext.set(constants.clientContextKeys.userName, controls.identifyForm.nameField.getValue().trim());
+//                clientContext.set(constants.clientContextKeys.userMail, controls.identifyForm.mailField.getValue().trim());
+//            }
 
-            var username = clientContext.get(constants.clientContextKeys.userName),
-                usermail = clientContext.get(constants.clientContextKeys.userMail);
+//            var username = clientContext.get(constants.clientContextKeys.userName),
+//                usermail = clientContext.get(constants.clientContextKeys.userMail);
 
-            if (!username || !username.trim() || !usermail || !usermail.trim()) {
-                showIdentifyUserForm();
-                return;
-            }
+//            if (!username || !username.trim() || !usermail || !usermail.trim()) {
+//                switchToIdentifyUserForm();
+//                return;
+//            }
 
-            var message = controls.messageForm.messageField.getValue().trim();
-            postCommentCommand.execute(message, username, usermail);
-        }
+//            var message = controls.messageForm.messageField.getValue().trim();
+//            postCommentCommand.execute(message, username, usermail)
+//                .done(function (response) {
+//                    if (response) {
+//                        if (response.success) {
+//                            clear();
+//                            controls.commentStatusMessage.success.show();
+//                        } else {
+//                            switchToMessageForm();
+//                            controls.commentStatusMessage.fail.show();
+//                        }
+//                    }
+//                }).fail(function () {
+//                    switchToMessageForm();
+//                    controls.commentStatusMessage.fail.show();
+//                });
+//        }
 
-        function toggleSize() {
-            var isExpanded = $dialog.hasClass(constants.css.expanded);
-            $dialog.toggleClass(constants.css.expanded);
+//        function toggleSize() {
+//            var isExpanded = $dialog.hasClass(constants.css.expanded);
+//            $dialog.toggleClass(constants.css.expanded);
 
-            if (!isExpanded) {
-                clear();
-                if (hintController.isGeneralReviewHintShown()) {
-                    hintController.hideGeneralReviewHint();
-                }
-            }
-        }
+//            if (!isExpanded) {
+//                clear();
+//                if (hintController.isGeneralReviewHintShown()) {
+//                    hintController.hideGeneralReviewHint();
+//                }
+//            }
+//        }
 
-        function clear() {
-            controls.commentStatusMessage.hide();
-            showMessageForm();
+//        function clear() {
+//            controls.commentStatusMessage.hide();
+//            switchToMessageForm();
 
-            controls.messageForm.messageField.clear();
-            controls.messageForm.messageField.focus();
-        }
+//            controls.messageForm.messageField.clear();
+//            controls.messageForm.messageField.focus();
+//        }
 
-        function subscribeOnEvents() {
-            controls.closeBtn.click(hide);
-            controls.cancelBtn.click(hide);
-            controls.submitBtn.click(submit);
-            controls.expandCollapseBtn.click(toggleSize);
-        }
+//        function subscribeOnEvents() {
+//            controls.closeBtn.click(hide);
+//            controls.cancelBtn.click(hide);
+//            controls.submitBtn.click(submit);
+//            controls.expandCollapseBtn.click(toggleSize);
+//        }
 
-        function showIdentifyUserForm() {
-            controls.identifyForm.nameField.clear();
-            controls.identifyForm.mailField.clear();
+//        function switchToIdentifyUserForm() {
+//            controls.identifyForm.nameField.clear();
+//            controls.identifyForm.mailField.clear();
 
-            controls.identifyForm.show();
-            controls.messageForm.hide();
-        }
+//            controls.identifyForm.show();
+//            controls.messageForm.hide();
+//        }
 
-        function showMessageForm() {
-            controls.identifyForm.hide();
-            controls.messageForm.show();
-        }
+//        function switchToMessageForm() {
+//            controls.identifyForm.hide();
+//            controls.messageForm.show();
+//        }
 
-        function validateIdentifyUserForm() {
-            var isValid = true;
-            if (!isIdentifyFormNameValid()) {
-                controls.identifyForm.nameField.setErrorMark();
-                isValid = false;
-            }
+//        function validateIdentifyUserForm() {
+//            var isValid = true;
+//            if (!isIdentifyFormNameValid()) {
+//                controls.identifyForm.nameField.setErrorMark();
+//                isValid = false;
+//            }
 
-            if (!isIdentifyFormMailValid()) {
-                controls.identifyForm.mailField.setErrorMark();
-                isValid = false;
-            }
+//            if (!isIdentifyFormMailValid()) {
+//                controls.identifyForm.mailField.setErrorMark();
+//                isValid = false;
+//            }
 
-            return isValid;
-        }
+//            return isValid;
+//        }
 
-        function isIdentifyFormNameValid() {
-            var value = controls.identifyForm.nameField.getValue();
-            return value && value.trim() && value.trim().length <= 254;
-        }
+//        function isIdentifyFormNameValid() {
+//            var value = controls.identifyForm.nameField.getValue();
+//            return value && value.trim() && value.trim().length <= 254;
+//        }
 
-        function isIdentifyFormMailValid() {
-            var value = controls.identifyForm.mailField.getValue();
-            return value && value.trim() && value.trim().length <= 254 && constants.patterns.email.test(value.trim());
-        }
-    }
+//        function isIdentifyFormMailValid() {
+//            var value = controls.identifyForm.mailField.getValue();
+//            return value && value.trim() && value.trim().length <= 254 && constants.patterns.email.test(value.trim());
+//        }
+//    }
 
-})(window.review = window.review || {});
+//})(window.review = window.review || {});
 (function (review) {
     'use strict';
 
     review.ReviewDialogController = function (courseId, hintController) {
         var constants = review.constants,
-            elementReviewDialog = review.ReviewDialog(courseId, hintController);
+            elementReviewDialog = new review.ElementReviewDialog(courseId),
+            generalReviewDialog = new review.GeneralReviewDialog(courseId, hintController);
 
         function showGeneralReviewDialog() {
-            review.ReviewDialog(courseId, hintController).show($('body'), constants.css.generalReviewDialog);
+            generalReviewDialog.show();
         }
 
         function showElementReviewDialog($spot) {
@@ -362,9 +380,7 @@
             spotReviewHint.hide();
             clientContext.set(constants.clientContextKeys.reviewSpotHintShown, true);
 
-            if (clientContext.get(constants.clientContextKeys.reviewGeneralHintShown) !== true) {
-                showGeneralReviewHint();
-            }
+            showHintsIfNeeded();
         }
 
         function showGeneralReviewHint() {
@@ -376,6 +392,8 @@
         function hideGeneralReviewHint() {
             generalReviewHint.hide();
             clientContext.set(constants.clientContextKeys.reviewGeneralHintShown, true);
+
+            showHintsIfNeeded();
         }
 
         function isSpotReviewHintShown() {
@@ -386,9 +404,18 @@
             return generalReviewHint.isShown;
         }
 
-        function showHintsIfNeeded(spots) {
-            if (spots.length > 0 && clientContext.get(constants.clientContextKeys.reviewSpotHintShown) !== true) {
-                showSpotReviewHint(spots[0]);
+        function showHintsIfNeeded() {
+            if (generalReviewHint.isShown)
+                return;
+
+            if (spotReviewHint.isShown) {
+                spotReviewHint.hide();
+            }
+
+            var $spots = $(constants.selectors.reviewSpotWrapper);
+
+            if ($spots.length > 0 && clientContext.get(constants.clientContextKeys.reviewSpotHintShown) !== true) {
+                showSpotReviewHint($spots[0]);
             } else if (clientContext.get(constants.clientContextKeys.reviewGeneralHintShown) !== true) {
                 showGeneralReviewHint();
             }
@@ -451,21 +478,171 @@
 (function (review) {
     'use strict';
 
-    review.ReviewDialogControls = function ($dialog) {
+    review.CommentForm = function (courseId, closeHandler) {
+        var constants = review.constants,
+            clientContext = review.clientContext,
+            postCommentCommand = new review.PostCommentCommand(courseId),
+            html = $.parseHTML('<form class="add-comment-form"> <div class="message-wrapper"> <div class="add-comment-form-title">Leave your comment</div> <textarea class="comment-text-block message" placeholder="Type your comment here..."></textarea> </div> <div class="identify-user-wrapper"> <div class="identify-user-title">Please idenitify yourself</div> <div class="identify-user-row"> <input class="name-input" type="text" /> <label>Name</label> <span class="error-message name">Enter your name</span> </div> <div class="identify-user-row"> <input class="email-input" type="email" /> <label>Email</label> <span class="error-message email">Invalid email</span> </div> </div> <div class="comment-action-wrapper"> <div class="comment-status-message success" title="Comment was sent"> Comment was sent </div> <div class="comment-status-message fail" title="Comment was not sent"> Comment was not sent. <br /> Try again. </div> <div class="comment-actions"> <button title="Cancel" class="cancel-btn"> <span class="btn-title">Cancel</span> </button> <button title="Post comment" class="comment-btn"> <span class="btn-title">Post comment</span> </button> </div> </div> </form>'),
+            $commentForm= $(html),
+            // dialog = {
+            //     show: show,
+            //     isShown: false,
+            //     hide: hide
+            // },
+            controls = new review.CommentFormControls($commentForm);
+
+        subscribeOnEvents();
+		
+		return {
+			$element: $commentForm,
+			init: init
+		};
+
+//         function show($parent) {
+//             $commentForm.hide();
+//             $commentForm.appendTo($parent);
+//             $commentForm.addClass(css);
+//             clear();
+// 
+//             $commentForm.fadeIn('fast').addClass(constants.css.shown);
+//             //dialog.isShown = true;
+//         }
+
+        function hide() {    
+			if(closeHandler){
+				closeHandler();
+			}
+			       
+            // $commentForm.removeClass(constants.css.shown).fadeOut('fast', function(){
+            //     $commentForm.detach();
+            // });
+            
+            //dialog.isShown = false;
+        }
+
+        function submit() {
+            if (!controls.identifyForm.isShown) {
+                if (controls.messageForm.messageField.getValue().trim().length === 0) {
+                    controls.messageForm.messageField.setErrorMark();
+                    return;
+                }
+            }
+            else {
+                if (!validateIdentifyUserForm())
+                    return;
+
+                clientContext.set(constants.clientContextKeys.userName, controls.identifyForm.nameField.getValue().trim());
+                clientContext.set(constants.clientContextKeys.userMail, controls.identifyForm.mailField.getValue().trim());
+            }
+
+            var username = clientContext.get(constants.clientContextKeys.userName),
+                usermail = clientContext.get(constants.clientContextKeys.userMail);
+
+            if (!username || !username.trim() || !usermail || !usermail.trim()) {
+                switchToIdentifyUserForm();
+                return;
+            }
+
+            var message = controls.messageForm.messageField.getValue().trim();
+            postCommentCommand.execute(message, username, usermail)
+                .done(function (response) {
+                    if (response) {
+                        if (response.success) {
+                            init();
+                            controls.commentStatusMessage.success.show();
+                        } else {
+                            switchToMessageForm();
+                            controls.commentStatusMessage.fail.show();
+                        }
+                    }
+                }).fail(function () {
+                    switchToMessageForm();
+                    controls.commentStatusMessage.fail.show();
+                });
+        }
+
+        function init() {
+            controls.commentStatusMessage.hide();
+            switchToMessageForm();
+
+            controls.messageForm.messageField.clear();
+            controls.messageForm.messageField.focus();
+        }
+
+        function subscribeOnEvents() {
+            //controls.closeBtn.click(hide);
+            controls.cancelBtn.click(hide);
+            controls.submitBtn.click(submit);
+            //controls.expandCollapseBtn.click(toggleSize);
+        }
+
+        function switchToIdentifyUserForm() {
+            controls.identifyForm.nameField.clear();
+            controls.identifyForm.mailField.clear();
+
+            controls.identifyForm.show();
+            controls.messageForm.hide();
+        }
+
+        function switchToMessageForm() {
+            controls.identifyForm.hide();
+            controls.messageForm.show();
+        }
+
+        function validateIdentifyUserForm() {
+            var isValid = true;
+            if (!isIdentifyFormNameValid()) {
+                controls.identifyForm.nameField.setErrorMark();
+                isValid = false;
+            }
+
+            if (!isIdentifyFormMailValid()) {
+                controls.identifyForm.mailField.setErrorMark();
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        function isIdentifyFormNameValid() {
+            var value = controls.identifyForm.nameField.getValue();
+            return value && value.trim() && value.trim().length <= 254;
+        }
+
+        function isIdentifyFormMailValid() {
+            var value = controls.identifyForm.mailField.getValue();
+            return value && value.trim() && value.trim().length <= 254 && constants.patterns.email.test(value.trim());
+        }
+    }
+
+})(window.review = window.review || {});
+(function (review) {
+    'use strict';
+
+    review.CommentFormControls = function ($dialog) {
         var constants = review.constants,
             controls = {
-                closeBtn: new Button(constants.selectors.closeDialogBtn),
+                //closeBtn: new Button(constants.selectors.closeDialogBtn),
                 cancelBtn: new Button(constants.selectors.cancelBtn),
                 submitBtn: new Button(constants.selectors.commentBtn),
-                expandCollapseBtn: new Button(constants.selectors.commentsHeader),
+                //expandCollapseBtn: new Button(constants.selectors.commentsHeader),
 
-                commentStatusMessage: new Message(constants.selectors.commentStatusMessage),
+                commentStatusMessage: new CommentStatusMessage(),
 
                 messageForm: new MessageForm(),
                 identifyForm: new IdentifyForm()
             };
 
         return controls;
+
+        function CommentStatusMessage() {
+            var control = Control.call(this, constants.selectors.commentStatusMessage);
+
+            control.success = new Message(constants.selectors.commentStatusMessage + constants.selectors.success);
+            control.fail = new Message(constants.selectors.commentStatusMessage + constants.selectors.fail);
+
+            return control;
+        }
 
         function MessageForm() {
             var control = Control.call(this, constants.selectors.messageWrapper);
@@ -487,106 +664,207 @@
         }
 
         function Message(selector) {
-            return Control.call(this, selector);
+            return new review.controls.Message($dialog, selector);
         }
 
         function Button(selector) {
-            var control = Control.call(this, selector),
-                $control = control.$control;
-
-            control.click = function (handler) {
-                $control.click(function (e) {
-                    e.preventDefault();
-                    handler();
-                });
-            }
-
-            return control;
+            return new review.controls.Button($dialog, selector);
         }
 
         function TextField(selector) {
-            var control = Control.call(this, selector),
-                $control = control.$control,
-                $errorMessage = $control.nextAll(constants.selectors.errorMessage);
-
-            $control.change(onChange);
-            $control.focus(function () {
-                control.removeErrorMark();
-            });
-
-            control.getValue = function () {
-                return $control.val();
-            }
-
-            control.setValue = function (value) {
-                $control.val(value);
-                onChange();
-            }
-
-            control.clear = function () {
-                control.setValue('');
-                control.removeErrorMark();
-            }
-
-            control.setErrorMark = function () {
-                control.addClass(constants.css.error);
-                $errorMessage.addClass(constants.css.shown);
-            }
-
-            control.removeErrorMark = function () {
-                control.removeClass(constants.css.error);
-                $errorMessage.removeClass(constants.css.shown);
-            }
-
-            function onChange() {
-                control.removeErrorMark();
-                if (control.getValue().length === 0) {
-                    control.addClass(constants.css.empty);
-                } else {
-                    control.removeClass(constants.css.empty);
-                }
-            }
-
-            return control;
+            return new review.controls.TextField($dialog, selector);
         }
 
         function Control(selector) {
-            var $control = $dialog.find(selector);
-
-            var control = {
-                isShown: true,
-                show: show,
-                hide: hide,
-                focus: focus,
-                addClass: addClass,
-                removeClass: removeClass,
-                $control: $control
-            };
-
-            return control;
-
-            function addClass(css) {
-                $control.addClass(css);
-            }
-
-            function removeClass(css) {
-                $control.removeClass(css);
-            }
-
-            function show() {
-                $control.show();
-                control.isShown = true;
-            }
-
-            function hide() {
-                $control.hide();
-                control.isShown = false;
-            }
-
-            function focus() {
-                $control.focus();
-            }
+            return new review.controls.Control($dialog, selector);
         }
     }
 
+})(window.review = window.review || {});
+(function (review) {
+    'use strict';
+
+    review.controls = {
+        Message: Message,
+        Button: Button,
+        TextField: TextField,
+        Control: Control
+    };
+
+    function Message($parent, selector) {
+        return review.controls.Control.call(this, $parent, selector);
+    }
+
+    function Button($parent, selector) {
+        var control = review.controls.Control.call(this, $parent, selector),
+            $control = control.$control;
+
+        control.click = function (handler) {
+            $control.click(function (e) {
+                e.preventDefault();
+                handler();
+            });
+        }
+
+        return control;
+    }
+
+    function TextField($parent, selector) {
+        var control = review.controls.Control.call(this, $parent, selector),
+            $control = control.$control,
+            $errorMessage = $control.nextAll(review.constants.selectors.errorMessage);
+
+        $control.change(onChange);
+        $control.focus(function () {
+            control.removeErrorMark();
+        });
+
+        control.getValue = function () {
+            return $control.val();
+        }
+
+        control.setValue = function (value) {
+            $control.val(value);
+            onChange();
+        }
+
+        control.clear = function () {
+            control.setValue('');
+            control.removeErrorMark();
+        }
+
+        control.setErrorMark = function () {
+            control.addClass(review.constants.css.error);
+            $errorMessage.addClass(review.constants.css.shown);
+        }
+
+        control.removeErrorMark = function () {
+            control.removeClass(review.constants.css.error);
+            $errorMessage.removeClass(review.constants.css.shown);
+        }
+
+        function onChange() {
+            control.removeErrorMark();
+            if (control.getValue().length === 0) {
+                control.addClass(review.constants.css.empty);
+            } else {
+                control.removeClass(review.constants.css.empty);
+            }
+        }
+
+        return control;
+    }
+
+    function Control($parent, selector) {
+        var $control = $parent.find(selector);
+
+        var control = {
+            isShown: true,
+            show: show,
+            hide: hide,
+            focus: focus,
+            addClass: addClass,
+            removeClass: removeClass,
+            $control: $control
+        };
+
+        return control;
+
+        function addClass(css) {
+            $control.addClass(css);
+        }
+
+        function removeClass(css) {
+            $control.removeClass(css);
+        }
+
+        function show() {
+            $control.show();
+            control.isShown = true;
+        }
+
+        function hide() {
+            $control.hide();
+            control.isShown = false;
+        }
+
+        function focus() {
+            $control.focus();
+        }
+    }
+
+})(window.review = window.review || {});
+(function (review) {
+    'use strict';
+
+    review.ElementReviewDialog = function (courseId) {
+        var constants = review.constants,
+            html = $.parseHTML('<div class="review-dialog element-review-dialog"> <button class="close-dialog-btn"></button> <form class="add-comment-form"> </form> </div>'),
+            commentForm = new review.CommentForm(courseId, hide),
+            $dialog = $(html),
+            closeBtn = new review.controls.Button($dialog, constants.selectors.closeDialogBtn),
+            dialog = {
+                isShown: false,
+                show: show,
+                hide: hide
+            };
+
+        closeBtn.click(hide);
+
+        return dialog;
+
+        function show($parent) {
+            $dialog.hide();
+            $dialog.find(constants.selectors.addCommentForm).replaceWith(commentForm.$element);
+            $dialog.appendTo($parent);
+            $dialog.addClass(constants.css.shown);
+            commentForm.init();
+
+            $dialog.fadeIn('fast').addClass(constants.css.shown);
+            dialog.isShown = true;
+        }
+
+        function hide() {
+            $dialog.removeClass(constants.css.shown).fadeOut('fast', function () {
+                $dialog.detach();
+            });
+
+            dialog.isShown = false;
+        }
+    };
+})(window.review = window.review || {});
+(function (review) {
+    'use strict';
+
+    review.GeneralReviewDialog = function (courseId, hintController) {
+        var constants = review.constants,
+            commentForm = new review.CommentForm(courseId),
+            $dialog = $($.parseHTML('<div class="review-dialog general-review-dialog"> <div class="comments-header"> <div class="comment-header-text">Leave general comment</div> <div class="comments-expander"></div> </div> <form class="add-comment-form"> </form> </div>')),
+            expandCollapseBtn = new review.controls.Button($dialog, constants.selectors.commentsHeader),
+            dialog = {
+                show: show
+            };
+
+        expandCollapseBtn.click(toggleSize);
+
+        return dialog;
+
+        function show() {
+            $dialog.find(constants.selectors.addCommentForm).replaceWith(commentForm.$element);
+            $dialog.appendTo('body');
+            commentForm.init();
+        }
+
+        function toggleSize() {
+            var isExpanded = $dialog.hasClass(constants.css.expanded);
+            $dialog.toggleClass(constants.css.expanded);
+
+            if (!isExpanded) {
+                commentForm.init();
+                if (hintController.isGeneralReviewHintShown()) {
+                    hintController.hideGeneralReviewHint();
+                }
+            }
+        }
+    };
 })(window.review = window.review || {});
