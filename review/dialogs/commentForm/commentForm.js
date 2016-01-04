@@ -86,13 +86,13 @@
             controls.identifyForm.nameField.clear();
             controls.identifyForm.mailField.clear();
 
-            controls.identifyForm.show();
             controls.messageForm.hide();
+            controls.identifyForm.fadeIn();
         }
 
         function switchToMessageForm() {
             controls.identifyForm.hide();
-            controls.messageForm.show();
+            controls.messageForm.fadeIn();
         }
 
         function validateIdentifyUserForm() {

@@ -15,6 +15,7 @@
             };
 
         closeBtn.click(hide);
+        $dialog.find(constants.selectors.addCommentForm).replaceWith(commentForm.$element);
 
         return dialog;
 
@@ -22,13 +23,12 @@
             if (dialog.isShown)
                 return;
 
-            $dialog.find(constants.selectors.addCommentForm).replaceWith(commentForm.$element);
             $dialog.appendTo($parent);
 
             $dialog.hide();
             popupPositioner.setPopupPosition($parent, $dialog);
 
-            $dialog.fadeIn('fast').addClass(constants.css.shown);
+            $dialog.fadeIn(0.1).addClass(constants.css.shown);
             commentForm.init();
 
             dialog.isShown = true;
@@ -38,7 +38,8 @@
             if (!dialog.isShown)
                 return;
 
-            $dialog.removeClass(constants.css.shown).fadeOut('fast', function () {
+            $dialog.fadeOut(0.1, function () {
+                $dialog.removeClass(constants.css.shown);
                 $dialog.detach();
             });
 

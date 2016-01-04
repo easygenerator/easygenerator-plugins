@@ -10,12 +10,12 @@
                 show: show
             };
 
+        $dialog.find(constants.selectors.addCommentForm).replaceWith(commentForm.$element);
         expandCollapseBtn.click(toggleSize);
 
         return dialog;
 
         function show() {
-            $dialog.find(constants.selectors.addCommentForm).replaceWith(commentForm.$element);
             $dialog.appendTo(constants.selectors.body);
             commentForm.init();
         }

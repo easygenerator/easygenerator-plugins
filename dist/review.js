@@ -512,13 +512,13 @@
             controls.identifyForm.nameField.clear();
             controls.identifyForm.mailField.clear();
 
-            controls.identifyForm.show();
             controls.messageForm.hide();
+            controls.identifyForm.fadeIn();
         }
 
         function switchToMessageForm() {
             controls.identifyForm.hide();
-            controls.messageForm.show();
+            controls.messageForm.fadeIn();
         }
 
         function validateIdentifyUserForm() {
@@ -773,6 +773,7 @@
             };
 
         closeBtn.click(hide);
+        $dialog.find(constants.selectors.addCommentForm).replaceWith(commentForm.$element);
 
         return dialog;
 
@@ -780,13 +781,12 @@
             if (dialog.isShown)
                 return;
 
-            $dialog.find(constants.selectors.addCommentForm).replaceWith(commentForm.$element);
             $dialog.appendTo($parent);
 
             $dialog.hide();
             popupPositioner.setPopupPosition($parent, $dialog);
 
-            $dialog.fadeIn('fast').addClass(constants.css.shown);
+            $dialog.fadeIn(0.1).addClass(constants.css.shown);
             commentForm.init();
 
             dialog.isShown = true;
@@ -796,7 +796,8 @@
             if (!dialog.isShown)
                 return;
 
-            $dialog.removeClass(constants.css.shown).fadeOut('fast', function () {
+            $dialog.fadeOut(0.1, function () {
+                $dialog.removeClass(constants.css.shown);
                 $dialog.detach();
             });
 
@@ -816,12 +817,12 @@
                 show: show
             };
 
+        $dialog.find(constants.selectors.addCommentForm).replaceWith(commentForm.$element);
         expandCollapseBtn.click(toggleSize);
 
         return dialog;
 
         function show() {
-            $dialog.find(constants.selectors.addCommentForm).replaceWith(commentForm.$element);
             $dialog.appendTo(constants.selectors.body);
             commentForm.init();
         }
