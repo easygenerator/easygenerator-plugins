@@ -1,9 +1,9 @@
 (function (review) {
     'use strict';
 
-    review.GeneralReviewDialog = function (courseId, hintController) {
+    review.GeneralReviewDialog = function (reviewService, hintController) {
         var constants = review.constants,
-            commentForm = new review.CommentForm(courseId),
+            commentForm = new review.CommentForm(reviewService),
             $dialog = $($.parseHTML('{{generalReviewDialog.html}}')),
             expandCollapseBtn = new review.controls.Button($dialog, constants.selectors.commentsHeader),
             dialog = {
@@ -16,7 +16,7 @@
 
         function show() {
             $dialog.find(constants.selectors.addCommentForm).replaceWith(commentForm.$element);
-            $dialog.appendTo('body');
+            $dialog.appendTo(constants.selectors.body);
             commentForm.init();
         }
 

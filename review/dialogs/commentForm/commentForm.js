@@ -1,10 +1,9 @@
 (function (review) {
     'use strict';
 
-    review.CommentForm = function (courseId, closeHandler) {
+    review.CommentForm = function (reviewService, closeHandler) {
         var constants = review.constants,
             clientContext = review.clientContext,
-            postCommentCommand = new review.PostCommentCommand(courseId),
             html = $.parseHTML('{{commentForm.html}}'),
             $commentForm= $(html),
             controls = new review.CommentFormControls($commentForm);
@@ -46,20 +45,24 @@
             }
 
             var message = controls.messageForm.messageField.getValue().trim();
-            postCommentCommand.execute(message, username, usermail)
+            controls.submitBtn.disable();
+            reviewService.postComment(message, username, usermail)
                 .done(function (response) {
+                    switchToMessageForm();
+                    controls.submitBtn.enable();
                     if (response) {
                         if (response.success) {
                             init();
-                            controls.commentStatusMessage.success.show();
+                            controls.commentStatusMessage.success.fadeIn();
                         } else {
-                            switchToMessageForm();
-                            controls.commentStatusMessage.fail.show();
+                            
+                            controls.commentStatusMessage.fail.fadeIn();
                         }
                     }
                 }).fail(function () {
+                    controls.submitBtn.enable();
                     switchToMessageForm();
-                    controls.commentStatusMessage.fail.show();
+                    controls.commentStatusMessage.fail.fadeIn();
                 });
         }
 
@@ -74,6 +77,9 @@
         function subscribeOnEvents() {
             controls.cancelBtn.click(hide);
             controls.submitBtn.click(submit);
+            controls.messageForm.messageField.onfocus(function () {
+                controls.commentStatusMessage.fadeOut();
+            });
         }
 
         function switchToIdentifyUserForm() {

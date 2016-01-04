@@ -29,12 +29,20 @@
     function TextField($parent, selector) {
         var control = review.controls.Control.call(this, $parent, selector),
             $control = control.$control,
-            $errorMessage = $control.nextAll(review.constants.selectors.errorMessage);
+            $errorMessage = $control.nextAll(review.constants.selectors.errorMessage),
+            onfocus = null;
 
         $control.change(onChange);
         $control.focus(function () {
             control.removeErrorMark();
+            if (onfocus) {
+                onfocus();
+            }
         });
+
+        control.onfocus = function (handler) {
+            onfocus = handler;
+        }
 
         control.getValue = function () {
             return $control.val();
@@ -82,6 +90,10 @@
             focus: focus,
             addClass: addClass,
             removeClass: removeClass,
+            fadeIn: fadeIn,
+            fadeOut: fadeOut,
+            disable: disable,
+            enable: enable,
             $control: $control
         };
 
@@ -105,8 +117,28 @@
             control.isShown = false;
         }
 
+        function fadeOut() {
+            $control.fadeOut('fast');
+            control.isShown = false;
+        }
+
+        function fadeIn() {
+            $control.fadeIn('fast');
+            control.isShown = true;
+        }
+
         function focus() {
             $control.focus();
+        }
+
+        function disable() {
+            $control.prop('disabled', true);
+            addClass('disabled');
+        }
+
+        function enable() {
+            $control.prop('disabled', false);
+            removeClass('disabled');
         }
     }
 

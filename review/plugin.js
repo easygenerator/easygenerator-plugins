@@ -6,12 +6,21 @@
             hintController = new review.ReviewHintController(),
             dialogController = null;
 
-        function init(courseId) {
+        function init(reviewApiUrl, courseId) {
             if ($ === undefined) {
                 throw 'Easygenerator review requires jQuery';
             }
 
-            dialogController = new review.ReviewDialogController(courseId, hintController);
+            if (!reviewApiUrl) {
+                throw 'Failed to initialize review plugin. Review api url is invalid.';
+            }
+
+            if (!courseId) {
+                throw 'Failed to initialize review plugin. Course id is invalid.';
+            }
+
+            var reviewService = new review.ReviewService(reviewApiUrl, courseId);
+            dialogController = new review.ReviewDialogController(reviewService, hintController);
             dialogController.showGeneralReviewDialog();
         }
 

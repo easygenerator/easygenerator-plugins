@@ -1,17 +1,17 @@
 ﻿(function (review) {
     'use strict';
 
-    review.PostCommentCommand = function (courseId) {
-        function execute(message, username, useremail) {
+    review.ReviewService = function (reviewApiUrl, courseId) {
+        function postComment(message, username, useremail) {
             return $.ajax({
-                url: 'http://localhost:666/api/comment/create',
+                url: reviewApiUrl + 'api/comment/create',
                 data: { courseId: courseId, text: message.trim(), createdByName: username.trim(), createdBy: useremail.trim() },
                 type: 'POST'
             });
         }
 
         return {
-            execute: execute
+            postComment: postComment
         };
     }
 

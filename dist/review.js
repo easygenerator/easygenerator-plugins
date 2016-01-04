@@ -62,6 +62,7 @@
         left: 'left',
         right: 'right',
         bottom: 'bottom',
+        middle: 'middle',
         expanded: 'expanded',
         error: 'error',
         name: 'name',
@@ -69,7 +70,8 @@
         empty: 'empty',
         shown: 'shown',
         success: 'success',
-        fail: 'fail'
+        fail: 'fail',
+        disabled: 'disabled'
     };
 
     constants.selectors = {
@@ -98,7 +100,9 @@
         name: '.' + constants.css.name,
         email: '.' + constants.css.email,
         success: '.' + constants.css.success,
-        fail: '.' + constants.css.fail
+        fail: '.' + constants.css.fail,
+
+        body: 'body'
     };
 
     review.constants = constants;
@@ -112,12 +116,21 @@
             hintController = new review.ReviewHintController(),
             dialogController = null;
 
-        function init(courseId) {
+        function init(reviewApiUrl, courseId) {
             if ($ === undefined) {
                 throw 'Easygenerator review requires jQuery';
             }
 
-            dialogController = new review.ReviewDialogController(courseId, hintController);
+            if (!reviewApiUrl) {
+                throw 'Failed to initialize review plugin. Review api url is invalid.';
+            }
+
+            if (!courseId) {
+                throw 'Failed to initialize review plugin. Course id is invalid.';
+            }
+
+            var reviewService = new review.ReviewService(reviewApiUrl, courseId);
+            dialogController = new review.ReviewDialogController(reviewService, hintController);
             dialogController.showGeneralReviewDialog();
         }
 
@@ -144,173 +157,109 @@
 (function (review) {
     'use strict';
 
-    review.PostCommentCommand = function (courseId) {
-        function execute(message, username, useremail) {
+    review.ReviewService = function (reviewApiUrl, courseId) {
+        function postComment(message, username, useremail) {
             return $.ajax({
-                url: 'http://localhost:666/api/comment/create',
+                url: reviewApiUrl + 'api/comment/create',
                 data: { courseId: courseId, text: message.trim(), createdByName: username.trim(), createdBy: useremail.trim() },
                 type: 'POST'
             });
         }
 
         return {
-            execute: execute
+            postComment: postComment
         };
     }
 
 })(window.review = window.review || {});
-//(function (review) {
-//    'use strict';
-
-//    review.ReviewDialog = function (courseId, hintController) {
-//        var constants = review.constants,
-//            clientContext = review.clientContext,
-//            postCommentCommand = new review.PostCommentCommand(courseId),
-//            html = $.parseHTML('{{reviewDialog.html}}'),
-//            $dialog = $(html),
-//            dialog = {
-//                show: show,
-//                isShown: false,
-//                hide: hide
-//            },
-//            controls = new review.ReviewDialogControls($dialog);
-
-//        subscribeOnEvents();
-//        return dialog;
-
-//        function show($parent, css) {
-//            $dialog.hide();
-//            $dialog.appendTo($parent);
-//            $dialog.addClass(css);
-//            clear();
-
-//            $dialog.fadeIn('fast').addClass(constants.css.shown);
-//            dialog.isShown = true;
-//        }
-
-//        function hide() {           
-//            $dialog.removeClass(constants.css.shown).fadeOut('fast', function(){
-//                $dialog.detach();
-//            });
-            
-//            dialog.isShown = false;
-//        }
-
-//        function submit() {
-//            if (!controls.identifyForm.isShown) {
-//                if (controls.messageForm.messageField.getValue().trim().length === 0) {
-//                    controls.messageForm.messageField.setErrorMark();
-//                    return;
-//                }
-//            }
-//            else {
-//                if (!validateIdentifyUserForm())
-//                    return;
-
-//                clientContext.set(constants.clientContextKeys.userName, controls.identifyForm.nameField.getValue().trim());
-//                clientContext.set(constants.clientContextKeys.userMail, controls.identifyForm.mailField.getValue().trim());
-//            }
-
-//            var username = clientContext.get(constants.clientContextKeys.userName),
-//                usermail = clientContext.get(constants.clientContextKeys.userMail);
-
-//            if (!username || !username.trim() || !usermail || !usermail.trim()) {
-//                switchToIdentifyUserForm();
-//                return;
-//            }
-
-//            var message = controls.messageForm.messageField.getValue().trim();
-//            postCommentCommand.execute(message, username, usermail)
-//                .done(function (response) {
-//                    if (response) {
-//                        if (response.success) {
-//                            clear();
-//                            controls.commentStatusMessage.success.show();
-//                        } else {
-//                            switchToMessageForm();
-//                            controls.commentStatusMessage.fail.show();
-//                        }
-//                    }
-//                }).fail(function () {
-//                    switchToMessageForm();
-//                    controls.commentStatusMessage.fail.show();
-//                });
-//        }
-
-//        function toggleSize() {
-//            var isExpanded = $dialog.hasClass(constants.css.expanded);
-//            $dialog.toggleClass(constants.css.expanded);
-
-//            if (!isExpanded) {
-//                clear();
-//                if (hintController.isGeneralReviewHintShown()) {
-//                    hintController.hideGeneralReviewHint();
-//                }
-//            }
-//        }
-
-//        function clear() {
-//            controls.commentStatusMessage.hide();
-//            switchToMessageForm();
-
-//            controls.messageForm.messageField.clear();
-//            controls.messageForm.messageField.focus();
-//        }
-
-//        function subscribeOnEvents() {
-//            controls.closeBtn.click(hide);
-//            controls.cancelBtn.click(hide);
-//            controls.submitBtn.click(submit);
-//            controls.expandCollapseBtn.click(toggleSize);
-//        }
-
-//        function switchToIdentifyUserForm() {
-//            controls.identifyForm.nameField.clear();
-//            controls.identifyForm.mailField.clear();
-
-//            controls.identifyForm.show();
-//            controls.messageForm.hide();
-//        }
-
-//        function switchToMessageForm() {
-//            controls.identifyForm.hide();
-//            controls.messageForm.show();
-//        }
-
-//        function validateIdentifyUserForm() {
-//            var isValid = true;
-//            if (!isIdentifyFormNameValid()) {
-//                controls.identifyForm.nameField.setErrorMark();
-//                isValid = false;
-//            }
-
-//            if (!isIdentifyFormMailValid()) {
-//                controls.identifyForm.mailField.setErrorMark();
-//                isValid = false;
-//            }
-
-//            return isValid;
-//        }
-
-//        function isIdentifyFormNameValid() {
-//            var value = controls.identifyForm.nameField.getValue();
-//            return value && value.trim() && value.trim().length <= 254;
-//        }
-
-//        function isIdentifyFormMailValid() {
-//            var value = controls.identifyForm.mailField.getValue();
-//            return value && value.trim() && value.trim().length <= 254 && constants.patterns.email.test(value.trim());
-//        }
-//    }
-
-//})(window.review = window.review || {});
 (function (review) {
     'use strict';
 
-    review.ReviewDialogController = function (courseId, hintController) {
+    review.PopupPositioner = function () {
         var constants = review.constants,
-            elementReviewDialog = new review.ElementReviewDialog(courseId),
-            generalReviewDialog = new review.GeneralReviewDialog(courseId, hintController);
+            css = constants.css,
+            $windowContainer = $(constants.selectors.body),
+            preferredVerticalAligment = css.bottom;
+
+        function setPopupPosition($container, $popup) {
+            var popupHeight = $popup.height();
+            var popupWidth = $popup.width();
+
+            var containerOffset = $container.offset();
+            var windowOffset = $windowContainer.offset();
+            var position = {};
+
+            position.vertical = getVerticalPosition(preferredVerticalAligment, containerOffset.top, windowOffset.top, popupHeight);
+            position.horizontal = getHorizontalPosition(containerOffset.left, windowOffset.left, $windowContainer.width(), popupWidth);
+
+            $popup.addClass(position.vertical.aligment).addClass(position.horizontal.aligment);
+
+            function getVerticalPosition(preferredVerticalAligment, pointerTopOffset, containerTopOffset, tooltipHeight) {
+                var vertical = {};
+                vertical.aligment = getVerticalAligment(preferredVerticalAligment, pointerTopOffset, tooltipHeight);
+
+                function getVerticalAligment(preferredVerticalAligment, pointerTopOffset, tooltipHeight) {
+                    if (preferredVerticalAligment === css.top && (pointerTopOffset - 100) < tooltipHeight) {
+                        return css.bottom;
+                    }
+                    if (preferredVerticalAligment === css.bottom && pointerTopOffset + tooltipHeight > $windowContainer.height()) {
+                        return css.top;
+                    }
+                    return preferredVerticalAligment;
+                }
+
+                return vertical;
+            }
+
+            function getHorizontalPosition(pointerLeftOffset, containerLeftOffset, containerWidth, tooltipWidth) {
+                var horizontal = {};
+                horizontal.aligment = '';
+
+                var leftLimit = containerLeftOffset;
+                var rightLimit = leftLimit + containerWidth;
+                var preferredHorizontalPosition = getPreferredHorizontalPosition();
+
+                if (preferredHorizontalPosition === css.right && pointerLeftOffset - tooltipWidth + 23 > leftLimit) {
+                    horizontal.aligment = css.right;
+                    return horizontal;
+                } else if (preferredHorizontalPosition === css.left && pointerLeftOffset + tooltipWidth < rightLimit) {
+                    horizontal.aligment = css.left;
+                    return horizontal;
+                }
+
+                if (pointerLeftOffset + tooltipWidth < rightLimit) {
+                    horizontal.aligment = css.left;
+                    return horizontal;
+                } else if (pointerLeftOffset - tooltipWidth + 23 > leftLimit) {
+                    horizontal.aligment = css.right;
+                    return horizontal;
+                }
+
+                horizontal.aligment = css.middle;
+                return horizontal;
+            }
+
+            function getPreferredHorizontalPosition() {
+                var constainerX = $container.offset().left;
+                return $windowContainer.width() / 2 - constainerX > 0 ? css.right : css.left;
+            }
+
+            return position;
+        }
+
+        return {
+            setPopupPosition: setPopupPosition
+        };
+    };
+
+})(window.review = window.review || {});
+(function (review) {
+    'use strict';
+
+    review.ReviewDialogController = function (reviewService, hintController) {
+        var constants = review.constants,
+            elementReviewDialog = new review.ElementReviewDialog(reviewService),
+            generalReviewDialog = new review.GeneralReviewDialog(reviewService, hintController);
 
         function showGeneralReviewDialog() {
             generalReviewDialog.show();
@@ -478,17 +427,11 @@
 (function (review) {
     'use strict';
 
-    review.CommentForm = function (courseId, closeHandler) {
+    review.CommentForm = function (reviewService, closeHandler) {
         var constants = review.constants,
             clientContext = review.clientContext,
-            postCommentCommand = new review.PostCommentCommand(courseId),
             html = $.parseHTML('<form class="add-comment-form"> <div class="message-wrapper"> <div class="add-comment-form-title">Leave your comment</div> <textarea class="comment-text-block message" placeholder="Type your comment here..."></textarea> </div> <div class="identify-user-wrapper"> <div class="identify-user-title">Please idenitify yourself</div> <div class="identify-user-row"> <input class="name-input" type="text" /> <label>Name</label> <span class="error-message name">Enter your name</span> </div> <div class="identify-user-row"> <input class="email-input" type="email" /> <label>Email</label> <span class="error-message email">Invalid email</span> </div> </div> <div class="comment-action-wrapper"> <div class="comment-status-message success" title="Comment was sent"> Comment was sent </div> <div class="comment-status-message fail" title="Comment was not sent"> Comment was not sent. <br /> Try again. </div> <div class="comment-actions"> <button title="Cancel" class="cancel-btn"> <span class="btn-title">Cancel</span> </button> <button title="Post comment" class="comment-btn"> <span class="btn-title">Post comment</span> </button> </div> </div> </form>'),
             $commentForm= $(html),
-            // dialog = {
-            //     show: show,
-            //     isShown: false,
-            //     hide: hide
-            // },
             controls = new review.CommentFormControls($commentForm);
 
         subscribeOnEvents();
@@ -498,26 +441,10 @@
 			init: init
 		};
 
-//         function show($parent) {
-//             $commentForm.hide();
-//             $commentForm.appendTo($parent);
-//             $commentForm.addClass(css);
-//             clear();
-// 
-//             $commentForm.fadeIn('fast').addClass(constants.css.shown);
-//             //dialog.isShown = true;
-//         }
-
         function hide() {    
 			if(closeHandler){
 				closeHandler();
 			}
-			       
-            // $commentForm.removeClass(constants.css.shown).fadeOut('fast', function(){
-            //     $commentForm.detach();
-            // });
-            
-            //dialog.isShown = false;
         }
 
         function submit() {
@@ -544,20 +471,24 @@
             }
 
             var message = controls.messageForm.messageField.getValue().trim();
-            postCommentCommand.execute(message, username, usermail)
+            controls.submitBtn.disable();
+            reviewService.postComment(message, username, usermail)
                 .done(function (response) {
+                    switchToMessageForm();
+                    controls.submitBtn.enable();
                     if (response) {
                         if (response.success) {
                             init();
-                            controls.commentStatusMessage.success.show();
+                            controls.commentStatusMessage.success.fadeIn();
                         } else {
-                            switchToMessageForm();
-                            controls.commentStatusMessage.fail.show();
+                            
+                            controls.commentStatusMessage.fail.fadeIn();
                         }
                     }
                 }).fail(function () {
+                    controls.submitBtn.enable();
                     switchToMessageForm();
-                    controls.commentStatusMessage.fail.show();
+                    controls.commentStatusMessage.fail.fadeIn();
                 });
         }
 
@@ -570,10 +501,11 @@
         }
 
         function subscribeOnEvents() {
-            //controls.closeBtn.click(hide);
             controls.cancelBtn.click(hide);
             controls.submitBtn.click(submit);
-            //controls.expandCollapseBtn.click(toggleSize);
+            controls.messageForm.messageField.onfocus(function () {
+                controls.commentStatusMessage.fadeOut();
+            });
         }
 
         function switchToIdentifyUserForm() {
@@ -622,10 +554,8 @@
     review.CommentFormControls = function ($dialog) {
         var constants = review.constants,
             controls = {
-                //closeBtn: new Button(constants.selectors.closeDialogBtn),
                 cancelBtn: new Button(constants.selectors.cancelBtn),
                 submitBtn: new Button(constants.selectors.commentBtn),
-                //expandCollapseBtn: new Button(constants.selectors.commentsHeader),
 
                 commentStatusMessage: new CommentStatusMessage(),
 
@@ -712,12 +642,20 @@
     function TextField($parent, selector) {
         var control = review.controls.Control.call(this, $parent, selector),
             $control = control.$control,
-            $errorMessage = $control.nextAll(review.constants.selectors.errorMessage);
+            $errorMessage = $control.nextAll(review.constants.selectors.errorMessage),
+            onfocus = null;
 
         $control.change(onChange);
         $control.focus(function () {
             control.removeErrorMark();
+            if (onfocus) {
+                onfocus();
+            }
         });
+
+        control.onfocus = function (handler) {
+            onfocus = handler;
+        }
 
         control.getValue = function () {
             return $control.val();
@@ -765,6 +703,10 @@
             focus: focus,
             addClass: addClass,
             removeClass: removeClass,
+            fadeIn: fadeIn,
+            fadeOut: fadeOut,
+            disable: disable,
+            enable: enable,
             $control: $control
         };
 
@@ -788,8 +730,28 @@
             control.isShown = false;
         }
 
+        function fadeOut() {
+            $control.fadeOut('fast');
+            control.isShown = false;
+        }
+
+        function fadeIn() {
+            $control.fadeIn('fast');
+            control.isShown = true;
+        }
+
         function focus() {
             $control.focus();
+        }
+
+        function disable() {
+            $control.prop('disabled', true);
+            addClass('disabled');
+        }
+
+        function enable() {
+            $control.prop('disabled', false);
+            removeClass('disabled');
         }
     }
 
@@ -797,10 +759,11 @@
 (function (review) {
     'use strict';
 
-    review.ElementReviewDialog = function (courseId) {
+    review.ElementReviewDialog = function (reviewService) {
         var constants = review.constants,
             html = $.parseHTML('<div class="review-dialog element-review-dialog"> <button class="close-dialog-btn"></button> <form class="add-comment-form"> </form> </div>'),
-            commentForm = new review.CommentForm(courseId, hide),
+            commentForm = new review.CommentForm(reviewService, hide),
+            popupPositioner = new review.PopupPositioner(),
             $dialog = $(html),
             closeBtn = new review.controls.Button($dialog, constants.selectors.closeDialogBtn),
             dialog = {
@@ -814,17 +777,25 @@
         return dialog;
 
         function show($parent) {
-            $dialog.hide();
+            if (dialog.isShown)
+                return;
+
             $dialog.find(constants.selectors.addCommentForm).replaceWith(commentForm.$element);
             $dialog.appendTo($parent);
-            $dialog.addClass(constants.css.shown);
-            commentForm.init();
+
+            $dialog.hide();
+            popupPositioner.setPopupPosition($parent, $dialog);
 
             $dialog.fadeIn('fast').addClass(constants.css.shown);
+            commentForm.init();
+
             dialog.isShown = true;
         }
 
         function hide() {
+            if (!dialog.isShown)
+                return;
+
             $dialog.removeClass(constants.css.shown).fadeOut('fast', function () {
                 $dialog.detach();
             });
@@ -836,9 +807,9 @@
 (function (review) {
     'use strict';
 
-    review.GeneralReviewDialog = function (courseId, hintController) {
+    review.GeneralReviewDialog = function (reviewService, hintController) {
         var constants = review.constants,
-            commentForm = new review.CommentForm(courseId),
+            commentForm = new review.CommentForm(reviewService),
             $dialog = $($.parseHTML('<div class="review-dialog general-review-dialog"> <div class="comments-header"> <div class="comment-header-text">Leave general comment</div> <div class="comments-expander"></div> </div> <form class="add-comment-form"> </form> </div>')),
             expandCollapseBtn = new review.controls.Button($dialog, constants.selectors.commentsHeader),
             dialog = {
@@ -851,7 +822,7 @@
 
         function show() {
             $dialog.find(constants.selectors.addCommentForm).replaceWith(commentForm.$element);
-            $dialog.appendTo('body');
+            $dialog.appendTo(constants.selectors.body);
             commentForm.init();
         }
 

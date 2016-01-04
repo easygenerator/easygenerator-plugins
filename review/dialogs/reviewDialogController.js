@@ -1,10 +1,10 @@
 ﻿(function (review) {
     'use strict';
 
-    review.ReviewDialogController = function (courseId, hintController) {
+    review.ReviewDialogController = function (reviewService, hintController) {
         var constants = review.constants,
-            elementReviewDialog = new review.ElementReviewDialog(courseId),
-            generalReviewDialog = new review.GeneralReviewDialog(courseId, hintController);
+            elementReviewDialog = new review.ElementReviewDialog(reviewService),
+            generalReviewDialog = new review.GeneralReviewDialog(reviewService, hintController);
 
         function showGeneralReviewDialog() {
             generalReviewDialog.show();

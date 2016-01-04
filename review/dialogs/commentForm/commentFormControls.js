@@ -4,10 +4,8 @@
     review.CommentFormControls = function ($dialog) {
         var constants = review.constants,
             controls = {
-                //closeBtn: new Button(constants.selectors.closeDialogBtn),
                 cancelBtn: new Button(constants.selectors.cancelBtn),
                 submitBtn: new Button(constants.selectors.commentBtn),
-                //expandCollapseBtn: new Button(constants.selectors.commentsHeader),
 
                 commentStatusMessage: new CommentStatusMessage(),
 

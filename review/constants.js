@@ -45,6 +45,7 @@
         left: 'left',
         right: 'right',
         bottom: 'bottom',
+        middle: 'middle',
         expanded: 'expanded',
         error: 'error',
         name: 'name',
@@ -52,7 +53,8 @@
         empty: 'empty',
         shown: 'shown',
         success: 'success',
-        fail: 'fail'
+        fail: 'fail',
+        disabled: 'disabled'
     };
 
     constants.selectors = {
@@ -81,7 +83,9 @@
         name: '.' + constants.css.name,
         email: '.' + constants.css.email,
         success: '.' + constants.css.success,
-        fail: '.' + constants.css.fail
+        fail: '.' + constants.css.fail,
+
+        body: 'body'
     };
 
     review.constants = constants;
