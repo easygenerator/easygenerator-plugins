@@ -4,21 +4,20 @@
     review.CommentForm = function (reviewService, closeHandler) {
         var constants = review.constants,
             clientContext = review.clientContext,
-            html = $.parseHTML('{{commentForm.html}}'),
-            $commentForm= $(html),
+            $commentForm = $(review.htmlMarkupProvider.getHtmlMarkup('{{commentForm.html}}')),
             controls = new review.CommentFormControls($commentForm);
 
         subscribeOnEvents();
-		
-		return {
-			$element: $commentForm,
-			init: init
-		};
 
-        function hide() {    
-			if(closeHandler){
-				closeHandler();
-			}
+        return {
+            $element: $commentForm,
+            init: init
+        };
+
+        function hide() {
+            if (closeHandler) {
+                closeHandler();
+            }
         }
 
         function submit() {
@@ -55,7 +54,7 @@
                             init();
                             controls.commentStatusMessage.success.fadeIn();
                         } else {
-                            
+
                             controls.commentStatusMessage.fail.fadeIn();
                         }
                     }

@@ -3,7 +3,7 @@
 
     review.ReviewHint = function (text, css) {
         var constants = review.constants,
-            html = $.parseHTML('{{reviewHint.html}}'),
+            html = review.htmlMarkupProvider.getHtmlMarkup('{{reviewHint.html}}'),
             $hint = $(html),
             hint = {
                  isShown: false,

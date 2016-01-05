@@ -58,19 +58,44 @@
         box-shadow: -2px 2px 1px -1px rgba(1,1,1,.3);
     }
 
-    &.left {
+    &.left, &.right {
         transform: translateY(-50%);
-        animation: hint-pulse-left-right .5s infinite;
 
         &:before {
             top: 50%;
+        }
+    }
+
+    &.left {
+        animation: pulsate-left-to-right .5s infinite;
+
+        &:before {
             left: -3px;
             transform: translateY(-50%) rotate(45deg);
         }
     }
 
+    &.right {
+        animation: pulsate-right-to-left .5s infinite;
+
+        &:before {
+            right: -3px;
+            transform: translateY(-50%) rotate(225deg);
+        }
+    }
+
     &.bottom {
-        animation: hint-pulse-top-bottom .5s infinite;
+        animation: pulsate-bottom-to-top .5s infinite;
+
+        &:before {
+            bottom: -9px;
+            left: 50%;
+            transform: translateY(-50%) rotate(-45deg);
+        }
+    }
+
+    &.top {
+        animation: pulsate-top-to-bottom .5s infinite;
 
         &:before {
             bottom: -9px;
@@ -89,7 +114,6 @@
         position: fixed;
         right: 30px;
         bottom: 46px;
-        animation: general-comment-hint-pulse .5s infinite;
     }
 
     .review-hint-text-wrapper,
@@ -540,7 +564,7 @@
 
 /*#region animations */
 
-@keyframes hint-pulse-left-right {
+@keyframes pulsate-left-to-right {
     0% {
         margin-left: 0;
     }
@@ -554,7 +578,21 @@
     }
 }
 
-@keyframes hint-pulse-top-bottom {
+@keyframes pulsate-right-to-left {
+    0% {
+        margin-right: 0;
+    }
+
+    50% {
+        margin-right: 3px;
+    }
+
+    100% {
+        margin-right: 0;
+    }
+}
+
+@keyframes pulsate-top-to-bottom {
     0% {
         margin-top: 0;
     }
@@ -568,18 +606,19 @@
     }
 }
 
-@keyframes general-comment-hint-pulse {
+@keyframes pulsate-bottom-to-top {
     0% {
-        bottom: 46px;
+        margin-bottom: 0;
     }
 
     50% {
-        bottom: 49px;
+        margin-bottom: 3px;
     }
 
     100% {
-        bottom: 46px;
+        margin-bottom: 0;
     }
 }
+
 /*#endregion */
 

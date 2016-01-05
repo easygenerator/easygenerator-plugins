@@ -1,0 +1,1 @@
+easyresources generate --worksheetName "Plugins" --outputPath "./localization/lang"

@@ -4,7 +4,7 @@
     review.GeneralReviewDialog = function (reviewService, hintController) {
         var constants = review.constants,
             commentForm = new review.CommentForm(reviewService),
-            $dialog = $($.parseHTML('{{generalReviewDialog.html}}')),
+            $dialog = $(review.htmlMarkupProvider.getHtmlMarkup('{{generalReviewDialog.html}}')),
             expandCollapseBtn = new review.controls.Button($dialog, constants.selectors.commentsHeader),
             dialog = {
                 show: show

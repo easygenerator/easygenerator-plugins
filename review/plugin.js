@@ -2,11 +2,11 @@
     'use strict';
 
     review.ReviewPlugin = function () {
-        var spotsController = new review.ReviewSpotsController(),
-            hintController = new review.ReviewHintController(),
+        var spotsController = null,
+            hintController = null,
             dialogController = null;
 
-        function init(reviewApiUrl, courseId) {
+        function init(reviewApiUrl, courseId, locale) {
             if ($ === undefined) {
                 throw 'Easygenerator review requires jQuery';
             }
@@ -19,7 +19,11 @@
                 throw 'Failed to initialize review plugin. Course id is invalid.';
             }
 
+            window.plugins.localizationService.init(locale);
+
             var reviewService = new review.ReviewService(reviewApiUrl, courseId);
+            spotsController = new review.ReviewSpotsController(),
+            hintController = new review.ReviewHintController(),
             dialogController = new review.ReviewDialogController(reviewService, hintController);
             dialogController.showGeneralReviewDialog();
         }

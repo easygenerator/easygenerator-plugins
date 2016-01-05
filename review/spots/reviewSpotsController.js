@@ -3,7 +3,7 @@
 
     review.ReviewSpotsController = function () {
         var constants = review.constants,
-            spotMarkup = '{{reviewSpot.html}}';
+            spotMarkup = review.htmlMarkupProvider.getHtmlMarkup('{{reviewSpot.html}}');
 
         function renderSpots(clickHandler) {
             var spots = [];

@@ -1,37 +1,31 @@
-  <form class="add-comment-form">
-        <div class="message-wrapper">
-            <div class="add-comment-form-title">Leave your comment</div>
-            <textarea class="comment-text-block message" placeholder="Type your comment here..."></textarea>
+<form class="add-comment-form">
+    <div class="message-wrapper">
+        <div class="add-comment-form-title">{{leaveYourComment}}</div>
+        <textarea class="comment-text-block message" placeholder="{{typeYourCommentHere}}"></textarea>
+    </div>
+    <div class="identify-user-wrapper">
+        <div class="identify-user-title">{{identifyMessage}}</div>
+        <div class="identify-user-row">
+            <input class="name-input" type="text" />
+            <label>{{name}}</label>
+            <span class="error-message name">{{enterYourNameError}}</span>
         </div>
-        <div class="identify-user-wrapper">
-            <div class="identify-user-title">Please idenitify yourself</div>
-            <div class="identify-user-row">
-                <input class="name-input" type="text" />
-                <label>Name</label>
-                <span class="error-message name">Enter your name</span>
-            </div>
-            <div class="identify-user-row">
-                <input class="email-input" type="email" />
-                <label>Email</label>
-                <span class="error-message email">Invalid email</span>
-            </div>
+        <div class="identify-user-row">
+            <input class="email-input" type="email" />
+            <label>{{email}}</label>
+            <span class="error-message email">{{enterValidEmailError}}</span>
         </div>
-        <div class="comment-action-wrapper">
-            <div class="comment-status-message success" title="Comment was sent">
-                Comment was sent
-            </div>
-            <div class="comment-status-message fail" title="Comment was not sent">
-                Comment was not sent.
-                <br />
-                Try again.
-            </div>
-            <div class="comment-actions">
-                <button title="Cancel" class="cancel-btn">
-                    <span class="btn-title">Cancel</span>
-                </button>
-                <button title="Post comment" class="comment-btn">
-                    <span class="btn-title">Post comment</span>
-                </button>
-            </div>
+    </div>
+    <div class="comment-action-wrapper">
+        <div class="comment-status-message success" title="{{commentWasSent}}">{{commentWasSent}}</div>
+        <div class="comment-status-message fail" title="{{commentWasNotSent}}">{{commentWasNotSent}}<br />{{tryAgain}}</div>
+        <div class="comment-actions">
+            <button title="{{cancel}}" class="cancel-btn">
+                <span class="btn-title">{{cancel}}</span>
+            </button>
+            <button title="{{postComment}}" class="comment-btn">
+                <span class="btn-title">{{postComment}}</span>
+            </button>
         </div>
-    </form>
+    </div>
+</form>

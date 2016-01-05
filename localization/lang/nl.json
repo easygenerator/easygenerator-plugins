@@ -1,0 +1,20 @@
+{
+    "commentWasNotSent": "Opmerking niet verzonden",
+    "commentWasSent": "Opmerking verzonden",
+    "leaveYourComment": "Geef uw mening",
+    "send": "Plaats opmerking",
+    "tryAgain": "Probeer opnieuw",
+    "yourMessage": "Typ uw bericht",
+    "identifyMessage": "Vul uw gegevens in",
+    "name": "Naam",
+    "email": "Email",
+    "enterValidEmailError": "Vul een correct emailadres in",
+    "enterYourNameError": "Vul een geldige naam in",
+    "gotIt": "Got it",
+    "elementReviewHint": "Click on icon near elements to leave the comment.",
+    "generalReviewHint": "Click on the panel here to leave the general comment.",
+    "leaveGeneralComment": "Leave general comment",
+    "typeYourCommentHere": "Type your comment here...",
+    "cancel": "Cancel",
+    "postComment": "Post comment"
+}

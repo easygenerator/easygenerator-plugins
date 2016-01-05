@@ -1,0 +1,20 @@
+{
+    "commentWasNotSent": "Коментар не був відправлений.",
+    "commentWasSent": "Відправлено",
+    "leaveYourComment": "Залиште свій коментар",
+    "send": "Відправити коментар",
+    "tryAgain": "Спробувати знову",
+    "yourMessage": "Напишіть Ваше повідомлення...",
+    "identifyMessage": "Будь-ласка, ідентифікуйте себе",
+    "name": "Ім'я",
+    "email": "E-mail",
+    "enterValidEmailError": "Введіть валідний e-mail",
+    "enterYourNameError": "Введіть своє ім'я",
+    "gotIt": "Зрозуміло",
+    "elementReviewHint": "Натисніть на іконку щоб залишити коментар",
+    "generalReviewHint": "Натисніть на панель щоб залишити загальний коментар",
+    "leaveGeneralComment": "Залиште загальний коментар",
+    "typeYourCommentHere": "Ваш коментар...",
+    "cancel": "Відміна",
+    "postComment": "Відіслати коментар"
+}

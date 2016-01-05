@@ -3,10 +3,9 @@
 
     review.ElementReviewDialog = function (reviewService) {
         var constants = review.constants,
-            html = $.parseHTML('{{elementReviewDialog.html}}'),
             commentForm = new review.CommentForm(reviewService, hide),
             popupPositioner = new review.PopupPositioner(),
-            $dialog = $(html),
+            $dialog = $(review.htmlMarkupProvider.getHtmlMarkup('{{elementReviewDialog.html}}')),
             closeBtn = new review.controls.Button($dialog, constants.selectors.closeDialogBtn),
             dialog = {
                 isShown: false,

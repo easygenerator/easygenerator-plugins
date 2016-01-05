@@ -4,8 +4,9 @@
     review.ReviewHintController = function () {
         var constants = review.constants,
             clientContext = review.clientContext,
-            spotReviewHint = new review.ReviewHint('Click on icon near elements to leave the comment.', constants.css.spotReviewHint + ' ' + constants.css.left),
-            generalReviewHint = new review.ReviewHint('Click on the panel here to leave the general comment.', constants.css.generalReviewHint + ' ' + constants.css.bottom);
+            localizationService = window.plugins.localizationService,
+            spotReviewHint = new review.ReviewHint(localizationService.localize('elementReviewHint'), constants.css.spotReviewHint + ' ' + constants.css.left),
+            generalReviewHint = new review.ReviewHint(localizationService.localize('generalReviewHint'), constants.css.generalReviewHint + ' ' + constants.css.bottom);
 
         function showSpotReviewHint($spot) {
             spotReviewHint.show($spot, function () {
@@ -21,7 +22,7 @@
         }
 
         function showGeneralReviewHint() {
-            generalReviewHint.show($('body'), function () {
+            generalReviewHint.show($(constants.selectors.body), function () {
                 hideGeneralReviewHint();
             });
         }

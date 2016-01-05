@@ -1,0 +1,20 @@
+{
+    "commentWasNotSent": "Comment was not sent.",
+    "commentWasSent": "Comment was sent",
+    "leaveYourComment": "Leave your comment",
+    "send": "Post comment",
+    "tryAgain": "Try again",
+    "yourMessage": "Type your message...",
+    "identifyMessage": "Please identify yourself",
+    "name": "Name",
+    "email": "E-mail",
+    "enterValidEmailError": "Enter a valid e-mail",
+    "enterYourNameError": "Enter a valid name",
+    "gotIt": "Got it",
+    "elementReviewHint": "Click on icon near elements to leave the comment.",
+    "generalReviewHint": "Click on the panel here to leave the general comment.",
+    "leaveGeneralComment": "Leave general comment",
+    "typeYourCommentHere": "Type your comment here...",
+    "cancel": "Cancel",
+    "postComment": "Post comment"
+}
