@@ -10,7 +10,10 @@
             dialog = {
                 isShown: false,
                 show: show,
-                hide: hide
+                hide: hide,
+                isShownForElement: isShownForElement,
+                updatePosition: updatePosition,
+                $parent: null
             };
 
         closeBtn.click(hide);
@@ -19,30 +22,35 @@
         return dialog;
 
         function show($parent) {
-            if (dialog.isShown)
-                return;
+            dialog.$parent = $parent;
+            $dialog.finish().css({ opacity: 0 }).show().appendTo($parent);
+            updatePosition();
 
-            $dialog.appendTo($parent);
-
-            $dialog.hide();
-            popupPositioner.setPopupPosition($parent, $dialog);
-
-            $dialog.fadeIn(0.1).addClass(constants.css.shown);
             commentForm.init();
+            $dialog.fadeTo(50, 1);
+            $dialog.addClass(constants.css.shown);
 
             dialog.isShown = true;
         }
 
         function hide() {
-            if (!dialog.isShown)
-                return;
-
-            $dialog.fadeOut(0.1, function () {
+            $dialog.finish().fadeOut(50, function () {
                 $dialog.removeClass(constants.css.shown);
                 $dialog.detach();
             });
 
             dialog.isShown = false;
+            dialog.$parent = null;
+        }
+
+        function updatePosition() {
+            if (dialog.$parent ) {
+                popupPositioner.setPopupPosition(dialog.$parent, $dialog);
+            }
+        }
+
+        function isShownForElement($spot) {
+            return $spot.find(constants.selectors.reviewDialog).length > 0;
         }
     };
 })(window.review = window.review || {});

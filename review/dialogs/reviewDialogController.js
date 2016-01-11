@@ -12,15 +12,26 @@
 
         function showElementReviewDialog($spot) {
             if (elementReviewDialog.isShown) {
+                var isShownForElement = elementReviewDialog.isShownForElement($spot);
                 elementReviewDialog.hide();
+                if (isShownForElement) {
+                    return;
+                }
             }
 
             elementReviewDialog.show($spot, constants.css.elementReviewDialog);
         }
 
+        function updatePosition() {
+            if (elementReviewDialog.isShown) {
+                elementReviewDialog.updatePosition();
+            }
+        }
+
         return {
             showGeneralReviewDialog: showGeneralReviewDialog,
-            showElementReviewDialog: showElementReviewDialog
+            showElementReviewDialog: showElementReviewDialog,
+            updatePosition: updatePosition
         };
     };
 

@@ -3,7 +3,6 @@
 
     var LocalizationService = function () {
         var service = {
-            defaultLocale: 'en',
             locale: 'en'
         };
 
@@ -13,15 +12,14 @@
             }
 
             service.locale = locale;
+            var lang = plugins.lang[service.locale];
+            if (!lang) {
+                service.locale = 'en';
+            }
         }
 
         function localize(key) {
-            var locale = plugins.lang[service.locale];
-            if (!locale) {
-                locale = plugins.lang[service.defaultLocale];
-            }
-
-            return locale[key];
+            return plugins.lang[service.locale][key];
         }
 
         function localizeHtml(html) {

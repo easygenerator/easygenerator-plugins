@@ -42,7 +42,7 @@ gulp.task('review-app', ['clean', 'lang'], function () {
           .pipe(insertHtmlMarkupForFile('./review/dialogs/generalReview/generalReviewDialog.html', '{{generalReviewDialog.html}}'))
           .pipe(insertHtmlMarkupForFile('./review/hints/reviewHint.html', '{{reviewHint.html}}'))
           .pipe(insertHtmlMarkupForFile('./review/spots/reviewSpot.html', '{{reviewSpot.html}}'))
-          .pipe($.uglify())
+          //.pipe($.uglify())
           .pipe(gulp.dest(output))
     );
 });
@@ -73,8 +73,8 @@ gulp.task('review-css', ['clean'], function () {
             browsers: less.browsers,
             cascade: false
         }))
-        .pipe(css())
-        .pipe($.csso())
+        //.pipe(css())
+        //.pipe($.csso())
         .pipe(gulp.dest(less.dest));
 });
 
