@@ -4,13 +4,27 @@
     review.ReviewDialogController = function (reviewService, hintController) {
         var constants = review.constants,
             elementReviewDialog = new review.ElementReviewDialog(reviewService),
-            generalReviewDialog = new review.GeneralReviewDialog(reviewService, hintController);
+            generalReviewDialog = new review.GeneralReviewDialog(reviewService, onGeneralReviewDialogExpansionChanged);
+
+        function onGeneralReviewDialogExpansionChanged() {
+            if (hintController.isGeneralReviewHintShown()) {
+                hintController.hideGeneralReviewHint();
+            }
+
+            if (elementReviewDialog.isShown) {
+                elementReviewDialog.hide();
+            }
+        }
 
         function showGeneralReviewDialog() {
             generalReviewDialog.show();
         }
 
         function showElementReviewDialog($spot) {
+            if (generalReviewDialog.isExpanded) {
+                generalReviewDialog.toggleExpansion();
+            }
+
             if (elementReviewDialog.isShown) {
                 var isShownForElement = elementReviewDialog.isShownForElement($spot);
                 elementReviewDialog.hide();

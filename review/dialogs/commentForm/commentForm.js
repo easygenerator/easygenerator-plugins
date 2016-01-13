@@ -51,10 +51,9 @@
                     controls.submitBtn.enable();
                     if (response) {
                         if (response.success) {
-                            init();
+                            clear();
                             controls.commentStatusMessage.success.fadeIn();
                         } else {
-
                             controls.commentStatusMessage.fail.fadeIn();
                         }
                     }
@@ -66,11 +65,15 @@
         }
 
         function init() {
+            clear();
+            controls.messageForm.messageField.focus();
+        }
+
+        function clear() {
             controls.commentStatusMessage.hide();
             switchToMessageForm();
 
             controls.messageForm.messageField.clear();
-            controls.messageForm.messageField.focus();
         }
 
         function subscribeOnEvents() {

@@ -3,7 +3,7 @@
 
     review.SpotPositioner = function () {
         var margin = {
-            x: 10,
+            x: 3,
             y: 10
         },
         size = {

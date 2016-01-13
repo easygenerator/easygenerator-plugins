@@ -85,7 +85,9 @@
         success: '.' + constants.css.success,
         fail: '.' + constants.css.fail,
 
-        body: 'body'
+        body: 'body',
+        iframe: 'iframe',
+        img: 'img'
     };
 
     review.constants = constants;

@@ -5,6 +5,8 @@
         var constants = review.constants,
             html = review.htmlMarkupProvider.getHtmlMarkup('{{reviewHint.html}}'),
             $hint = $(html),
+            $body = $(constants.selectors.body),
+            hintPositioner = new review.HintPositioner(),
             hint = {
                 isShown: false,
                 show: show,
@@ -18,8 +20,13 @@
 
         return hint;
 
-        function show($parent) {
-            $hint.appendTo($parent);
+        function show($spot) {
+            $hint.appendTo($body);
+            if ($spot) {
+                hintPositioner.updatePosition($spot, hint);
+            }
+
+            $hint.addClass(constants.css.shown);
             hint.isShown = true;
         }
 
@@ -27,6 +34,7 @@
             if (!hint.isShown)
                 return;
 
+            $hint.removeClass(constants.css.shown);
             $hint.detach();
             hint.isShown = false;
         }

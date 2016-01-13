@@ -12,6 +12,7 @@
         function addSpot($element) {
             var spotMarkup = review.htmlMarkupProvider.getHtmlMarkup('{{reviewSpot.html}}');
             var $spotWrapper = $(spotMarkup).appendTo(constants.selectors.body);
+            $spotWrapper.hide();
 
             var id = data.maxId + 1;
             var spot = {
@@ -22,9 +23,19 @@
             data.arr.push(spot);
             data.maxId = id;
 
+            spot.$contextElement.find(constants.selectors.img).one('load', updateSpotPositions);
+            spot.$contextElement.find(constants.selectors.iframe).one('load', updateSpotPositions);
+
             spotPositioner.updatePosition(spot);
+            $spotWrapper.fadeIn(200);
 
             return spot;
+        }
+
+        function updateSpotPositions() {
+            data.arr.forEach(function (item) {
+                spotPositioner.updatePosition(item);
+            });
         }
 
         function getSpotById(id) {
@@ -42,7 +53,9 @@
 
             data.arr.forEach(function (item) {
                 if (arr.indexOf(item) === -1) {
-                    item.$element.detach();
+                    item.$element.fadeOut(200, function () {
+                        item.$element.detach();
+                    });
                 }
             });
 

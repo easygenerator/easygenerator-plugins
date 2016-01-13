@@ -44,14 +44,14 @@
             }
         }
 
-        function render() {
+        function renderSpots() {
             spotController.renderSpots();
             hintController.showHintsIfNeeded();
         }
 
         return {
             init: init,
-            render: render
+            renderSpots: renderSpots
         };
     };
 

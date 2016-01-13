@@ -20,8 +20,8 @@
 
         function getHorizontalPosition($contextElement, $element) {
             elementSize = {
-                width: $element.width(),
-                height: $element.height()
+                width: $element.outerWidth(),
+                height: $element.outerWidth()
             };
 
             containerSize = {

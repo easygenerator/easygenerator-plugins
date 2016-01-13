@@ -44,14 +44,14 @@
             }
         }
 
-        function render() {
+        function renderSpots() {
             spotController.renderSpots();
             hintController.showHintsIfNeeded();
         }
 
         return {
             init: init,
-            render: render
+            renderSpots: renderSpots
         };
     };
 
@@ -116,13 +116,27 @@
     review.ReviewDialogController = function (reviewService, hintController) {
         var constants = review.constants,
             elementReviewDialog = new review.ElementReviewDialog(reviewService),
-            generalReviewDialog = new review.GeneralReviewDialog(reviewService, hintController);
+            generalReviewDialog = new review.GeneralReviewDialog(reviewService, onGeneralReviewDialogExpansionChanged);
+
+        function onGeneralReviewDialogExpansionChanged() {
+            if (hintController.isGeneralReviewHintShown()) {
+                hintController.hideGeneralReviewHint();
+            }
+
+            if (elementReviewDialog.isShown) {
+                elementReviewDialog.hide();
+            }
+        }
 
         function showGeneralReviewDialog() {
             generalReviewDialog.show();
         }
 
         function showElementReviewDialog($spot) {
+            if (generalReviewDialog.isExpanded) {
+                generalReviewDialog.toggleExpansion();
+            }
+
             if (elementReviewDialog.isShown) {
                 var isShownForElement = elementReviewDialog.isShownForElement($spot);
                 elementReviewDialog.hide();
@@ -155,6 +169,8 @@
         var constants = review.constants,
             html = review.htmlMarkupProvider.getHtmlMarkup('<div class="review-hint"> <div class="review-hint-text-wrapper"> <div class="review-hint-text"></div> </div> <div class="review-hint-action-wrapper"> <button class="review-hint-btn btn">{{gotIt}}</button> </div> </div>'),
             $hint = $(html),
+            $body = $(constants.selectors.body),
+            hintPositioner = new review.HintPositioner(),
             hint = {
                 isShown: false,
                 show: show,
@@ -168,8 +184,13 @@
 
         return hint;
 
-        function show($parent) {
-            $hint.appendTo($parent);
+        function show($spot) {
+            $hint.appendTo($body);
+            if ($spot) {
+                hintPositioner.updatePosition($spot, hint);
+            }
+
+            $hint.addClass(constants.css.shown);
             hint.isShown = true;
         }
 
@@ -177,6 +198,7 @@
             if (!hint.isShown)
                 return;
 
+            $hint.removeClass(constants.css.shown);
             $hint.detach();
             hint.isShown = false;
         }
@@ -189,7 +211,6 @@
     review.HintController = function () {
         var constants = review.constants,
             clientContext = review.clientContext,
-            hintPositioner = new review.HintPositioner(),
             localizationService = window.plugins.localizationService,
             spotReviewHint = new review.Hint(localizationService.localize('elementReviewHint'), constants.css.spotReviewHint,
                 function () {
@@ -201,7 +222,6 @@
                 });
 
         function showSpotReviewHint($spot) {
-            hintPositioner.updatePosition($spot, spotReviewHint);
             spotReviewHint.show($spot);
         }
 
@@ -213,7 +233,7 @@
         }
 
         function showGeneralReviewHint() {
-            generalReviewHint.show($(constants.selectors.body));
+            generalReviewHint.show();
         }
 
         function hideGeneralReviewHint() {
@@ -239,11 +259,15 @@
                 spotReviewHint.hide();
             }
 
-            var $spots = $(constants.selectors.reviewSpotWrapper);
+            if (clientContext.get(constants.clientContextKeys.reviewSpotHintShown) !== true) {
+                var $spots = $(constants.selectors.reviewSpotWrapper);
+                if ($spots.length > 0) {
+                    showSpotReviewHint($($spots[0]));
+                    return;
+                } 
+            }
 
-            if ($spots.length > 0 && clientContext.get(constants.clientContextKeys.reviewSpotHintShown) !== true) {
-                showSpotReviewHint($($spots[0]));
-            } else if (clientContext.get(constants.clientContextKeys.reviewGeneralHintShown) !== true) {
+            if (clientContext.get(constants.clientContextKeys.reviewGeneralHintShown) !== true) {
                 showGeneralReviewHint();
             }
         }
@@ -284,17 +308,76 @@
 
             var horizontalPosition = positioner.getHorizontalPosition($contextElement, $element);
             if (horizontalPosition) {
+                setCoordinates($contextElement, $element, horizontalPosition);
                 $element.addClass(horizontalPosition);
                 return;
             }
 
             var verticalPosition = positioner.getVerticalPosition($contextElement, $element);
             if (verticalPosition) {
+                setCoordinates($contextElement, $element, verticalPosition);
                 $element.addClass(verticalPosition);
                 return;
             }
 
             hint.$element.addClass(css.bottom);
+        }
+
+        function setCoordinates($contextElement, $element, position) {
+            var coordinates = getCoordinates($contextElement, $element, position);
+            var styles = {
+                left: coordinates.x,
+                top: coordinates.y
+            };
+
+            $element.css(styles);
+        }
+
+        function getCoordinates($contextElement, $element, position) {
+            var elementSize = {
+                width: $element.outerWidth(),
+                height: $element.outerHeight()
+            };
+
+            var containerSize = {
+                width: $contextElement.width(),
+                height: $contextElement.height()
+            };
+
+            var containerPosition = {
+                x: $contextElement.offset().left,
+                y: $contextElement.offset().top
+            };
+
+            if (position === css.right) {
+                return {
+                    x: containerPosition.x + containerSize.width + margin.x,
+                    y: containerPosition.y + containerSize.height / 2 - elementSize.height / 2
+                };
+            }
+
+            if (position === css.left) {
+                return {
+                    x: containerPosition.x - margin.x - elementSize.width,
+                    y: containerPosition.y + containerSize.height / 2 - elementSize.height / 2
+                };
+            }
+
+            if (position === css.top) {
+                return {
+                    x: containerPosition.x + containerSize.width / 2 - elementSize.width / 2,
+                    y: containerPosition.y - margin.y - elementSize.height
+                };
+            }
+
+            if (position === css.bottom) {
+                return {
+                    x: containerPosition.x + containerSize.width / 2 - elementSize.width / 2,
+                    y: containerPosition.y + containerSize.height + margin.y
+                };
+            }
+
+            return undefined;
         }
 
         return {
@@ -407,7 +490,9 @@
         success: '.' + constants.css.success,
         fail: '.' + constants.css.fail,
 
-        body: 'body'
+        body: 'body',
+        iframe: 'iframe',
+        img: 'img'
     };
 
     review.constants = constants;
@@ -427,6 +512,7 @@
         function addSpot($element) {
             var spotMarkup = review.htmlMarkupProvider.getHtmlMarkup('<div class="review-spot-wrapper"> <div class="review-spot"></div> </div>');
             var $spotWrapper = $(spotMarkup).appendTo(constants.selectors.body);
+            $spotWrapper.hide();
 
             var id = data.maxId + 1;
             var spot = {
@@ -437,9 +523,19 @@
             data.arr.push(spot);
             data.maxId = id;
 
+            spot.$contextElement.find(constants.selectors.img).one('load', updateSpotPositions);
+            spot.$contextElement.find(constants.selectors.iframe).one('load', updateSpotPositions);
+
             spotPositioner.updatePosition(spot);
+            $spotWrapper.fadeIn(200);
 
             return spot;
+        }
+
+        function updateSpotPositions() {
+            data.arr.forEach(function (item) {
+                spotPositioner.updatePosition(item);
+            });
         }
 
         function getSpotById(id) {
@@ -457,7 +553,9 @@
 
             data.arr.forEach(function (item) {
                 if (arr.indexOf(item) === -1) {
-                    item.$element.detach();
+                    item.$element.fadeOut(200, function () {
+                        item.$element.detach();
+                    });
                 }
             });
 
@@ -499,19 +597,6 @@
         var constants = review.constants,
             spotCollection = new review.SpotCollection();
 
-        function renderSpots() {
-            var ids = [];
-
-            $(constants.selectors.reviewable).each(function () {
-                var spot = renderSpotOnElement($(this));
-                if (spot) {
-                    ids.push(spot.id);
-                }
-            });
-
-            spotCollection.filterSpots(ids);
-        }
-
         function hideSpots() {
             spotCollection.hideSpots();
         }
@@ -521,10 +606,24 @@
         }
 
         return {
-            renderSpots: renderSpots,
             hideSpots: hideSpots,
-            showSpots: showSpots
+            showSpots: showSpots,
+            renderSpots: renderSpots
         };
+
+        function renderSpots() {
+            var ids = [];
+
+            $(constants.selectors.reviewable).each(function () {
+                var $element = $(this);
+                var spot = renderSpotOnElement($element);
+                if (spot) {
+                    ids.push(spot.id);
+                }
+            });
+
+            spotCollection.filterSpots(ids);
+        }
 
         function renderSpotOnElement($element) {
             var spotId = getReviewSpotIdAttachedToElement($element);
@@ -567,7 +666,7 @@
 
     review.SpotPositioner = function () {
         var margin = {
-            x: 10,
+            x: 3,
             y: 10
         },
         size = {
@@ -619,7 +718,7 @@
     review.CommentForm = function (reviewService, closeHandler) {
         var constants = review.constants,
             clientContext = review.clientContext,
-            $commentForm = $(review.htmlMarkupProvider.getHtmlMarkup('<form class="add-comment-form"> <div class="message-wrapper"> <div class="add-comment-form-title">{{leaveYourComment}}</div> <textarea class="comment-text-block message" placeholder="{{typeYourCommentHere}}"></textarea> </div> <div class="identify-user-wrapper"> <div class="identify-user-title">{{identifyMessage}}</div> <div class="identify-user-row"> <input class="name-input" type="text" /> <label>{{name}}</label> <span class="error-message name">{{enterYourNameError}}</span> </div> <div class="identify-user-row"> <input class="email-input" type="email" /> <label>{{email}}</label> <span class="error-message email">{{enterValidEmailError}}</span> </div> </div> <div class="comment-action-wrapper"> <div class="comment-status-message success" title="{{commentWasSent}}">{{commentWasSent}}</div> <div class="comment-status-message fail" title="{{commentWasNotSent}}">{{commentWasNotSent}}<br />{{tryAgain}}</div> <div class="comment-actions"> <button title="{{cancel}}" class="cancel-btn"> <span class="btn-title">{{cancel}}</span> </button> <button title="{{postComment}}" class="comment-btn"> <span class="btn-title">{{postComment}}</span> </button> </div> </div> </form>')),
+            $commentForm = $(review.htmlMarkupProvider.getHtmlMarkup('<form class="add-comment-form"> <div class="message-wrapper"> <div class="add-comment-form-title">{{leaveYourComment}}</div> <textarea class="comment-text-block message" placeholder="{{typeYourCommentHere}}"></textarea> </div> <div class="identify-user-wrapper"> <div class="identify-user-title">{{identifyMessage}}</div> <div class="identify-user-row"> <input class="name-input" type="text" /> <label>{{name}}</label> <span class="error-message name">{{enterYourNameError}}</span> </div> <div class="identify-user-row"> <input class="email-input" type="email" /> <label>{{email}}</label> <span class="error-message email">{{enterValidEmailError}}</span> </div> </div> <div class="comment-action-wrapper"> <div class="comment-status-message success" title="{{commentWasSent}}">{{commentWasSent}}</div> <div class="comment-status-message fail" title="{{commentWasNotSent}}">{{commentWasNotSent}}<br />{{tryAgain}}</div> <div class="comment-actions"> <button title="{{cancel}}" class="cancel-btn">{{cancel}}</button> <button title="{{postComment}}" class="comment-btn">{{postComment}}</button> </div> </div> </form>')),
             controls = new review.CommentFormControls($commentForm);
 
         subscribeOnEvents();
@@ -666,10 +765,9 @@
                     controls.submitBtn.enable();
                     if (response) {
                         if (response.success) {
-                            init();
+                            clear();
                             controls.commentStatusMessage.success.fadeIn();
                         } else {
-
                             controls.commentStatusMessage.fail.fadeIn();
                         }
                     }
@@ -681,11 +779,15 @@
         }
 
         function init() {
+            clear();
+            controls.messageForm.messageField.focus();
+        }
+
+        function clear() {
             controls.commentStatusMessage.hide();
             switchToMessageForm();
 
             controls.messageForm.messageField.clear();
-            controls.messageForm.messageField.focus();
         }
 
         function subscribeOnEvents() {
@@ -969,12 +1071,14 @@
 
         function show($parent) {
             dialog.$parent = $parent;
-            $dialog.finish().css({ opacity: 0 }).show().appendTo($parent);
+            $dialog.finish().css({ opacity: 0 }).removeClass(constants.css.shown).show().appendTo($parent);
             updatePosition();
 
             commentForm.init();
-            $dialog.fadeTo(50, 1);
-            $dialog.addClass(constants.css.shown);
+            $dialog.fadeTo(50, 1, function () {
+                $dialog.addClass(constants.css.shown);
+            });
+            //$dialog.addClass(constants.css.shown);
 
             dialog.isShown = true;
         }
@@ -1003,17 +1107,19 @@
 (function (review) {
     'use strict';
 
-    review.GeneralReviewDialog = function (reviewService, hintController) {
+    review.GeneralReviewDialog = function (reviewService, onExpansionChanhed) {
         var constants = review.constants,
             commentForm = new review.CommentForm(reviewService),
             $dialog = $(review.htmlMarkupProvider.getHtmlMarkup('<div class="review-dialog general-review-dialog"> <div class="comments-header"> <div class="comment-header-text">{{leaveGeneralComment}}</div> <div class="comments-expander"></div> </div> <form class="add-comment-form"> </form> </div>')),
             expandCollapseBtn = new review.controls.Button($dialog, constants.selectors.commentsHeader),
             dialog = {
-                show: show
+                show: show,
+                isExpanded: false,
+                toggleExpansion: toggleExpansion
             };
 
         $dialog.find(constants.selectors.addCommentForm).replaceWith(commentForm.$element);
-        expandCollapseBtn.click(toggleSize);
+        expandCollapseBtn.click(toggleExpansion);
 
         return dialog;
 
@@ -1022,16 +1128,17 @@
             commentForm.init();
         }
 
-        function toggleSize() {
+        function toggleExpansion() {
             var isExpanded = $dialog.hasClass(constants.css.expanded);
             $dialog.toggleClass(constants.css.expanded);
+            dialog.isExpanded = false;
 
             if (!isExpanded) {
                 commentForm.init();
-                if (hintController.isGeneralReviewHintShown()) {
-                    hintController.hideGeneralReviewHint();
-                }
+                dialog.isExpanded = true;
             }
+
+            onExpansionChanhed();
         }
     };
 })(window.review = window.review || {});
@@ -1057,8 +1164,8 @@
 
         function getHorizontalPosition($contextElement, $element) {
             elementSize = {
-                width: $element.width(),
-                height: $element.height()
+                width: $element.outerWidth(),
+                height: $element.outerWidth()
             };
 
             containerSize = {

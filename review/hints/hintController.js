@@ -4,7 +4,6 @@
     review.HintController = function () {
         var constants = review.constants,
             clientContext = review.clientContext,
-            hintPositioner = new review.HintPositioner(),
             localizationService = window.plugins.localizationService,
             spotReviewHint = new review.Hint(localizationService.localize('elementReviewHint'), constants.css.spotReviewHint,
                 function () {
@@ -16,7 +15,6 @@
                 });
 
         function showSpotReviewHint($spot) {
-            hintPositioner.updatePosition($spot, spotReviewHint);
             spotReviewHint.show($spot);
         }
 
@@ -28,7 +26,7 @@
         }
 
         function showGeneralReviewHint() {
-            generalReviewHint.show($(constants.selectors.body));
+            generalReviewHint.show();
         }
 
         function hideGeneralReviewHint() {
@@ -54,11 +52,15 @@
                 spotReviewHint.hide();
             }
 
-            var $spots = $(constants.selectors.reviewSpotWrapper);
+            if (clientContext.get(constants.clientContextKeys.reviewSpotHintShown) !== true) {
+                var $spots = $(constants.selectors.reviewSpotWrapper);
+                if ($spots.length > 0) {
+                    showSpotReviewHint($($spots[0]));
+                    return;
+                } 
+            }
 
-            if ($spots.length > 0 && clientContext.get(constants.clientContextKeys.reviewSpotHintShown) !== true) {
-                showSpotReviewHint($($spots[0]));
-            } else if (clientContext.get(constants.clientContextKeys.reviewGeneralHintShown) !== true) {
+            if (clientContext.get(constants.clientContextKeys.reviewGeneralHintShown) !== true) {
                 showGeneralReviewHint();
             }
         }

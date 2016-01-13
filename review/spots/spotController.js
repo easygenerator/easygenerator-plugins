@@ -5,19 +5,6 @@
         var constants = review.constants,
             spotCollection = new review.SpotCollection();
 
-        function renderSpots() {
-            var ids = [];
-
-            $(constants.selectors.reviewable).each(function () {
-                var spot = renderSpotOnElement($(this));
-                if (spot) {
-                    ids.push(spot.id);
-                }
-            });
-
-            spotCollection.filterSpots(ids);
-        }
-
         function hideSpots() {
             spotCollection.hideSpots();
         }
@@ -27,10 +14,24 @@
         }
 
         return {
-            renderSpots: renderSpots,
             hideSpots: hideSpots,
-            showSpots: showSpots
+            showSpots: showSpots,
+            renderSpots: renderSpots
         };
+
+        function renderSpots() {
+            var ids = [];
+
+            $(constants.selectors.reviewable).each(function () {
+                var $element = $(this);
+                var spot = renderSpotOnElement($element);
+                if (spot) {
+                    ids.push(spot.id);
+                }
+            });
+
+            spotCollection.filterSpots(ids);
+        }
 
         function renderSpotOnElement($element) {
             var spotId = getReviewSpotIdAttachedToElement($element);

@@ -23,12 +23,14 @@
 
         function show($parent) {
             dialog.$parent = $parent;
-            $dialog.finish().css({ opacity: 0 }).show().appendTo($parent);
+            $dialog.finish().css({ opacity: 0 }).removeClass(constants.css.shown).show().appendTo($parent);
             updatePosition();
 
             commentForm.init();
-            $dialog.fadeTo(50, 1);
-            $dialog.addClass(constants.css.shown);
+            $dialog.fadeTo(50, 1, function () {
+                $dialog.addClass(constants.css.shown);
+            });
+            //$dialog.addClass(constants.css.shown);
 
             dialog.isShown = true;
         }
