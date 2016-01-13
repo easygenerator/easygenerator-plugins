@@ -40,7 +40,6 @@ webpackJsonp([0,1],[
 	        dialogController = null;
 
 	    function init(settings) {
-	        debugger;
 	        if ($ === undefined) {
 	            throw 'Easygenerator review requires jQuery';
 	        }
