@@ -1,63 +1,62 @@
-﻿(function (review) {
-    'use strict';
+﻿import constants from './../../infrastructure/constants';
+import controls from './../controls/controls';
+    
+var CommentFormControls = function ($dialog) {
+    var formControls = {
+        cancelBtn: new Button(constants.selectors.cancelBtn),
+        submitBtn: new Button(constants.selectors.commentBtn),
 
-    review.CommentFormControls = function ($dialog) {
-        var constants = review.constants,
-            controls = {
-                cancelBtn: new Button(constants.selectors.cancelBtn),
-                submitBtn: new Button(constants.selectors.commentBtn),
+        commentStatusMessage: new CommentStatusMessage(),
 
-                commentStatusMessage: new CommentStatusMessage(),
+        messageForm: new MessageForm(),
+        identifyForm: new IdentifyForm()
+    };
 
-                messageForm: new MessageForm(),
-                identifyForm: new IdentifyForm()
-            };
+    return formControls;
 
-        return controls;
+    function CommentStatusMessage() {
+        var control = Control.call(this, constants.selectors.commentStatusMessage);
 
-        function CommentStatusMessage() {
-            var control = Control.call(this, constants.selectors.commentStatusMessage);
+        control.success = new Message(constants.selectors.commentStatusMessage + constants.selectors.success);
+        control.fail = new Message(constants.selectors.commentStatusMessage + constants.selectors.fail);
 
-            control.success = new Message(constants.selectors.commentStatusMessage + constants.selectors.success);
-            control.fail = new Message(constants.selectors.commentStatusMessage + constants.selectors.fail);
-
-            return control;
-        }
-
-        function MessageForm() {
-            var control = Control.call(this, constants.selectors.messageWrapper);
-
-            control.messageField = new TextField(constants.selectors.message);
-
-            return control;
-        }
-
-        function IdentifyForm() {
-            var control = Control.call(this, constants.selectors.identifyUserWrapper);
-
-            control.nameField = new TextField(constants.selectors.nameInput);
-            control.mailField = new TextField(constants.selectors.mailInput);
-            control.nameErrorMessage = new Message(constants.selectors.errorMessage + constants.selectors.name);
-            control.mailErrorMassage = new Message(constants.selectors.errorMessage + constants.selectors.email);
-
-            return control;
-        }
-
-        function Message(selector) {
-            return new review.controls.Message($dialog, selector);
-        }
-
-        function Button(selector) {
-            return new review.controls.Button($dialog, selector);
-        }
-
-        function TextField(selector) {
-            return new review.controls.TextField($dialog, selector);
-        }
-
-        function Control(selector) {
-            return new review.controls.Control($dialog, selector);
-        }
+        return control;
     }
 
-})(window.review = window.review || {});
+    function MessageForm() {
+        var control = Control.call(this, constants.selectors.messageWrapper);
+
+        control.messageField = new TextField(constants.selectors.message);
+
+        return control;
+    }
+
+    function IdentifyForm() {
+        var control = Control.call(this, constants.selectors.identifyUserWrapper);
+
+        control.nameField = new TextField(constants.selectors.nameInput);
+        control.mailField = new TextField(constants.selectors.mailInput);
+        control.nameErrorMessage = new Message(constants.selectors.errorMessage + constants.selectors.name);
+        control.mailErrorMassage = new Message(constants.selectors.errorMessage + constants.selectors.email);
+
+        return control;
+    }
+
+    function Message(selector) {
+        return new controls.Message($dialog, selector);
+    }
+
+    function Button(selector) {
+        return new controls.Button($dialog, selector);
+    }
+
+    function TextField(selector) {
+        return new controls.TextField($dialog, selector);
+    }
+
+    function Control(selector) {
+        return new controls.Control($dialog, selector);
+    }
+};
+    
+module.exports = CommentFormControls;

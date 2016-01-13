@@ -1,7 +1,6 @@
-(function (review) {
-    'use strict';
-
-    review.controls = {
+  import constants from './../../infrastructure/constants';
+    
+    var controls = {
         Message: Message,
         Button: Button,
         TextField: TextField,
@@ -9,11 +8,11 @@
     };
 
     function Message($parent, selector) {
-        return review.controls.Control.call(this, $parent, selector);
+        return controls.Control.call(this, $parent, selector);
     }
 
     function Button($parent, selector) {
-        var control = review.controls.Control.call(this, $parent, selector),
+        var control = controls.Control.call(this, $parent, selector),
             $control = control.$control;
 
         control.click = function (handler) {
@@ -27,9 +26,9 @@
     }
 
     function TextField($parent, selector) {
-        var control = review.controls.Control.call(this, $parent, selector),
+        var control = controls.Control.call(this, $parent, selector),
             $control = control.$control,
-            $errorMessage = $control.nextAll(review.constants.selectors.errorMessage),
+            $errorMessage = $control.nextAll(constants.selectors.errorMessage),
             onfocus = null;
 
         $control.change(onChange);
@@ -59,21 +58,21 @@
         }
 
         control.setErrorMark = function () {
-            control.addClass(review.constants.css.error);
-            $errorMessage.addClass(review.constants.css.shown);
+            control.addClass(constants.css.error);
+            $errorMessage.addClass(constants.css.shown);
         }
 
         control.removeErrorMark = function () {
-            control.removeClass(review.constants.css.error);
-            $errorMessage.removeClass(review.constants.css.shown);
+            control.removeClass(constants.css.error);
+            $errorMessage.removeClass(constants.css.shown);
         }
 
         function onChange() {
             control.removeErrorMark();
             if (control.getValue().length === 0) {
-                control.addClass(review.constants.css.empty);
+                control.addClass(constants.css.empty);
             } else {
-                control.removeClass(review.constants.css.empty);
+                control.removeClass(constants.css.empty);
             }
         }
 
@@ -142,4 +141,4 @@
         }
     }
 
-})(window.review = window.review || {});
+module.exports = controls;

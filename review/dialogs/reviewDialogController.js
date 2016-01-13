@@ -1,52 +1,52 @@
-﻿(function (review) {
-    'use strict';
+﻿   import constants from './../infrastructure/constants';
+   import ElementReviewDialog from './elementReview/elementReviewDialog';
+   import GeneralReviewDialog from './generalReview/generalReviewDialog';
+   
+var ReviewDialogController = function (reviewService, hintController) {
+    var elementReviewDialog = new ElementReviewDialog(reviewService),
+        generalReviewDialog = new GeneralReviewDialog(reviewService, onGeneralReviewDialogExpansionChanged);
 
-    review.ReviewDialogController = function (reviewService, hintController) {
-        var constants = review.constants,
-            elementReviewDialog = new review.ElementReviewDialog(reviewService),
-            generalReviewDialog = new review.GeneralReviewDialog(reviewService, onGeneralReviewDialogExpansionChanged);
+    function onGeneralReviewDialogExpansionChanged() {
+        if (hintController.isGeneralReviewHintShown()) {
+            hintController.hideGeneralReviewHint();
+        }
 
-        function onGeneralReviewDialogExpansionChanged() {
-            if (hintController.isGeneralReviewHintShown()) {
-                hintController.hideGeneralReviewHint();
-            }
+        if (elementReviewDialog.isShown) {
+            elementReviewDialog.hide();
+        }
+    }
 
-            if (elementReviewDialog.isShown) {
-                elementReviewDialog.hide();
+    function showGeneralReviewDialog() {
+        generalReviewDialog.show();
+    }
+
+    function showElementReviewDialog($spot) {
+        if (generalReviewDialog.isExpanded) {
+            generalReviewDialog.toggleExpansion();
+        }
+
+        if (elementReviewDialog.isShown) {
+            var isShownForElement = elementReviewDialog.isShownForElement($spot);
+            elementReviewDialog.hide();
+            if (isShownForElement) {
+                return;
             }
         }
 
-        function showGeneralReviewDialog() {
-            generalReviewDialog.show();
+        elementReviewDialog.show($spot, constants.css.elementReviewDialog);
+    }
+
+    function updatePositionIfNeeded() {
+        if (elementReviewDialog.isShown) {
+            elementReviewDialog.updatePosition();
         }
+    }
 
-        function showElementReviewDialog($spot) {
-            if (generalReviewDialog.isExpanded) {
-                generalReviewDialog.toggleExpansion();
-            }
-
-            if (elementReviewDialog.isShown) {
-                var isShownForElement = elementReviewDialog.isShownForElement($spot);
-                elementReviewDialog.hide();
-                if (isShownForElement) {
-                    return;
-                }
-            }
-
-            elementReviewDialog.show($spot, constants.css.elementReviewDialog);
-        }
-
-        function updatePosition() {
-            if (elementReviewDialog.isShown) {
-                elementReviewDialog.updatePosition();
-            }
-        }
-
-        return {
-            showGeneralReviewDialog: showGeneralReviewDialog,
-            showElementReviewDialog: showElementReviewDialog,
-            updatePosition: updatePosition
-        };
+    return {
+        showGeneralReviewDialog: showGeneralReviewDialog,
+        showElementReviewDialog: showElementReviewDialog,
+        updatePositionIfNeeded: updatePositionIfNeeded
     };
+};
 
-})(window.review = window.review || {});
+module.exports = ReviewDialogController;

@@ -1,25 +1,20 @@
-﻿(function (plugins) {
-    'use strict';
-
+﻿import langs from './langs';
+       
     var LocalizationService = function () {
         var service = {
             locale: 'en'
         };
 
         function init(locale) {
-            if (!plugins.lang) {
-                throw 'Plugins lang is not initialized';
-            }
-
             service.locale = locale;
-            var lang = plugins.lang[service.locale];
+            var lang = langs[service.locale];
             if (!lang) {
                 service.locale = 'en';
             }
         }
 
         function localize(key) {
-            return plugins.lang[service.locale][key];
+            return langs[service.locale][key];
         }
 
         function localizeHtml(html) {
@@ -42,6 +37,5 @@
         };
     };
 
-    plugins.localizationService = new LocalizationService();
-
-})(window.plugins = window.plugins || {});
+var localizationService = new LocalizationService();
+module.exports = localizationService;

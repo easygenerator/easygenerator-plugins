@@ -2,13 +2,13 @@
   font-family: 'OpenSans';
   font-weight: normal;
   font-style: normal;
-  src: url('font/opensans-regular.woff') format('woff');
+  src: url(fonts/opensans-regular.woff) format('woff');
 }
 @font-face {
   font-family: 'OpenSans-Semibold';
   font-weight: normal;
   font-style: normal;
-  src: url('font/opensans-semibold.woff') format('woff');
+  src: url(fonts/opensans-semibold.woff) format('woff');
 }
 .review-spot-wrapper {
   font: 13px 'OpenSans';
@@ -18,7 +18,7 @@
   width: 32px;
   height: 32px;
   cursor: pointer;
-  background: url('img/review-sprites.png');
+  background: url(images/review-sprites.png);
   background-position: 0px -112px;
 }
 .review-spot-wrapper .review-spot:hover {
@@ -35,7 +35,7 @@
   border: 1px solid #c5ccd1;
   background-color: #fffddd;
   -webkit-box-shadow: 0 1px 3px 0 rgba(1, 1, 1, 0.2);
-  box-shadow: 0 1px 3px 0 rgba(1, 1, 1, 0.2);
+          box-shadow: 0 1px 3px 0 rgba(1, 1, 1, 0.2);
 }
 .review-hint.shown {
   display: block;
@@ -48,122 +48,117 @@
   content: '';
   background-color: #fffddd;
   -webkit-box-shadow: -2px 2px 1px -1px rgba(1, 1, 1, 0.3);
-  box-shadow: -2px 2px 1px -1px rgba(1, 1, 1, 0.3);
+          box-shadow: -2px 2px 1px -1px rgba(1, 1, 1, 0.3);
 }
-.review-hint.left,
-.review-hint.right {
+.review-hint.left, .review-hint.right {
   -webkit-animation-duration: 0.7s;
-  animation-duration: 0.7s;
+          animation-duration: 0.7s;
   -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
+          animation-fill-mode: both;
   -webkit-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
   -webkit-animation-name: pulsation-left-right;
-  animation-name: pulsation-left-right;
+          animation-name: pulsation-left-right;
 }
 @-webkit-keyframes pulsation-left-right {
   0% {
     -webkit-transform: translateX(0px);
-    transform: translateX(0px);
+            transform: translateX(0px);
   }
   50% {
     -webkit-transform: translateX(3px);
-    transform: translateX(3px);
+            transform: translateX(3px);
   }
   100% {
     -webkit-transform: translateX(0px);
-    transform: translateX(0px);
+            transform: translateX(0px);
   }
 }
 @keyframes pulsation-left-right {
   0% {
     -webkit-transform: translateX(0px);
-    transform: translateX(0px);
+            transform: translateX(0px);
   }
   50% {
     -webkit-transform: translateX(3px);
-    transform: translateX(3px);
+            transform: translateX(3px);
   }
   100% {
     -webkit-transform: translateX(0px);
-    transform: translateX(0px);
+            transform: translateX(0px);
   }
 }
-.review-hint.left:before,
-.review-hint.right:before {
+.review-hint.left:before, .review-hint.right:before {
   top: 50%;
 }
 .review-hint.right:before {
   left: -3px;
   -webkit-transform: translateY(-50%) rotate(45deg);
-  transform: translateY(-50%) rotate(45deg);
+          transform: translateY(-50%) rotate(45deg);
 }
 .review-hint.left:before {
   right: -3px;
   -webkit-transform: translateY(-50%) rotate(225deg);
-  transform: translateY(-50%) rotate(225deg);
+          transform: translateY(-50%) rotate(225deg);
 }
-.review-hint.bottom,
-.review-hint.top {
+.review-hint.bottom, .review-hint.top {
   -webkit-animation-duration: 0.7s;
-  animation-duration: 0.7s;
+          animation-duration: 0.7s;
   -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
+          animation-fill-mode: both;
   -webkit-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
   -webkit-animation-name: pulsation-top-bottom;
-  animation-name: pulsation-top-bottom;
+          animation-name: pulsation-top-bottom;
 }
 @-webkit-keyframes pulsation-top-bottom {
   0% {
     -webkit-transform: translateY(0px);
-    transform: translateY(0px);
+            transform: translateY(0px);
   }
   50% {
     -webkit-transform: translateY(3px);
-    transform: translateY(3px);
+            transform: translateY(3px);
   }
   100% {
     -webkit-transform: translateY(0px);
-    transform: translateY(0px);
+            transform: translateY(0px);
   }
 }
 @keyframes pulsation-top-bottom {
   0% {
     -webkit-transform: translateY(0px);
-    transform: translateY(0px);
+            transform: translateY(0px);
   }
   50% {
     -webkit-transform: translateY(3px);
-    transform: translateY(3px);
+            transform: translateY(3px);
   }
   100% {
     -webkit-transform: translateY(0px);
-    transform: translateY(0px);
+            transform: translateY(0px);
   }
 }
-.review-hint.bottom:before,
-.review-hint.top:before {
+.review-hint.bottom:before, .review-hint.top:before {
   left: 50%;
   margin-left: -5px;
 }
 .review-hint.bottom:before {
   top: 2px;
   -webkit-transform: translateY(-50%) rotate(135deg);
-  transform: translateY(-50%) rotate(135deg);
+          transform: translateY(-50%) rotate(135deg);
 }
 .review-hint.top:before {
   bottom: -9px;
   -webkit-transform: translateY(-50%) rotate(-45deg);
-  transform: translateY(-50%) rotate(-45deg);
+          transform: translateY(-50%) rotate(-45deg);
 }
 .review-hint.general-review-hint {
   position: fixed;
   right: 55px;
   bottom: 45px;
 }
-.review-hint .review-hint-text-wrapper,
-.review-hint .review-hint-action-wrapper {
+.review-hint .review-hint-text-wrapper, .review-hint .review-hint-action-wrapper {
   display: table-cell;
   vertical-align: middle;
 }
@@ -199,7 +194,7 @@
   border: 1px solid #d1dae0;
   background-color: #fff;
   -webkit-box-shadow: 0 1px 3px 0 rgba(1, 1, 1, 0.2);
-  box-shadow: 0 1px 3px 0 rgba(1, 1, 1, 0.2);
+          box-shadow: 0 1px 3px 0 rgba(1, 1, 1, 0.2);
 }
 .review-dialog .comments-header {
   font-family: 'OpenSans-Semibold';
@@ -215,8 +210,8 @@
   color: white;
   background-color: #546677;
   -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
   border-top-left-radius: 5px;
 }
 .review-dialog .comments-header:hover {
@@ -226,8 +221,8 @@
   margin-left: 24px;
   padding-left: 10px;
   -webkit-box-flex: 1;
-  -ms-flex: 1 0;
-  flex: 1 0;
+      -ms-flex: 1 0;
+          flex: 1 0;
 }
 .review-dialog .comments-header .comment-header-text:before {
   position: absolute;
@@ -237,7 +232,7 @@
   width: 20px;
   height: 17px;
   content: '';
-  background: url('img/review-sprites.png');
+  background: url(images/review-sprites.png);
   background-position: -7px -59px;
 }
 .review-dialog .comments-header .comments-expander {
@@ -245,12 +240,12 @@
   height: 9px;
   margin-right: 12px;
   content: '';
-  background: url('img/review-sprites.png');
+  background: url(images/review-sprites.png);
   background-position: -7px -45px;
   -webkit-transition: all .2s linear;
   transition: all .2s linear;
   -webkit-transform-origin: 50% 50%;
-  transform-origin: 50% 50%;
+          transform-origin: 50% 50%;
 }
 .review-dialog.element-review-dialog {
   position: absolute;
@@ -264,7 +259,7 @@
   content: '';
   background-color: #fff;
   -webkit-box-shadow: -2px 2px 1px -1px rgba(1, 1, 1, 0.3);
-  box-shadow: -2px 2px 1px -1px rgba(1, 1, 1, 0.3);
+          box-shadow: -2px 2px 1px -1px rgba(1, 1, 1, 0.3);
 }
 .review-dialog.element-review-dialog.top {
   bottom: 45px;
@@ -278,9 +273,9 @@
 .review-dialog.element-review-dialog.top:before {
   bottom: -9px;
   -webkit-box-shadow: -2px 2px 1px -1px rgba(1, 1, 1, 0.3);
-  box-shadow: -2px 2px 1px -1px rgba(1, 1, 1, 0.3);
+          box-shadow: -2px 2px 1px -1px rgba(1, 1, 1, 0.3);
   -webkit-transform: translateY(-50%) rotate(-45deg);
-  transform: translateY(-50%) rotate(-45deg);
+          transform: translateY(-50%) rotate(-45deg);
 }
 .review-dialog.element-review-dialog.bottom {
   top: 45px;
@@ -294,9 +289,9 @@
 .review-dialog.element-review-dialog.bottom:before {
   top: 2px;
   -webkit-box-shadow: -2px 2px 0px -1px rgba(1, 1, 1, 0.2);
-  box-shadow: -2px 2px 0px -1px rgba(1, 1, 1, 0.2);
+          box-shadow: -2px 2px 0px -1px rgba(1, 1, 1, 0.2);
   -webkit-transform: translateY(-50%) rotate(135deg);
-  transform: translateY(-50%) rotate(135deg);
+          transform: translateY(-50%) rotate(135deg);
 }
 .review-dialog.element-review-dialog.left {
   right: -20px;
@@ -313,7 +308,7 @@
 .review-dialog.element-review-dialog.middle {
   left: 10px;
   -webkit-transform: translateX(-50%);
-  transform: translateX(-50%);
+          transform: translateX(-50%);
 }
 .review-dialog.element-review-dialog.middle:before {
   left: 50%;
@@ -351,14 +346,14 @@
   border-left: 1px solid #d7d7d7;
   border-top-left-radius: 7px;
   -webkit-box-shadow: 0 2px 5px #d7d7d7;
-  box-shadow: 0 2px 5px #d7d7d7;
+          box-shadow: 0 2px 5px #d7d7d7;
 }
 .review-dialog.general-review-dialog.expanded {
   bottom: 0;
 }
 .review-dialog.general-review-dialog.expanded .comments-header .comments-expander {
   -webkit-transform: rotate(180deg);
-  transform: rotate(180deg);
+          transform: rotate(180deg);
 }
 .review-dialog.general-review-dialog .close-dialog-btn {
   display: none;
@@ -382,7 +377,7 @@
   position: relative;
   width: 100%;
   -webkit-box-shadow: none;
-  box-shadow: none;
+          box-shadow: none;
   overflow: hidden;
 }
 .review-dialog .add-comment-form .identify-user-wrapper {
@@ -421,7 +416,7 @@
   outline: none;
   background-color: transparent;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
   width: 100%;
 }
 .review-dialog .add-comment-form .identify-user-wrapper .identify-user-row input:focus {
@@ -466,7 +461,7 @@
   border-radius: 3px;
   outline: none;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
   height: 162px;
 }
 .review-dialog .add-comment-form .message-wrapper .comment-text-block.placeholder {
@@ -486,7 +481,7 @@
 .review-dialog .add-comment-form .message-wrapper .comment-text-block.message.error {
   border: 1px solid #f16162;
   -webkit-box-shadow: inset 0 0 3px #f16162;
-  box-shadow: inset 0 0 3px #f16162;
+          box-shadow: inset 0 0 3px #f16162;
 }
 .review-dialog .add-comment-form .comment-action-wrapper {
   font-size: 13px;
@@ -511,7 +506,7 @@
   display: block;
   width: 20px;
   content: '';
-  background: url('img/review-sprites.png');
+  background: url(images/review-sprites.png);
 }
 .review-dialog .add-comment-form .comment-action-wrapper .comment-status-message.success {
   padding-top: 8px;
@@ -519,7 +514,7 @@
 }
 .review-dialog .add-comment-form .comment-action-wrapper .comment-status-message.success:before {
   height: 14px;
-  background: url('img/review-sprites.png');
+  background: url(images/review-sprites.png);
   background-position: -7px -10px;
 }
 .review-dialog .add-comment-form .comment-action-wrapper .comment-status-message.fail:before {
@@ -531,8 +526,7 @@
   display: inline-block;
   float: right;
 }
-.review-dialog .add-comment-form .comment-action-wrapper .comment-actions .cancel-btn .btn-title,
-.review-dialog .add-comment-form .comment-action-wrapper .comment-actions .comment-btn .btn-title {
+.review-dialog .add-comment-form .comment-action-wrapper .comment-actions .cancel-btn .btn-title, .review-dialog .add-comment-form .comment-action-wrapper .comment-actions .comment-btn .btn-title {
   display: inline-block;
   overflow: hidden;
   max-width: 100%;

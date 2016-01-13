@@ -1,38 +1,41 @@
-(function (review) {
-    'use strict';
+import constants from './../../infrastructure/constants';
+import CommentForm from './../commentForm/commentForm';
+import htmlMarkupProvider from './../../infrastructure/htmlMarkupProvider';
+import controls from './../controls/controls';
+import generalReviewDialogHtml from './generalReviewDialog.html';
+     
+var GeneralReviewDialog = function (reviewService, onExpansionChanhed) {
+    var commentForm = new CommentForm(reviewService),
+        $dialog = $(htmlMarkupProvider.getHtmlMarkup(generalReviewDialogHtml)),
+        expandCollapseBtn = new controls.Button($dialog, constants.selectors.commentsHeader),
+        dialog = {
+            show: show,
+            isExpanded: false,
+            toggleExpansion: toggleExpansion
+        };
 
-    review.GeneralReviewDialog = function (reviewService, onExpansionChanhed) {
-        var constants = review.constants,
-            commentForm = new review.CommentForm(reviewService),
-            $dialog = $(review.htmlMarkupProvider.getHtmlMarkup('{{generalReviewDialog.html}}')),
-            expandCollapseBtn = new review.controls.Button($dialog, constants.selectors.commentsHeader),
-            dialog = {
-                show: show,
-                isExpanded: false,
-                toggleExpansion: toggleExpansion
-            };
+    $dialog.find(constants.selectors.addCommentForm).replaceWith(commentForm.$element);
+    expandCollapseBtn.click(toggleExpansion);
 
-        $dialog.find(constants.selectors.addCommentForm).replaceWith(commentForm.$element);
-        expandCollapseBtn.click(toggleExpansion);
+    return dialog;
 
-        return dialog;
+    function show() {
+        $dialog.appendTo(constants.selectors.body);
+        commentForm.init();
+    }
 
-        function show() {
-            $dialog.appendTo(constants.selectors.body);
+    function toggleExpansion() {
+        var isExpanded = $dialog.hasClass(constants.css.expanded);
+        $dialog.toggleClass(constants.css.expanded);
+        dialog.isExpanded = false;
+
+        if (!isExpanded) {
             commentForm.init();
+            dialog.isExpanded = true;
         }
 
-        function toggleExpansion() {
-            var isExpanded = $dialog.hasClass(constants.css.expanded);
-            $dialog.toggleClass(constants.css.expanded);
-            dialog.isExpanded = false;
+        onExpansionChanhed();
+    }
+};
 
-            if (!isExpanded) {
-                commentForm.init();
-                dialog.isExpanded = true;
-            }
-
-            onExpansionChanhed();
-        }
-    };
-})(window.review = window.review || {});
+module.exports = GeneralReviewDialog;

@@ -1,58 +1,77 @@
-﻿(function (review) {
-    'use strict';
+﻿import ReviewService from './reviewService';
+import HintController from './hints/hintController';
+import SpotController from './spots/spotController';
+import ReviewDialogController from './dialogs/ReviewDialogController';
+import WindowEventTracker from './infrastructure/domInteraction/windowEventTracker';
+import localizationService from './../localization/localizationService';
 
-    review.ReviewPlugin = function () {
-        var spotController = null,
-            hintController = null,
-            dialogController = null;
+import styles from './css/review.less';
 
-        function init(settings) {
-            if ($ === undefined) {
-                throw 'Easygenerator review requires jQuery';
-            }
+var Plugin = function () {
+    var spotController = null,
+        hintController = null,
+        dialogController = null;
 
-            if (!settings) {
-                throw 'Failed to initialize review plugin. Settings are not defined.';
-            }
-
-            if (!settings.reviewApiUrl) {
-                throw 'Failed to initialize review plugin. Review api url is invalid.';
-            }
-
-            if (!settings.courseId) {
-                throw 'Failed to initialize review plugin. Course id is invalid.';
-            }
-
-            var reviewService = new review.ReviewService(settings.reviewApiUrl, settings.courseId);
-            hintController = new review.HintController(),
-            dialogController = new review.ReviewDialogController(reviewService, hintController),
-            spotController = new review.SpotController(hintController, dialogController);
-
-            var windowResizeTracker = new review.WindowResizeTracker();
-
-            windowResizeTracker.track(function () {
-                spotController.hideSpots();
-                hintController.hideHints();
-            }, function () {
-                spotController.showSpots();
-                hintController.showHintsIfNeeded();
-                dialogController.updatePosition();
-            });
-
-            if (!settings.hideGeneralReviewDialog) {
-                dialogController.showGeneralReviewDialog();
-            }
+    function init(settings) {
+        debugger;
+        if ($ === undefined) {
+            throw 'Easygenerator review requires jQuery';
         }
 
-        function renderSpots() {
-            spotController.renderSpots();
+        if (!settings) {
+            throw 'Failed to initialize review plugin. Settings are not defined.';
+        }
+        
+        if (!settings.locale) {
+            throw 'Failed to initialize review plugin. Settings locale is not defined.';
+        }
+
+        if (!settings.reviewApiUrl) {
+            throw 'Failed to initialize review plugin. Review api url is invalid.';
+        }
+
+        if (!settings.courseId) {
+            throw 'Failed to initialize review plugin. Course id is invalid.';
+        }
+
+        localizationService.init(settings.locale);
+
+        var reviewService = new ReviewService(settings.reviewApiUrl, settings.courseId);
+        hintController = new HintController(),
+        dialogController = new ReviewDialogController(reviewService, hintController),
+        spotController = new SpotController(hintController, dialogController);
+
+        var windowEventTracker = new WindowEventTracker();
+
+        windowEventTracker.trackWindowResize(function () {
+            spotController.hideSpots();
+            hintController.hideHints();
+        }, function () {
+            spotController.showSpots();
             hintController.showHintsIfNeeded();
+            dialogController.updatePositionIfNeeded();
+        });
+
+        dialogController.showGeneralReviewDialog();
+    }
+
+    function renderSpots() {
+        if (!spotController||!hintController) {
+            throw 'Easygenerator review plugin is not initialized.';
         }
+            
+        spotController.renderSpots();
+        hintController.showHintsIfNeeded();
+    }
 
-        return {
-            init: init,
-            renderSpots: renderSpots
-        };
+    return {
+        init: init,
+        renderSpots: renderSpots
     };
-
-})(window.review = window.review || {});
+};
+    
+window.easygeneratorPlugins= {
+    ReviewPlugin: Plugin
+};
+    
+module.exports = Plugin;
