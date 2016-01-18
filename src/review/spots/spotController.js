@@ -39,7 +39,6 @@ class SpotController{
     }
 
     renderSpot($element) {
-        var that = this;
         var spotId = getReviewSpotIdAttachedToElement($element);
         if (spotId) {
             var spot = this.spotCollection.getSpotById(spotId);

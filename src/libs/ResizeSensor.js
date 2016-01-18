@@ -84,7 +84,6 @@
             var expand = element.resizeSensor.childNodes[0];
             var expandChild = expand.childNodes[0];
             var shrink = element.resizeSensor.childNodes[1];
-            var shrinkChild = shrink.childNodes[0];
 
             var lastWidth, lastHeight;
 
