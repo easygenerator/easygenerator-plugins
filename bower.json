@@ -4,6 +4,7 @@
   "authors": [
     "easygenerator team"
   ],
+  "homepage": "https://github.com/easygenerator/easygenerator-plugins",
   "license": "ISC",
   "keywords": [
     "easygenerator",
@@ -17,6 +18,10 @@
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "tests",
+    "src",
+    "package.json",
+    "update-resources.bat",
+    "webpack.config.js"
   ]
 }
