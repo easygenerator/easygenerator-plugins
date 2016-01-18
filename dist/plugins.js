@@ -45,10 +45,15 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
+	__webpack_require__(39);
 	__webpack_require__(10);
 	__webpack_require__(40);
 	__webpack_require__(41);
-	module.exports = __webpack_require__(42);
+	__webpack_require__(42);
+	__webpack_require__(43);
+	__webpack_require__(44);
+	__webpack_require__(49);
+	module.exports = __webpack_require__(51);
 
 
 /***/ },
@@ -71,21 +76,17 @@
 
 	var _hintController2 = _interopRequireDefault(_hintController);
 
-	var _spotController = __webpack_require__(23);
+	var _spotController = __webpack_require__(22);
 
 	var _spotController2 = _interopRequireDefault(_spotController);
 
-	var _dialogController = __webpack_require__(28);
+	var _dialogController = __webpack_require__(27);
 
 	var _dialogController2 = _interopRequireDefault(_dialogController);
 
-	var _eventTracker = __webpack_require__(39);
+	var _eventTracker = __webpack_require__(38);
 
 	var _eventTracker2 = _interopRequireDefault(_eventTracker);
-
-	var _windowPluginsObjectExtender = __webpack_require__(20);
-
-	var _windowPluginsObjectExtender2 = _interopRequireDefault(_windowPluginsObjectExtender);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -143,7 +144,7 @@
 	    return Plugin;
 	}();
 
-	new _windowPluginsObjectExtender2.default().extend('ReviewPlugin', Plugin);
+	window.ReviewPlugin = Plugin;
 
 	exports.default = Plugin;
 
@@ -218,7 +219,7 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _clientContext = __webpack_require__(22);
+	var _clientContext = __webpack_require__(21);
 
 	var _clientContext2 = _interopRequireDefault(_clientContext);
 
@@ -336,7 +337,7 @@
 
 	var _htmlMarkupProvider2 = _interopRequireDefault(_htmlMarkupProvider);
 
-	var _hint = __webpack_require__(21);
+	var _hint = __webpack_require__(20);
 
 	var _hint2 = _interopRequireDefault(_hint);
 
@@ -882,10 +883,6 @@
 
 	var _langs2 = _interopRequireDefault(_langs);
 
-	var _windowPluginsObjectExtender = __webpack_require__(20);
-
-	var _windowPluginsObjectExtender2 = _interopRequireDefault(_windowPluginsObjectExtender);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -938,7 +935,7 @@
 
 	var localizationService = new LocalizationService();
 
-	new _windowPluginsObjectExtender2.default().extend('localizationService', localizationService);
+	window.pluginsLocalizationService = localizationService;
 
 	exports.default = localizationService;
 
@@ -1203,45 +1200,10 @@
 /* 20 */
 /***/ function(module, exports) {
 
-	"use strict";
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var WindowPluginsObjectExtender = function () {
-	    function WindowPluginsObjectExtender() {
-	        _classCallCheck(this, WindowPluginsObjectExtender);
-	    }
-
-	    _createClass(WindowPluginsObjectExtender, [{
-	        key: "extend",
-	        value: function extend(key, value) {
-	            if (!window.easygeneratorPlugins) {
-	                window.easygeneratorPlugins = {};
-	            }
-
-	            window.easygeneratorPlugins[key] = value;
-	        }
-	    }]);
-
-	    return WindowPluginsObjectExtender;
-	}();
-
-	exports.default = WindowPluginsObjectExtender;
-
-/***/ },
-/* 21 */
-/***/ function(module, exports) {
-
 	module.exports = "<div class=\"review-hint\">\r\n    <div class=\"review-hint-text-wrapper\">\r\n        <div class=\"review-hint-text\"></div>\r\n    </div>\r\n    <div class=\"review-hint-action-wrapper\">\r\n        <button class=\"review-hint-btn btn\">{{gotIt}}</button>\r\n    </div>\r\n</div>\r\n";
 
 /***/ },
-/* 22 */
+/* 21 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1280,7 +1242,7 @@
 	module.exports = clientContext;
 
 /***/ },
-/* 23 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1295,15 +1257,15 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _SpotCollection = __webpack_require__(24);
+	var _SpotCollection = __webpack_require__(23);
 
 	var _SpotCollection2 = _interopRequireDefault(_SpotCollection);
 
-	var _Spot = __webpack_require__(25);
+	var _Spot = __webpack_require__(24);
 
 	var _Spot2 = _interopRequireDefault(_Spot);
 
-	var _multiEventTracker = __webpack_require__(38);
+	var _multiEventTracker = __webpack_require__(37);
 
 	var _multiEventTracker2 = _interopRequireDefault(_multiEventTracker);
 
@@ -1358,7 +1320,6 @@
 	    }, {
 	        key: 'renderSpot',
 	        value: function renderSpot($element) {
-	            var that = this;
 	            var spotId = getReviewSpotIdAttachedToElement($element);
 	            if (spotId) {
 	                var spot = this.spotCollection.getSpotById(spotId);
@@ -1386,7 +1347,7 @@
 	exports.default = spotController;
 
 /***/ },
-/* 24 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1397,7 +1358,7 @@
 	    value: true
 	});
 
-	var _Spot = __webpack_require__(25);
+	var _Spot = __webpack_require__(24);
 
 	var _Spot2 = _interopRequireDefault(_Spot);
 
@@ -1493,7 +1454,7 @@
 	exports.default = SpotCollection;
 
 /***/ },
-/* 25 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1504,11 +1465,11 @@
 	    value: true
 	});
 
-	var _spotPositioner = __webpack_require__(26);
+	var _spotPositioner = __webpack_require__(25);
 
 	var _spotPositioner2 = _interopRequireDefault(_spotPositioner);
 
-	var _spot = __webpack_require__(27);
+	var _spot = __webpack_require__(26);
 
 	var _spot2 = _interopRequireDefault(_spot);
 
@@ -1520,7 +1481,7 @@
 
 	var _htmlMarkupProvider2 = _interopRequireDefault(_htmlMarkupProvider);
 
-	var _dialogController = __webpack_require__(28);
+	var _dialogController = __webpack_require__(27);
 
 	var _dialogController2 = _interopRequireDefault(_dialogController);
 
@@ -1594,7 +1555,7 @@
 	exports.default = Spot;
 
 /***/ },
-/* 26 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1701,13 +1662,13 @@
 	exports.default = SpotPositioner;
 
 /***/ },
-/* 27 */
+/* 26 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"review-spot-wrapper\">\r\n    <div class=\"review-spot\"></div>\r\n</div>";
 
 /***/ },
-/* 28 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1722,11 +1683,11 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _dialog = __webpack_require__(29);
+	var _dialog = __webpack_require__(28);
 
 	var _dialog2 = _interopRequireDefault(_dialog);
 
-	var _dialog3 = __webpack_require__(36);
+	var _dialog3 = __webpack_require__(35);
 
 	var _dialog4 = _interopRequireDefault(_dialog3);
 
@@ -1796,7 +1757,7 @@
 	exports.default = dialogController;
 
 /***/ },
-/* 29 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1811,7 +1772,7 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _commentForm = __webpack_require__(30);
+	var _commentForm = __webpack_require__(29);
 
 	var _commentForm2 = _interopRequireDefault(_commentForm);
 
@@ -1819,15 +1780,15 @@
 
 	var _htmlMarkupProvider2 = _interopRequireDefault(_htmlMarkupProvider);
 
-	var _controls = __webpack_require__(32);
+	var _controls = __webpack_require__(31);
 
 	var _controls2 = _interopRequireDefault(_controls);
 
-	var _dialogPositioner = __webpack_require__(34);
+	var _dialogPositioner = __webpack_require__(33);
 
 	var _dialogPositioner2 = _interopRequireDefault(_dialogPositioner);
 
-	var _dialog = __webpack_require__(35);
+	var _dialog = __webpack_require__(34);
 
 	var _dialog2 = _interopRequireDefault(_dialog);
 
@@ -1930,7 +1891,7 @@
 	exports.default = Dialog;
 
 /***/ },
-/* 30 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1945,7 +1906,7 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _clientContext = __webpack_require__(22);
+	var _clientContext = __webpack_require__(21);
 
 	var _clientContext2 = _interopRequireDefault(_clientContext);
 
@@ -1953,11 +1914,11 @@
 
 	var _htmlMarkupProvider2 = _interopRequireDefault(_htmlMarkupProvider);
 
-	var _CommentFormControls = __webpack_require__(31);
+	var _CommentFormControls = __webpack_require__(30);
 
 	var _CommentFormControls2 = _interopRequireDefault(_CommentFormControls);
 
-	var _commentForm = __webpack_require__(33);
+	var _commentForm = __webpack_require__(32);
 
 	var _commentForm2 = _interopRequireDefault(_commentForm);
 
@@ -2098,7 +2059,7 @@
 	exports.default = CommentForm;
 
 /***/ },
-/* 31 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2111,7 +2072,7 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _controls = __webpack_require__(32);
+	var _controls = __webpack_require__(31);
 
 	var _controls2 = _interopRequireDefault(_controls);
 
@@ -2178,7 +2139,7 @@
 	exports.default = CommentFormControls;
 
 /***/ },
-/* 32 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2339,13 +2300,13 @@
 	exports.default = controls;
 
 /***/ },
-/* 33 */
+/* 32 */
 /***/ function(module, exports) {
 
 	module.exports = "<form class=\"add-comment-form\">\r\n    <div class=\"message-wrapper\">\r\n        <div class=\"add-comment-form-title\">{{leaveYourComment}}</div>\r\n        <textarea class=\"comment-text-block message\" placeholder=\"{{typeYourCommentHere}}\"></textarea>\r\n    </div>\r\n    <div class=\"identify-user-wrapper\">\r\n        <div class=\"identify-user-title\">{{identifyMessage}}</div>\r\n        <div class=\"identify-user-row\">\r\n            <input class=\"name-input\" type=\"text\" />\r\n            <label>{{name}}</label>\r\n            <span class=\"error-message name\">{{enterYourNameError}}</span>\r\n        </div>\r\n        <div class=\"identify-user-row\">\r\n            <input class=\"email-input\" type=\"email\" />\r\n            <label>{{email}}</label>\r\n            <span class=\"error-message email\">{{enterValidEmailError}}</span>\r\n        </div>\r\n    </div>\r\n    <div class=\"comment-action-wrapper\">\r\n        <div class=\"comment-status-message success\" title=\"{{commentWasSent}}\">{{commentWasSent}}</div>\r\n        <div class=\"comment-status-message fail\" title=\"{{commentWasNotSent}}\">{{commentWasNotSent}}<br />{{tryAgain}}</div>\r\n        <div class=\"comment-actions\">\r\n            <button title=\"{{cancel}}\" class=\"cancel-btn\">{{cancel}}</button>\r\n            <button title=\"{{postComment}}\" class=\"comment-btn\">{{postComment}}</button>\r\n        </div>\r\n    </div>\r\n</form>";
 
 /***/ },
-/* 34 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2398,13 +2359,13 @@
 	exports.default = DialogPositioner;
 
 /***/ },
-/* 35 */
+/* 34 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"review-dialog element-review-dialog\">\r\n    <button class=\"close-dialog-btn\"></button>\r\n    <form class=\"add-comment-form\">\r\n    </form>\r\n</div>";
 
 /***/ },
-/* 36 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2419,7 +2380,7 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _commentForm = __webpack_require__(30);
+	var _commentForm = __webpack_require__(29);
 
 	var _commentForm2 = _interopRequireDefault(_commentForm);
 
@@ -2427,11 +2388,11 @@
 
 	var _htmlMarkupProvider2 = _interopRequireDefault(_htmlMarkupProvider);
 
-	var _controls = __webpack_require__(32);
+	var _controls = __webpack_require__(31);
 
 	var _controls2 = _interopRequireDefault(_controls);
 
-	var _dialog = __webpack_require__(37);
+	var _dialog = __webpack_require__(36);
 
 	var _dialog2 = _interopRequireDefault(_dialog);
 
@@ -2520,13 +2481,13 @@
 	//module.exports = GeneralReviewDialog;
 
 /***/ },
-/* 37 */
+/* 36 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"review-dialog general-review-dialog\">\r\n    <div class=\"comments-header\">\r\n        <div class=\"comment-header-text\">{{leaveGeneralComment}}</div>\r\n        <div class=\"comments-expander\"></div>\r\n    </div>\r\n    <form class=\"add-comment-form\">\r\n    </form>\r\n</div>";
 
 /***/ },
-/* 38 */
+/* 37 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2645,7 +2606,7 @@
 	exports.default = MultiEventTracker;
 
 /***/ },
-/* 39 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2656,7 +2617,7 @@
 	    value: true
 	});
 
-	var _multiEventTracker = __webpack_require__(38);
+	var _multiEventTracker = __webpack_require__(37);
 
 	var _multiEventTracker2 = _interopRequireDefault(_multiEventTracker);
 
@@ -2697,7 +2658,7 @@
 	exports.default = EventTracker;
 
 /***/ },
-/* 40 */
+/* 39 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2782,7 +2743,6 @@
 	            var expand = element.resizeSensor.childNodes[0];
 	            var expandChild = expand.childNodes[0];
 	            var shrink = element.resizeSensor.childNodes[1];
-	            var shrinkChild = shrink.childNodes[0];
 
 	            var lastWidth, lastHeight;
 
@@ -2862,7 +2822,684 @@
 	})();
 
 /***/ },
+/* 40 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	(function () {
+	    'use strict';
+
+	    function BranchtrackProvider() {
+	        var instances = {},
+	            messageProvider = 'branchtrack',
+	            supportedMessageTypes = {
+	            init: 'branchtrack:player:init', //first time init
+	            start: 'branchtrack:player:start', //start of playing, t.i. before first scene appear, including on restart
+	            scene: 'branchtrack:player:scene', //new scene shown
+	            choice: 'branchtrack:player:choice', //user hit the choice
+	            finish: 'branchtrack:player:finish' //user reached last scene
+	        };
+
+	        return {
+	            create: createInstance,
+	            destroy: destroyInstance,
+	            instances: instances
+	        };
+
+	        function createInstance(projectId) {
+	            if (!projectId) {
+	                return;
+	            }
+
+	            if (isEmpty(instances)) {
+	                subscribeMessageEvent();
+	            }
+
+	            var branchtrack = new BranchtrackInstance(projectId);
+
+	            instances[projectId] = branchtrack;
+	            return branchtrack;
+	        }
+
+	        function destroyInstance(instance) {
+	            if (typeof instances[instance.projectId] !== 'undefined') {
+	                delete instances[instance.projectId];
+	            }
+
+	            if (isEmpty(instances)) {
+	                unsubscribeMessageEvent();
+	            }
+	        }
+
+	        function subscribeMessageEvent() {
+	            window.addEventListener('message', messageEventHadler);
+	        }
+
+	        function unsubscribeMessageEvent() {
+	            window.removeEventListener('message', messageEventHadler);
+	        }
+
+	        function messageEventHadler(event) {
+	            var data = JSON.parse(event.data);
+	            if (data.provider !== messageProvider) {
+	                return;
+	            }
+	            var projectId = data.details.project.permalink,
+	                messageDataType = data.type,
+	                branchtrackInstance = instances[projectId];
+
+	            if (typeof branchtrackInstance === 'undefined' || branchtrackInstance === null) {
+	                return;
+	            }
+
+	            if (messageDataType === supportedMessageTypes.scene && data.details.scene.score > 0) {
+	                branchtrackInstance.score = data.details.scene.score;
+	            }
+
+	            if (messageDataType === supportedMessageTypes.finish) {
+	                branchtrackInstance.isFinished = true;
+	            }
+	        }
+
+	        function isEmpty(obj) {
+	            for (var key in obj) {
+	                if (Object.prototype.hasOwnProperty.call(obj, key)) {
+	                    return false;
+	                }
+	            }
+
+	            return true;
+	        }
+	    }
+
+	    window.Branchtrack = BranchtrackProvider();
+
+	    function BranchtrackInstance(projectId) {
+	        this.projectId = projectId;
+	        this.score = 0;
+	        this.isFinished = false;
+	    }
+
+	    BranchtrackInstance.prototype = {
+	        reset: function reset() {
+	            this.score = 0;
+	            this.isFinished = false;
+	        },
+	        destroy: function destroy() {
+	            window.Branchtrack.destroy(this);
+	        }
+	    };
+	})();
+
+/***/ },
 /* 41 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	(function () {
+	    'use strict';
+
+	    var classList = {
+	        tooltipWrapper: 'tl-wrapper',
+	        tooltipArrowWrapper: 'tl-arrow-wrapper',
+	        tooltipArrow: 'tl-arrow',
+	        tooltipTextWrapper: 'tl-text-wrapper',
+	        top: 'top',
+	        bottom: 'bottom',
+	        infoContainer: 'info-container',
+	        mouseover: 'mouseover'
+	    };
+
+	    var isTouchDevice = function isTouchDevice() {
+	        return 'ontouchstart' in window || navigator.MaxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+	    },
+	        getElementsByAttribute = function getElementsByAttribute(parent, attr) {
+	        var matchingElements = [];
+	        var allElements = parent.getElementsByTagName('*');
+	        for (var i = 0, l = allElements.length; i < l; i++) {
+	            if (allElements[i].getAttribute(attr) !== null) {
+	                matchingElements.push(allElements[i]);
+	            }
+	        }
+	        return matchingElements;
+	    },
+	        defer = function defer(callback) {
+	        setTimeout(function () {
+	            if (typeof callback === 'function') {
+	                callback();
+	            }
+	        });
+	    },
+	        config = {
+	        useContainerOffsetLeft: false,
+	        units: 'px'
+	    };
+
+	    var Tooltip = function () {
+	        var tooltip;
+
+	        function init() {
+	            var domElement = 'div',
+	                tooltipElement = document.createElement(domElement),
+	                arrowWrapper = document.createElement(domElement),
+	                arrow = document.createElement(domElement),
+	                textWrapper = document.createElement(domElement);
+
+	            buildMarkup();
+
+	            bindEvents();
+
+	            return {
+	                show: show,
+	                hide: hide,
+	                element: tooltipElement
+	            };
+
+	            function show(container, element, text) {
+	                if (text !== '') {
+	                    container.appendChild(tooltipElement);
+	                    textWrapper.textContent = text;
+	                    arrow.style.display = 'block';
+	                    tooltipElement.style.display = 'block';
+	                    var infoContainer = element.getElementsByClassName(classList.infoContainer)[0],
+	                        infoContainerHeight = infoContainer.offsetHeight - 5,
+	                        arrowHalfWidth = 0,
+	                        windowWidth = window.innerWidth,
+	                        browserScrollWidth = 20,
+	                        spotBounds = {
+	                        width: element.offsetWidth,
+	                        height: element.offsetHeight,
+	                        clientTop: element.getBoundingClientRect().top,
+	                        clientLeft: element.getBoundingClientRect().left,
+	                        top: element.offsetTop,
+	                        left: element.offsetLeft,
+	                        centerPosition: {
+	                            top: element.offsetTop + element.offsetHeight / 2,
+	                            left: element.offsetLeft + element.offsetWidth / 2
+	                        }
+	                    },
+	                        tooltipBounds = {
+	                        width: tooltipElement.offsetWidth,
+	                        heigth: tooltipElement.offsetHeight,
+	                        top: 0,
+	                        left: 0
+	                    },
+	                        tooltipClientRect = null;
+
+	                    if (tooltipBounds.heigth < spotBounds.clientTop + infoContainerHeight) {
+	                        tooltipElement.classList.remove(classList.bottom);
+	                        tooltipElement.classList.add(classList.top);
+	                        tooltipBounds.top = spotBounds.centerPosition.top - infoContainerHeight - tooltipBounds.heigth;
+	                    } else {
+	                        tooltipElement.classList.remove(classList.top);
+	                        tooltipElement.classList.add(classList.bottom);
+	                        tooltipBounds.top = spotBounds.centerPosition.top + infoContainerHeight;
+	                    }
+
+	                    arrowHalfWidth = arrow.offsetWidth / 2;
+	                    tooltipElement.style.top = tooltipBounds.top + config.units;
+
+	                    tooltipBounds.left = spotBounds.centerPosition.left - tooltipBounds.width * 0.5;
+	                    arrow.style.left = spotBounds.centerPosition.left - tooltipBounds.left - arrowHalfWidth + config.units;
+
+	                    tooltipElement.style.left = tooltipBounds.left + config.units;
+	                    tooltipClientRect = tooltipElement.getBoundingClientRect();
+	                    if (tooltipClientRect.bottom > window.innerHeight) {
+	                        tooltipElement.style.top = tooltipBounds.top - (tooltipClientRect.bottom - window.innerHeight) + config.units;
+	                        arrow.style.display = 'none';
+	                    }
+
+	                    var tempLeft = tooltipBounds.left;
+
+	                    if (tooltipClientRect.left < 0) {
+	                        tooltipBounds.left = tempLeft - tooltipClientRect.left;
+	                        tooltipElement.style.left = tooltipBounds.left + config.units;
+	                        arrow.style.left = spotBounds.centerPosition.left - tempLeft + tooltipClientRect.left - arrowHalfWidth + config.units;
+	                    }if (tooltipClientRect.right > windowWidth) {
+	                        tooltipBounds.left = tempLeft + (windowWidth - tooltipClientRect.right) - browserScrollWidth;
+	                        tooltipElement.style.left = tooltipBounds.left + config.units;
+	                        arrow.style.left = spotBounds.centerPosition.left - tempLeft - (windowWidth - tooltipClientRect.right) + browserScrollWidth - arrowHalfWidth + config.units;
+	                    }
+
+	                    if (config.useContainerOffsetLeft) {
+	                        if (tooltipBounds.left + container.offsetLeft < 0) {
+	                            tooltipElement.style.left = tooltipBounds.left + container.offsetLeft + config.units;
+	                            arrow.style.left = parseInt(arrow.style.left) - container.offsetLeft + config.units;
+	                        }
+	                    }
+	                }
+	            }
+
+	            function hide() {
+	                var parentNode = tooltipElement.parentNode;
+	                tooltipElement.classList.remove(classList.bottom);
+	                tooltipElement.classList.remove(classList.top);
+	                if (parentNode) {
+	                    parentNode.removeChild(tooltipElement);
+	                } else {
+	                    tooltipElement.style.display = 'block';
+	                }
+	            }
+
+	            function buildMarkup() {
+	                tooltipElement.classList.add(classList.tooltipWrapper);
+	                arrowWrapper.classList.add(classList.tooltipArrowWrapper);
+	                arrow.classList.add(classList.tooltipArrow);
+	                textWrapper.classList.add(classList.tooltipTextWrapper);
+
+	                arrowWrapper.appendChild(arrow);
+	                tooltipElement.appendChild(arrowWrapper);
+	                tooltipElement.appendChild(textWrapper);
+	            }
+
+	            function bindEvents() {
+	                window.addEventListener('resize', function () {
+	                    hide();
+	                });
+
+	                if (isTouchDevice()) {
+	                    tooltipElement.addEventListener('click', function (event) {
+	                        event.stopPropagation();
+	                    });
+	                    document.addEventListener('click', function (event) {
+	                        hide();
+	                    });
+	                } else {
+	                    tooltipElement.addEventListener('mouseenter', function () {
+	                        tooltipElement.classList.add(classList.mouseover);
+	                    });
+
+	                    tooltipElement.addEventListener('mouseleave', function (event) {
+	                        tooltipElement.classList.remove(classList.mouseover);
+	                        hide();
+	                    });
+	                }
+	            }
+	        }
+
+	        return {
+	            getInstance: function getInstance() {
+	                if (!tooltip) {
+	                    tooltip = init();
+	                }
+	                return tooltip;
+	            }
+	        };
+	    }();
+
+	    var Spot = function Spot(element, container, ratio) {
+	        var that = this;
+	        that.element = element;
+	        that.defaultTopStyle = parseFloat(element.style.top);
+	        that.defaultLeftStyle = parseFloat(element.style.left);
+	        that.defaultWidthStyle = parseFloat(element.style.width);
+	        that.defaultHeightStyle = parseFloat(element.style.height);
+	        that.text = element.getAttribute('data-text');
+
+	        var tooltip = Tooltip.getInstance();
+
+	        that.hide = function () {
+	            element.style.display = 'none';
+	        };
+
+	        that.show = function () {
+	            that.element.style.display = 'inline-block';
+	        };
+
+	        that.updatePosition = function (ratio) {
+	            that.element.style.top = that.defaultTopStyle * ratio + config.units;
+	            that.element.style.left = that.defaultLeftStyle * ratio + config.units;
+	            that.element.style.width = that.defaultWidthStyle * ratio + config.units;
+	            that.element.style.height = that.defaultHeightStyle * ratio + config.units;
+	        };
+
+	        init();
+
+	        function init() {
+	            if (that.text !== '' && typeof that.text !== 'undefined') {
+	                var infoElement = document.createElement('span');
+	                infoElement.classList.add(classList.infoContainer);
+	                that.element.appendChild(infoElement);
+	                that.hide();
+	                if (isTouchDevice()) {
+	                    that.element.addEventListener('click', function (event) {
+	                        tooltip.show(container, that.element, that.text);
+	                        event.stopPropagation();
+	                    });
+	                } else {
+
+	                    that.element.addEventListener('mouseenter', function (event) {
+	                        defer(function () {
+	                            tooltip.show(container, that.element, that.text);
+	                        });
+	                    });
+
+	                    that.element.addEventListener('mouseleave', function (event) {
+	                        var e = event.toElement || event.relatedTarget;
+	                        if (e && e == tooltip.element) {
+	                            return;
+	                        }
+
+	                        defer(function () {
+	                            if (!tooltip.element.classList.contains(classList.mouseover)) {
+	                                tooltip.hide();
+	                            }
+	                        });
+	                    });
+	                }
+	            }
+	        }
+	    };
+
+	    window.HotspotOnImage = function (element, settings) {
+	        var that = this,
+	            resizeTimer,
+	            refreshRate = 250,
+	            settings = settings || {};
+	        that.element = element;
+	        that.renderedImage = that.element.getElementsByTagName('img')[0];
+	        that.spots = [];
+	        that.ratio = 1;
+	        that.defaultImageWidth = 0;
+
+	        if (typeof settings.useContainerOffsetLeft !== 'undefined') {
+	            config.useContainerOffsetLeft = settings.useContainerOffsetLeft;
+	        }
+
+	        init();
+
+	        function init() {
+	            generateSpots();
+	            loadImage();
+	        }
+
+	        function loadImage() {
+	            var image = new Image();
+	            image.onload = function () {
+	                that.defaultImageWidth = this.width;
+	                that.ratio = that.renderedImage.offsetWidth / that.defaultImageWidth;
+	                updateSpotsPosition();
+	            };
+	            image.src = that.renderedImage.getAttribute('src');
+	        }
+
+	        function generateSpots() {
+	            var spots = getElementsByAttribute(that.element, 'data-id');
+	            eachSpots(spots, function (spot) {
+	                that.spots.push(new Spot(spot, that.element, that.ratio));
+	            });
+	        }
+
+	        function updateSpotsPosition() {
+	            that.ratio = that.renderedImage.offsetWidth / that.defaultImageWidth;
+	            eachSpots(that.spots, function (spot) {
+	                spot.updatePosition(that.ratio);
+	                spot.show();
+	            });
+	        }
+
+	        function eachSpots(spots, callback) {
+	            var spotsLength = spots.length;
+	            for (var i = 0; i < spotsLength; i++) {
+	                if (typeof callback === 'function') {
+	                    callback.call(this, spots[i]);
+	                }
+	            }
+	        }
+
+	        window.addEventListener('resize', function () {
+	            eachSpots(that.spots, function (spot) {
+	                spot.hide();
+	            });
+	            clearTimeout(resizeTimer);
+	            resizeTimer = setTimeout(updateSpotsPosition, 250);
+	        });
+	    };
+	})();
+
+/***/ },
+/* 42 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	(function (supportedBrowser) {
+		var options = {};
+
+		supportedBrowser.configure = function (configurationOptions) {
+			options.browsers = configurationOptions.browsers || {};
+			options.browsers.win = extend(configurationOptions.browsers.win || {}, configurationOptions.globalBrowsersInfo);
+			options.browsers.mac = extend(configurationOptions.browsers.mac || {}, configurationOptions.globalBrowsersInfo);
+			options.browsers.linux = extend(configurationOptions.browsers.linux || {}, configurationOptions.globalBrowsersInfo);
+			options.browsers.android = extend(configurationOptions.browsers.android || {}, configurationOptions.globalBrowsersInfo);
+			options.browsers.ios = extend(configurationOptions.browsers.ios || {}, configurationOptions.globalBrowsersInfo);
+			options.browsers.winphone = extend(configurationOptions.browsers.winphone || {}, configurationOptions.globalBrowsersInfo);
+			options.browsers.blackberry = extend(configurationOptions.browsers.blackberry || {}, configurationOptions.globalBrowsersInfo);
+
+			options.mainAppContainerId = configurationOptions.mainAppContainerId;
+			options.debug = configurationOptions.debug;
+
+			return supportedBrowser;
+		};
+
+		supportedBrowser.init = function () {
+			if (!isBrowserSupported()) {
+				hideMainApp();
+				renderNotSupportedView();
+			}
+
+			if (options.debug) {
+				var browser = detectBrowser();
+				alert('Browser: ' + browser.name + '\nVersion: ' + browser.version + '\nPlatform: ' + browser.platform + '\n\nUser agent: \n' + navigator.userAgent);
+			}
+
+			return supportedBrowser;
+		};
+
+		function extend(targetBrowsers, globalBrowsers) {
+			var result = targetBrowsers;
+
+			for (var browser in targetBrowsers) {
+				if (!globalBrowsers[browser]) {
+					continue;
+				}
+
+				targetBrowsers[browser].image = targetBrowsers[browser].image || globalBrowsers[browser].image || null;
+				targetBrowsers[browser].title = targetBrowsers[browser].title || globalBrowsers[browser].title || null;
+				targetBrowsers[browser].link = targetBrowsers[browser].link || globalBrowsers[browser].link || null;
+				targetBrowsers[browser].version = targetBrowsers[browser].version || globalBrowsers[browser].version || null;
+			}
+
+			return result;
+		}
+
+		function isBrowserSupported() {
+			var browserInfo = detectBrowser();
+
+			if (!browserInfo.name || !browserInfo.version || !browserInfo.platform) {
+				return false;
+			}
+
+			var browser = options.browsers[browserInfo.platform][browserInfo.name];
+			return browser && (!browser.version || browser.version <= browserInfo.version);
+		}
+
+		function hideMainApp() {
+			var mainAppContainer = getById(options.mainAppContainerId),
+			    htmlContainer = document.getElementsByTagName("html")[0],
+			    bodyContainer = document.getElementsByTagName("body")[0];
+
+			supportedBrowser.originalPageStyles = {
+				mainContainerDisplay: mainAppContainer.style.display,
+				htmlContainerHeight: htmlContainer.style.height,
+				bodyContainerHeight: bodyContainer.style.height
+			};
+
+			mainAppContainer.style.display = 'none';
+			htmlContainer.style.height = '100%';
+			bodyContainer.style.height = '100%';
+		}
+
+		function showMainApp() {
+			getById(options.mainAppContainerId).style.display = supportedBrowser.originalPageStyles.mainContainerDisplay;
+			document.getElementsByTagName("html")[0].style.height = supportedBrowser.originalPageStyles.htmlContainerHeight;
+			document.getElementsByTagName("body")[0].style.height = supportedBrowser.originalPageStyles.bodyContainerHeight;
+		}
+
+		function detectBrowser() {
+			var ua = navigator.userAgent,
+			    matches = ua.match(/(opera|chrome|safari|firefox|msie|trident|opios|crios(?=\/))\/?\s*(\d+)/i) || [],
+			    browserName = matches[1],
+			    version = matches[2],
+			    temp;
+
+			// detect platform
+			var platform = (/(ipad)/i.exec(ua) || /(ipod)/i.exec(ua) || /(iphone)/i.exec(ua) || /(android)/i.exec(ua) || /(windows phone)/i.exec(ua) || /(win)/i.exec(ua) || /(mac)/i.exec(ua) || /(linux)/i.exec(ua) || /(blackberry)/i.exec(ua) || [])[0];
+
+			if (/(ipad|ipod|iphone)/i.exec(platform)) {
+				platform = 'ios';
+			} else if (/(windows phone)/i.exec(platform)) {
+				platform = 'winphone';
+			}
+
+			if (!matches[2]) {
+				browserName = navigator.appName;
+				version = navigator.appVersion;
+			}
+			if ((temp = ua.match(/version\/(\d+)/i)) != null) {
+				version = temp[1];
+			}
+
+			// hacks
+			if (/edge\/(\d+)/.exec(ua.toLowerCase())) {
+				browserName = 'edge';
+			} else if (/(trident)/i.exec(browserName)) {
+				temp = /\brv[ :]+(\d+)/g.exec(ua) || [];
+				browserName = 'msie';
+				version = temp[1] || '';
+			} else if (/(android)/i.exec(platform) && /(safari)/i.exec(browserName) || /(android)/i.exec(platform) && /(chrome)/i.exec(browserName) && /(version)/i.exec(ua)) {
+				browserName = 'native';
+			} else if (/(chrome)/i.exec(browserName)) {
+				temp = ua.match(/\bOPR\/(\d+)/);
+				if (temp != null) {
+					browserName = 'opera';
+					version = temp[1] || '';
+				}
+			} else if (/(crios)/i.exec(browserName)) {
+				browserName = 'chrome';
+			} else if (/(opios)/i.exec(browserName)) {
+				browserName = 'opera';
+			}
+
+			return {
+				name: browserName.toLowerCase(),
+				version: version,
+				platform: (platform || '').toLowerCase()
+			};
+		}
+
+		function renderNotSupportedView() {
+			var notSupportedViewHtml = '<table class="not-supported-page-bg-table" border="0" cellpadding="0" cellspacing="0">\
+		            <tr>\
+		                <td class="not-supported-page-top-bg" colspan="2">&nbsp;</td>\
+		            </tr>\
+		            <tr>\
+		                <td colspan="2">\
+		                    <div class="not-supported-page-toothed-bg">&nbsp;</div>\
+		                </td>\
+		            </tr>\
+		            <tr>\
+		                <td class="not-supported-page-bottom-bg" colspan="2">&nbsp;</td>\
+		            </tr>\
+		        </table>\
+		        <table class="not-supported-page-markup-table" border="0" cellpadding="0" cellspacing="0">\
+		            <tr>\
+		                <td colspan="3" class="not-supported-page-logo-wrapper">\
+		                    <div class="not-supported-page-logo">&nbsp;</div>\
+		                </td>\
+		            </tr>\
+		            <tr>\
+		                <td>&nbsp;</td>\
+		                <td class="not-supported-page-content-cell">\
+		                    <div class="not-supported-page-content">\
+		                        <h1 class="not-supported-page-caption">We can\'t guarantee that easygenerator will work perfectly on your current browser</h1>\
+		                        <a href="" id="skip-not-supported-page" class="not-supported-page-try-anyway-link">I still want to continue</a>\
+		                        <p class="not-supported-page-caption-description">We recommend that you upgrade your browser or use a fully supported browser. Click one of this icons below to install or upgrade.</p>\
+		                        <table class="supported-browsers-group" border="0" cellpadding="0" cellspacing="0">\
+		                            <tr>\
+		                                <td>&nbsp;</td>\
+										{0}\
+		                                <td>&nbsp;</td>\
+		                            </tr>\
+		                        </table>\
+		                    </div>\
+		                </td>\
+		                <td>&nbsp;</td>\
+		            </tr>\
+		            <tr>\
+		                <td>\
+		                    <div class="not-supported-page-bottom-aligner">&nbsp;</div>\
+		                </td>\
+		                <td>&nbsp;</td>\
+		                <td>&nbsp;</td>\
+		            </tr>\
+		        </table>';
+
+			var browserInfo = detectBrowser(),
+			    supportedBrowsers = options.browsers[browserInfo.platform];
+
+			var supportedBrowsersListHtml = '';
+			for (var browserName in supportedBrowsers) {
+				var browser = supportedBrowsers[browserName];
+
+				if (browser.link) {
+					supportedBrowsersListHtml += '<td class="supported-browser-item">\
+				            <a href="' + browser.link + '" class="supported-browser-container with-link" target="_blank">\
+				                <img class="supported-browser-image" src="' + browser.image + '" alt="">\
+				                <p class="supported-browser-title-wrapper">\
+				                    <span class="supported-browser-title">' + browser.title + '</span>\
+				                </p>\
+				            </a>\
+				        </td>';
+				} else {
+					supportedBrowsersListHtml += '<td class="supported-browser-item">\
+				            <div class="supported-browser-container">\
+				                <img class="supported-browser-image" src="' + browser.image + '" alt="">\
+				                <p class="supported-browser-title-wrapper">\
+				                    <span class="supported-browser-title">' + browser.title + '</span>\
+				                </p>\
+				            </div>\
+				        </td>';
+				}
+			}
+
+			notSupportedViewHtml = notSupportedViewHtml.replace('{0}', supportedBrowsersListHtml);
+
+			var notSupportedView = document.createElement('div');
+			notSupportedView.innerHTML = notSupportedViewHtml;
+			notSupportedView.id = 'not-supported-page';
+
+			var body = document.getElementsByTagName('body')[0];
+			body.appendChild(notSupportedView);
+
+			getById('skip-not-supported-page').onclick = function () {
+				notSupportedView.style.display = 'none';
+				showMainApp();
+				return false;
+			};
+
+			return notSupportedView;
+		}
+
+		function getById(id) {
+			return document.getElementById(id);
+		}
+	})(window.supportedBrowser = window.supportedBrowser || {});
+
+/***/ },
+/* 43 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2884,7 +3521,24 @@
 	})();
 
 /***/ },
-/* 42 */
+/* 44 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 45 */,
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 50 */,
+/* 51 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin

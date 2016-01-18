@@ -1,5 +1,4 @@
 ﻿import langs from './langs';
-import WindowPluginsObjectExtender from './../windowPluginsObjectExtender';
        
 class LocalizationService{
     constructor() {
@@ -39,6 +38,6 @@ class LocalizationService{
 
 var localizationService = new LocalizationService();
 
-new WindowPluginsObjectExtender().extend('localizationService', localizationService);
+window.pluginsLocalizationService = localizationService;
 
 export default localizationService;

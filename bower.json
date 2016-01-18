@@ -12,7 +12,6 @@
     "review"
   ],
   "moduleType": [],
-  "homepage": "",
   "ignore": [
     "**/.*",
     "node_modules",

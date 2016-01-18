@@ -10,10 +10,15 @@ module.exports = {
     context: __dirname,
     entry: [
         path.resolve(__dirname, 'src/review/plugin.js'),
-        path.resolve(__dirname, 'src/localization/localizationService.js'),
         path.resolve(__dirname, 'src/libs/ResizeSensor.js'),
+        path.resolve(__dirname, 'src/localization/localizationService.js'),
+        path.resolve(__dirname, 'src/branchtrack/branchtrackProvider.js'),
+        path.resolve(__dirname, 'src/hotspotOnAnImage/plugin.js'),
+        path.resolve(__dirname, 'src/supportedBrowser/plugin.js'),
         path.resolve(__dirname, 'src/fontLoader.js'),
-        path.resolve(__dirname, 'src/css/review.less')
+        path.resolve(__dirname, 'src/css/review.less'),
+        path.resolve(__dirname, 'src/css/hotspotOnAnImage.less'),
+        path.resolve(__dirname, 'src/css/supportedBrowser.less')
     ],
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -54,6 +59,11 @@ module.exports = {
 			    exclude: /node_modules/,
 			    loader: 'url?limit=1024&name=./img/[name].[ext]'
 			},
+            {
+                test: /\.(ttf|eot|woff)$/,
+                exclude: /node_modules/,
+                loader: 'url?limit=1024&name=./font/[name].[ext]'
+            },
 			{
 			    test: /\.html$/,
 			    exclude: /node_modules/,

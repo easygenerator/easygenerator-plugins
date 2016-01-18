@@ -3,7 +3,6 @@ import hintController from './hints/hintController';
 import spotController from './spots/spotController';
 import dialogController from './dialogs/dialogController';
 import EventTracker from './infrastructure/domInteraction/eventTracker';
-import WindowPluginsObjectExtender from './../windowPluginsObjectExtender';
 
 class Plugin{
     init(settings) {
@@ -47,6 +46,6 @@ class Plugin{
     }
 }
 
-new WindowPluginsObjectExtender().extend('ReviewPlugin', Plugin);
+window.ReviewPlugin = Plugin;
 
 export default Plugin;

@@ -1,0 +1,207 @@
+﻿@font-face {
+    font-family: 'RobotoCondensedRegular';
+    src: url('./font/robotocondensed-regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@notsupported-main-font: 'RobotoCondensedRegular',sans-serif;
+@notsupported-alternate-font: 'OpenSans',sans-serif;
+
+@notsupported-main-color: #469dd5;
+@notsupported-main-hover-color: #2f82b8;
+@notsupported-alternate-color: #546677;
+
+@pagecaption-font-size: 30px;
+@pagecaptiondesc-font-size: 13px;
+@browsertitle-font-size: 20px;
+@continue-anyway-font-size: 34px;
+
+@logo-background: url('img/easy-supported-browser-logo.png') 0 0 no-repeat;
+
+@top-part-background: url('img/easy-supported-browser-top-part-bg.png') 0 0 repeat;
+@middle-pard-background: url('img/easy-supported-browser-middle-part-bg.png') center center repeat-x;
+@bottom-part-background: #f9fafc;
+
+@supported-browser-container-background: url('img/easy-supported-browser-browser-bg.png') center bottom no-repeat;
+
+.transition (@transition) {
+    -webkit-transition: @transition;
+    -moz-transition: @transition;
+    -o-transition: @transition;
+    transition: @transition;
+}
+
+#not-supported-page {
+    height: 100%;
+
+    .not-supported-page-bg-table {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        min-height: 665px;
+
+        .not-supported-page-top-bg {
+            height: 61%;
+            background: @top-part-background;
+        }
+
+        .not-supported-page-toothed-bg {
+            height: 8px;
+            background: @middle-pard-background;
+        }
+
+        .not-supported-page-bottom-bg {
+            height: 50%;
+            background: @bottom-part-background;
+        }
+    }
+
+    .not-supported-page-markup-table {
+        height: 100%;
+        width: 100%;
+        vertical-align: middle;
+        position: relative;
+
+        .not-supported-page-logo-wrapper {
+            vertical-align: top;
+
+            .not-supported-page-logo {
+                height: 36px;
+                width: 200px;
+                margin: 30px;
+                
+                background: @logo-background;
+            }
+        }
+
+        .not-supported-page-content-cell {
+            padding: 0 30px;
+            text-align: center;
+            vertical-align: middle;
+            
+            .not-supported-page-content {
+                color: @notsupported-alternate-color;
+                font-family: @notsupported-alternate-font;
+                font-size: @pagecaptiondesc-font-size;
+                
+                .not-supported-page-caption {
+                    margin: 0 0 25px 0;
+                    text-align: center;
+                    color: @notsupported-alternate-color;
+                    font-family: @notsupported-main-font;
+                    font-size: @pagecaption-font-size;
+                    font-style: normal;
+                    font-weight: normal;
+                }
+        
+                .not-supported-page-caption-description {
+                    max-width: 650px;
+                    margin: 0 auto;
+                    padding: 80px 40px 15px;
+                    text-align: center;
+                    line-height: 26px;
+                }
+                
+                .not-supported-page-try-anyway-link {
+                    display: inline-block;
+                    line-height: @continue-anyway-font-size;
+                    border-bottom: 2px solid @notsupported-main-color;
+                    color: @notsupported-main-color;
+                    font-family: @notsupported-main-font;
+                    font-size: @continue-anyway-font-size;
+                    text-decoration: none;
+        
+        
+                    &:hover {
+                        border-bottom: 2px solid @notsupported-main-hover-color;
+                        color: @notsupported-main-hover-color;
+                    }
+                }
+            }
+        }
+
+        .supported-browsers-group {
+            width: 100%;
+            margin-bottom: 50px;
+            border-collapse: separate;
+            table-layout: fixed;
+
+            .supported-browser-item {
+                width: 200px;
+            }
+        }
+
+        .supported-browser-container {
+            display: block;
+            height: 208px;
+            width: 177px;
+            margin: 0 auto;
+            background: @supported-browser-container-background;
+            text-decoration: none;
+
+            &.with-link:hover {
+
+                .supported-browser-title {
+                    color: @notsupported-main-color;
+
+                    &:after {
+                        width: 100%;
+                        .transition(width 0.15s linear);
+                    }
+                }
+            }
+
+            .supported-browser-image {
+                width: 124px;
+                height: 128px;
+                margin-top: 20px;
+                border: none;
+                outline: 0;
+                vertical-align: top;
+            }
+
+            .supported-browser-title-wrapper {
+                height: 42px;
+                overflow: hidden;
+                
+                .supported-browser-title {
+                    line-height: 1;
+                    position: relative;
+                    color: @notsupported-alternate-color;
+                    font-family: @notsupported-main-font;
+                    font-size: @browsertitle-font-size;
+    
+                    &:after {
+                        content: '';
+                        display: block;
+                        height: 1px;
+                        width: 0;
+                        position: absolute;
+                        left: 0;
+                        bottom: -5px;
+                        background: @notsupported-main-color;
+                    }
+                }
+            }
+        }
+
+        .not-supported-page-bottom-aligner {
+            height: 66px;
+        }
+    }
+
+    @media (max-width: 800px) {
+        .markup-table {
+            .eg-logo-wrapper {
+                .eg-logo {
+                    margin: 30px auto 30px;
+                }
+            }
+
+            .content-cell {
+                width: 800px;
+            }
+        }
+    }
+}
