@@ -1,6 +1,6 @@
 # easygenerator-plugins
 
-Easygenerator 'Browser not supported' page.
+Collection of plugins to extend easygenerator templates functionality.
 
 ## Installation
 
@@ -27,17 +27,32 @@ bower install easygenerator-plugins
 </head>
 ```
 
+## Localization
+
+```
+easygeneratorPlugins.localizationService.init('en');
+```
+
 ## Review plugin
 
 If the course is opened for review, the query string parameter `'reviewApiUrl'` is added to url.
+
+### Mark element for review
+
+To mark an element for review, add `'reviewable'` class in the html markup.
+
+```
+ <li class="objective reviewable">
+    ...
+ </li>
+```
 
 ### Init plugin
 
 ```
 var reviewPlugin = new easygeneratorPlugins.ReviewPlugin();
 
-reviewPlugin.init({
-                locale: 'en',
+ reviewPlugin.init({
                 reviewApiUrl: decodeURIComponent(reviewApiUrl),
                 courseId: courseId
             });

@@ -3,7 +3,7 @@ import hintController from './hints/hintController';
 import spotController from './spots/spotController';
 import dialogController from './dialogs/dialogController';
 import EventTracker from './infrastructure/domInteraction/eventTracker';
-import localizationService from './../localization/localizationService';
+import WindowPluginsObjectExtender from './../windowPluginsObjectExtender';
 
 class Plugin{
     init(settings) {
@@ -14,10 +14,6 @@ class Plugin{
         if (!settings) {
             throw 'Failed to initialize review plugin. Settings are not defined.';
         }
-        
-        if (!settings.locale) {
-            throw 'Failed to initialize review plugin. Settings locale is not defined.';
-        }
 
         if (!settings.reviewApiUrl) {
             throw 'Failed to initialize review plugin. Review api url is invalid.';
@@ -27,7 +23,6 @@ class Plugin{
             throw 'Failed to initialize review plugin. Course id is invalid.';
         }
 
-        localizationService.init(settings.locale);
         reviewService.init(settings.reviewApiUrl, settings.courseId);     
         hintController.init();
         dialogController.init();
@@ -51,9 +46,7 @@ class Plugin{
         spotController.renderSpots();
     }
 }
-    
-window.easygeneratorPlugins= {
-    ReviewPlugin: Plugin
-};
+
+new WindowPluginsObjectExtender().extend('ReviewPlugin', Plugin);
 
 export default Plugin;

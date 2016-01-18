@@ -45,9 +45,10 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	__webpack_require__(39);
+	__webpack_require__(10);
 	__webpack_require__(40);
-	module.exports = __webpack_require__(41);
+	__webpack_require__(41);
+	module.exports = __webpack_require__(42);
 
 
 /***/ },
@@ -70,21 +71,21 @@
 
 	var _hintController2 = _interopRequireDefault(_hintController);
 
-	var _spotController = __webpack_require__(22);
+	var _spotController = __webpack_require__(23);
 
 	var _spotController2 = _interopRequireDefault(_spotController);
 
-	var _dialogController = __webpack_require__(27);
+	var _dialogController = __webpack_require__(28);
 
 	var _dialogController2 = _interopRequireDefault(_dialogController);
 
-	var _eventTracker = __webpack_require__(38);
+	var _eventTracker = __webpack_require__(39);
 
 	var _eventTracker2 = _interopRequireDefault(_eventTracker);
 
-	var _localizationService = __webpack_require__(10);
+	var _windowPluginsObjectExtender = __webpack_require__(20);
 
-	var _localizationService2 = _interopRequireDefault(_localizationService);
+	var _windowPluginsObjectExtender2 = _interopRequireDefault(_windowPluginsObjectExtender);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -106,10 +107,6 @@
 	                throw 'Failed to initialize review plugin. Settings are not defined.';
 	            }
 
-	            if (!settings.locale) {
-	                throw 'Failed to initialize review plugin. Settings locale is not defined.';
-	            }
-
 	            if (!settings.reviewApiUrl) {
 	                throw 'Failed to initialize review plugin. Review api url is invalid.';
 	            }
@@ -118,7 +115,6 @@
 	                throw 'Failed to initialize review plugin. Course id is invalid.';
 	            }
 
-	            _localizationService2.default.init(settings.locale);
 	            _reviewService2.default.init(settings.reviewApiUrl, settings.courseId);
 	            _hintController2.default.init();
 	            _dialogController2.default.init();
@@ -147,9 +143,7 @@
 	    return Plugin;
 	}();
 
-	window.easygeneratorPlugins = {
-	    ReviewPlugin: Plugin
-	};
+	new _windowPluginsObjectExtender2.default().extend('ReviewPlugin', Plugin);
 
 	exports.default = Plugin;
 
@@ -224,7 +218,7 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _clientContext = __webpack_require__(21);
+	var _clientContext = __webpack_require__(22);
 
 	var _clientContext2 = _interopRequireDefault(_clientContext);
 
@@ -342,7 +336,7 @@
 
 	var _htmlMarkupProvider2 = _interopRequireDefault(_htmlMarkupProvider);
 
-	var _hint = __webpack_require__(20);
+	var _hint = __webpack_require__(21);
 
 	var _hint2 = _interopRequireDefault(_hint);
 
@@ -888,6 +882,10 @@
 
 	var _langs2 = _interopRequireDefault(_langs);
 
+	var _windowPluginsObjectExtender = __webpack_require__(20);
+
+	var _windowPluginsObjectExtender2 = _interopRequireDefault(_windowPluginsObjectExtender);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -939,6 +937,9 @@
 	}();
 
 	var localizationService = new LocalizationService();
+
+	new _windowPluginsObjectExtender2.default().extend('localizationService', localizationService);
+
 	exports.default = localizationService;
 
 /***/ },
@@ -1202,10 +1203,45 @@
 /* 20 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"review-hint\">\r\n    <div class=\"review-hint-text-wrapper\">\r\n        <div class=\"review-hint-text\"></div>\r\n    </div>\r\n    <div class=\"review-hint-action-wrapper\">\r\n        <button class=\"review-hint-btn btn\">{{gotIt}}</button>\r\n    </div>\r\n</div>\r\n";
+	"use strict";
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var WindowPluginsObjectExtender = function () {
+	    function WindowPluginsObjectExtender() {
+	        _classCallCheck(this, WindowPluginsObjectExtender);
+	    }
+
+	    _createClass(WindowPluginsObjectExtender, [{
+	        key: "extend",
+	        value: function extend(key, value) {
+	            if (!window.easygeneratorPlugins) {
+	                window.easygeneratorPlugins = {};
+	            }
+
+	            window.easygeneratorPlugins[key] = value;
+	        }
+	    }]);
+
+	    return WindowPluginsObjectExtender;
+	}();
+
+	exports.default = WindowPluginsObjectExtender;
 
 /***/ },
 /* 21 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"review-hint\">\r\n    <div class=\"review-hint-text-wrapper\">\r\n        <div class=\"review-hint-text\"></div>\r\n    </div>\r\n    <div class=\"review-hint-action-wrapper\">\r\n        <button class=\"review-hint-btn btn\">{{gotIt}}</button>\r\n    </div>\r\n</div>\r\n";
+
+/***/ },
+/* 22 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1244,7 +1280,7 @@
 	module.exports = clientContext;
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1259,15 +1295,15 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _SpotCollection = __webpack_require__(23);
+	var _SpotCollection = __webpack_require__(24);
 
 	var _SpotCollection2 = _interopRequireDefault(_SpotCollection);
 
-	var _Spot = __webpack_require__(24);
+	var _Spot = __webpack_require__(25);
 
 	var _Spot2 = _interopRequireDefault(_Spot);
 
-	var _multiEventTracker = __webpack_require__(37);
+	var _multiEventTracker = __webpack_require__(38);
 
 	var _multiEventTracker2 = _interopRequireDefault(_multiEventTracker);
 
@@ -1350,7 +1386,7 @@
 	exports.default = spotController;
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1361,7 +1397,7 @@
 	    value: true
 	});
 
-	var _Spot = __webpack_require__(24);
+	var _Spot = __webpack_require__(25);
 
 	var _Spot2 = _interopRequireDefault(_Spot);
 
@@ -1457,7 +1493,7 @@
 	exports.default = SpotCollection;
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1468,11 +1504,11 @@
 	    value: true
 	});
 
-	var _spotPositioner = __webpack_require__(25);
+	var _spotPositioner = __webpack_require__(26);
 
 	var _spotPositioner2 = _interopRequireDefault(_spotPositioner);
 
-	var _spot = __webpack_require__(26);
+	var _spot = __webpack_require__(27);
 
 	var _spot2 = _interopRequireDefault(_spot);
 
@@ -1484,7 +1520,7 @@
 
 	var _htmlMarkupProvider2 = _interopRequireDefault(_htmlMarkupProvider);
 
-	var _dialogController = __webpack_require__(27);
+	var _dialogController = __webpack_require__(28);
 
 	var _dialogController2 = _interopRequireDefault(_dialogController);
 
@@ -1558,7 +1594,7 @@
 	exports.default = Spot;
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1665,13 +1701,13 @@
 	exports.default = SpotPositioner;
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"review-spot-wrapper\">\r\n    <div class=\"review-spot\"></div>\r\n</div>";
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1686,11 +1722,11 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _dialog = __webpack_require__(28);
+	var _dialog = __webpack_require__(29);
 
 	var _dialog2 = _interopRequireDefault(_dialog);
 
-	var _dialog3 = __webpack_require__(35);
+	var _dialog3 = __webpack_require__(36);
 
 	var _dialog4 = _interopRequireDefault(_dialog3);
 
@@ -1760,7 +1796,7 @@
 	exports.default = dialogController;
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1775,7 +1811,7 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _commentForm = __webpack_require__(29);
+	var _commentForm = __webpack_require__(30);
 
 	var _commentForm2 = _interopRequireDefault(_commentForm);
 
@@ -1783,15 +1819,15 @@
 
 	var _htmlMarkupProvider2 = _interopRequireDefault(_htmlMarkupProvider);
 
-	var _controls = __webpack_require__(31);
+	var _controls = __webpack_require__(32);
 
 	var _controls2 = _interopRequireDefault(_controls);
 
-	var _dialogPositioner = __webpack_require__(33);
+	var _dialogPositioner = __webpack_require__(34);
 
 	var _dialogPositioner2 = _interopRequireDefault(_dialogPositioner);
 
-	var _dialog = __webpack_require__(34);
+	var _dialog = __webpack_require__(35);
 
 	var _dialog2 = _interopRequireDefault(_dialog);
 
@@ -1894,7 +1930,7 @@
 	exports.default = Dialog;
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1909,7 +1945,7 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _clientContext = __webpack_require__(21);
+	var _clientContext = __webpack_require__(22);
 
 	var _clientContext2 = _interopRequireDefault(_clientContext);
 
@@ -1917,11 +1953,11 @@
 
 	var _htmlMarkupProvider2 = _interopRequireDefault(_htmlMarkupProvider);
 
-	var _CommentFormControls = __webpack_require__(30);
+	var _CommentFormControls = __webpack_require__(31);
 
 	var _CommentFormControls2 = _interopRequireDefault(_CommentFormControls);
 
-	var _commentForm = __webpack_require__(32);
+	var _commentForm = __webpack_require__(33);
 
 	var _commentForm2 = _interopRequireDefault(_commentForm);
 
@@ -2062,7 +2098,7 @@
 	exports.default = CommentForm;
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2075,7 +2111,7 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _controls = __webpack_require__(31);
+	var _controls = __webpack_require__(32);
 
 	var _controls2 = _interopRequireDefault(_controls);
 
@@ -2142,7 +2178,7 @@
 	exports.default = CommentFormControls;
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2303,13 +2339,13 @@
 	exports.default = controls;
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports) {
 
 	module.exports = "<form class=\"add-comment-form\">\r\n    <div class=\"message-wrapper\">\r\n        <div class=\"add-comment-form-title\">{{leaveYourComment}}</div>\r\n        <textarea class=\"comment-text-block message\" placeholder=\"{{typeYourCommentHere}}\"></textarea>\r\n    </div>\r\n    <div class=\"identify-user-wrapper\">\r\n        <div class=\"identify-user-title\">{{identifyMessage}}</div>\r\n        <div class=\"identify-user-row\">\r\n            <input class=\"name-input\" type=\"text\" />\r\n            <label>{{name}}</label>\r\n            <span class=\"error-message name\">{{enterYourNameError}}</span>\r\n        </div>\r\n        <div class=\"identify-user-row\">\r\n            <input class=\"email-input\" type=\"email\" />\r\n            <label>{{email}}</label>\r\n            <span class=\"error-message email\">{{enterValidEmailError}}</span>\r\n        </div>\r\n    </div>\r\n    <div class=\"comment-action-wrapper\">\r\n        <div class=\"comment-status-message success\" title=\"{{commentWasSent}}\">{{commentWasSent}}</div>\r\n        <div class=\"comment-status-message fail\" title=\"{{commentWasNotSent}}\">{{commentWasNotSent}}<br />{{tryAgain}}</div>\r\n        <div class=\"comment-actions\">\r\n            <button title=\"{{cancel}}\" class=\"cancel-btn\">{{cancel}}</button>\r\n            <button title=\"{{postComment}}\" class=\"comment-btn\">{{postComment}}</button>\r\n        </div>\r\n    </div>\r\n</form>";
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2362,13 +2398,13 @@
 	exports.default = DialogPositioner;
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"review-dialog element-review-dialog\">\r\n    <button class=\"close-dialog-btn\"></button>\r\n    <form class=\"add-comment-form\">\r\n    </form>\r\n</div>";
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2383,7 +2419,7 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _commentForm = __webpack_require__(29);
+	var _commentForm = __webpack_require__(30);
 
 	var _commentForm2 = _interopRequireDefault(_commentForm);
 
@@ -2391,11 +2427,11 @@
 
 	var _htmlMarkupProvider2 = _interopRequireDefault(_htmlMarkupProvider);
 
-	var _controls = __webpack_require__(31);
+	var _controls = __webpack_require__(32);
 
 	var _controls2 = _interopRequireDefault(_controls);
 
-	var _dialog = __webpack_require__(36);
+	var _dialog = __webpack_require__(37);
 
 	var _dialog2 = _interopRequireDefault(_dialog);
 
@@ -2484,13 +2520,13 @@
 	//module.exports = GeneralReviewDialog;
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"review-dialog general-review-dialog\">\r\n    <div class=\"comments-header\">\r\n        <div class=\"comment-header-text\">{{leaveGeneralComment}}</div>\r\n        <div class=\"comments-expander\"></div>\r\n    </div>\r\n    <form class=\"add-comment-form\">\r\n    </form>\r\n</div>";
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2609,7 +2645,7 @@
 	exports.default = MultiEventTracker;
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2620,7 +2656,7 @@
 	    value: true
 	});
 
-	var _multiEventTracker = __webpack_require__(37);
+	var _multiEventTracker = __webpack_require__(38);
 
 	var _multiEventTracker2 = _interopRequireDefault(_multiEventTracker);
 
@@ -2661,7 +2697,7 @@
 	exports.default = EventTracker;
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2826,7 +2862,7 @@
 	})();
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2848,7 +2884,7 @@
 	})();
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
