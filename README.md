@@ -77,7 +77,7 @@ Helper for easygenerator templates that support **Scenario question**
 
 For more information you can go to [JavaScript events API - BranchTrack](https://docs.branchtrack.com/events-api)
 
-## easy-supported-browser
+## Supported browser
 
 Easygenerator 'Browser not supported' page.
 
