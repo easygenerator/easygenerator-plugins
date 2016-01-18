@@ -46,7 +46,8 @@
 
 	__webpack_require__(1);
 	__webpack_require__(39);
-	module.exports = __webpack_require__(40);
+	__webpack_require__(40);
+	module.exports = __webpack_require__(41);
 
 
 /***/ },
@@ -115,10 +116,6 @@
 
 	            if (!settings.courseId) {
 	                throw 'Failed to initialize review plugin. Course id is invalid.';
-	            }
-
-	            if (!settings.appElementSelector) {
-	                throw 'Failed to initialize review plugin. App element selector is not defined.';
 	            }
 
 	            _localizationService2.default.init(settings.locale);
@@ -1832,7 +1829,7 @@
 	        value: function show($parent) {
 	            var that = this;
 	            this.$parent = $parent;
-	            this.$dialog.finish().css({ opacity: 0 }).removeClass(_constants2.default.css.shown).show().appendTo(this.$parent);
+	            this.$dialog.finish().css({ opacity: 0 }).removeClass(_constants2.default.css.shown).show().appendTo($parent);
 	            this.updatePosition();
 
 	            this.commentForm.init();
@@ -1840,8 +1837,8 @@
 	                that.$dialog.addClass(_constants2.default.css.shown);
 	            });
 
-	            this.$parent.on(_constants2.default.events.elementShown, this.updatePositionProxy);
-	            this.$parent.on(_constants2.default.events.elementDestroyed, this.detachProxy);
+	            $parent.on(_constants2.default.events.elementShown, this.updatePositionProxy);
+	            $parent.on(_constants2.default.events.elementDestroyed, this.detachProxy);
 
 	            $html.on('keyup', this.hideOnEscapeProxy);
 
@@ -1863,8 +1860,10 @@
 	                that.detach();
 	            });
 
-	            this.$parent.off(_constants2.default.events.elementShown, this.updatePositionProxy);
-	            this.$parent.off(_constants2.default.events.elementDestroyed, this.detachProxy);
+	            if (this.$parent) {
+	                this.$parent.off(_constants2.default.events.elementShown, this.updatePositionProxy);
+	                this.$parent.off(_constants2.default.events.elementDestroyed, this.detachProxy);
+	            }
 
 	            $html.off('keyup', this.hideOnEscapeProxy);
 	        }
@@ -2828,6 +2827,28 @@
 
 /***/ },
 /* 40 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	(function () {
+	    if (!WebFont) {
+	        var wf = document.createElement('script');
+	        wf.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+	        wf.type = 'text/javascript';
+	        var s = document.getElementsByTagName('script')[0];
+	        s.parentNode.insertBefore(wf, s);
+	    }
+
+	    WebFont.load({
+	        google: {
+	            families: ['Open+Sans:400,600:latin,cyrillic-ext']
+	        }
+	    });
+	})();
+
+/***/ },
+/* 41 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin

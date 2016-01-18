@@ -31,7 +31,7 @@ class Dialog{
     show($parent) {
         var that=this;
         this.$parent = $parent;
-        this.$dialog.finish().css({ opacity: 0 }).removeClass(constants.css.shown).show().appendTo(this.$parent);
+        this.$dialog.finish().css({ opacity: 0 }).removeClass(constants.css.shown).show().appendTo($parent);
         this.updatePosition();
 
         this.commentForm.init();
@@ -39,8 +39,8 @@ class Dialog{
             that.$dialog.addClass(constants.css.shown);
         });
 
-        this.$parent.on(constants.events.elementShown, this.updatePositionProxy);
-        this.$parent.on(constants.events.elementDestroyed, this.detachProxy);
+        $parent.on(constants.events.elementShown, this.updatePositionProxy);
+        $parent.on(constants.events.elementDestroyed, this.detachProxy);
 
         $html.on('keyup',  this.hideOnEscapeProxy);
 
@@ -60,8 +60,10 @@ class Dialog{
             that.detach();
         });
 
-        this.$parent.off(constants.events.elementShown, this.updatePositionProxy);
-        this.$parent.off(constants.events.elementDestroyed, this.detachProxy);
+        if (this.$parent) {
+            this.$parent.off(constants.events.elementShown, this.updatePositionProxy);
+            this.$parent.off(constants.events.elementDestroyed, this.detachProxy);
+        }
 
         $html.off('keyup',  this.hideOnEscapeProxy);
     }

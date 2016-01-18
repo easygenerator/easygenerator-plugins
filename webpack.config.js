@@ -11,6 +11,7 @@ module.exports = {
     entry: [
         path.resolve(__dirname, 'src/review/plugin.js'),
         path.resolve(__dirname, 'src/libs/ResizeSensor.js'),
+        path.resolve(__dirname, 'src/fontLoader.js'),
         path.resolve(__dirname, 'src/css/review.less')
     ],
     output: {
