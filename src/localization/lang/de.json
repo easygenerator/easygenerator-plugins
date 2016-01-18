@@ -1,0 +1,20 @@
+{
+    "commentWasNotSent": "Der Kommentar wurde nicht gesendet.",
+    "commentWasSent": "Der Kommentar wurde gesendet.",
+    "leaveYourComment": "Kommentieren Sie diesen Beitrag",
+    "send": "Kommentar posten",
+    "tryAgain": "Versuchen Sie es erneut.",
+    "yourMessage": "Ihre Nachricht tippen ...",
+    "identifyMessage": "Bitte identifizieren Sie sich",
+    "name": "Name",
+    "email": "E-Mail",
+    "enterValidEmailError": "Geben Sie eine gültige E-Mail ein",
+    "enterYourNameError": "Geben Sie Ihren Namen ein",
+    "gotIt": "Alles klar",
+    "elementReviewHint": "Klicken Sie auf das Symbol in der Nähe der Elemente, um den Kommentar zu hinterlassen.",
+    "generalReviewHint": "Klicken Sie auf den Bereich hier, um einen allgemeinen Kommentar zu hinterlassen.",
+    "leaveGeneralComment": "Allgemeinen Kommentar hinterlassen",
+    "typeYourCommentHere": "Schreiben Sie Ihren Kommentar hier...",
+    "cancel": "Abbrechen",
+    "postComment": "Kommentar posten"
+}

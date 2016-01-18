@@ -2,19 +2,21 @@ var path = require('path'),
 	webpack = require('webpack'),
 	autoprefixer = require('autoprefixer'),
 	precss = require('precss'),
-	commonsPlugin = new webpack.optimize.CommonsChunkPlugin('shared.js'),
 	ExtractTextPlugin = require('extract-text-webpack-plugin'),
 	CleanWebpackPlugin = require('clean-webpack-plugin')
 ;
 
 module.exports = {
-    context: path.resolve('.'),
-    entry: {
-        'review': path.resolve(__dirname, 'review/plugin.js')
-    },
+    context: __dirname,
+    entry: [
+        path.resolve(__dirname, 'src/review/plugin.js'),
+        path.resolve(__dirname, 'src/libs/ResizeSensor.js'),
+        path.resolve(__dirname, 'src/css/review.less')
+    ],
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: '[name].js'
+        filename: 'plugins.js',
+        pathInfo: true
     },
     resolve: {
         modulesDirectories: ['node_modules']
@@ -25,14 +27,16 @@ module.exports = {
 		    verbose: true,
 		    dry: false
 		}),
-		commonsPlugin,
-		new ExtractTextPlugin('[name].css')
+		new ExtractTextPlugin('styles.css')
     ],
     module: {
         loaders: [
 			{
 			    test: /\.js$/,
 			    exclude: /node_modules/,
+			    include: [
+                     __dirname
+			    ],
 			    loader: 'babel',
 			    query: {
 			        presets: ['es2015']
@@ -47,11 +51,6 @@ module.exports = {
 			    test: /\.(jpg|jpe?g|gif|png)$/,
 			    exclude: /node_modules/,
 			    loader: 'url?limit=1024&name=./img/[name].[ext]'
-			},
-			{
-			    test: /\.(ttf|eot|woff)$/,
-			    exclude: /node_modules/,
-			    loader: 'url?limit=1024&name=./font/[name].[ext]'
 			},
 			{
 			    test: /\.html$/,

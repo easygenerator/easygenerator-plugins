@@ -1,0 +1,20 @@
+{
+    "commentWasNotSent": "评论没有发送",
+    "commentWasSent": "评论已发送",
+    "leaveYourComment": "发表评论",
+    "send": "发布评论",
+    "tryAgain": "重试",
+    "yourMessage": "输入您的消息...",
+    "identifyMessage": "请填写您自己的相关信息",
+    "name": "姓名",
+    "email": "电子邮件",
+    "enterValidEmailError": "输入有效电子邮件",
+    "enterYourNameError": "输入您的姓名",
+    "gotIt": "我明白了",
+    "elementReviewHint": "点击元素附近的图标发表评论。",
+    "generalReviewHint": "点击面板此处发表一般评论。",
+    "leaveGeneralComment": "发表一般评论",
+    "typeYourCommentHere": "请在此处输入您的评论...",
+    "cancel": "取消",
+    "postComment": "发布评论"
+}

@@ -1,0 +1,20 @@
+{
+    "commentWasNotSent": "Le commentaire n'a pas été envoyé.",
+    "commentWasSent": "Le commentaire a été envoyé",
+    "leaveYourComment": "Laissez votre commentaire",
+    "send": "Publiez le commentaire",
+    "tryAgain": "Réessayer",
+    "yourMessage": "Saisissez votre message...",
+    "identifyMessage": "Veuillez vous identifier",
+    "name": "Nom",
+    "email": "Adresse email",
+    "enterValidEmailError": "Veuillez saisir une adresse email valide",
+    "enterYourNameError": "Veuillez saisir votre nom",
+    "gotIt": "Récupéré",
+    "elementReviewHint": "Pour laisser un commentaire, cliquez sur l'icône en regard de l'élément concerné.",
+    "generalReviewHint": "Cliquez ici sur le panneau pour laisser le commentaire général.",
+    "leaveGeneralComment": "Laisser un commentaire général",
+    "typeYourCommentHere": "Saisissez votre commentaire ici...",
+    "cancel": "Annuler",
+    "postComment": "Publier un commentaire"
+}
