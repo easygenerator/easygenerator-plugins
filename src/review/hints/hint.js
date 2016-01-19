@@ -3,8 +3,6 @@ import constants from './../infrastructure/constants';
 import htmlMarkupProvider from './../infrastructure/htmlMarkupProvider';
 import hintHtml from './hint.html';
 
-var hintPositioner = new HintPositioner();
-
 class Hint{
     constructor(text, css, gotItHandler){
         this.isShown = false;
@@ -65,7 +63,7 @@ class Hint{
 
     updatePosition(){
         if(this.$spot){
-            hintPositioner.updatePosition(this);
+            HintPositioner().updatePosition(this);
         }
     }
 }

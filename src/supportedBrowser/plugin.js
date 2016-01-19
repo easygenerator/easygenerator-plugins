@@ -30,6 +30,8 @@
 
 		return supportedBrowser;
 	}
+    
+    supportedBrowser.isBrowserSupported = isBrowserSupported;
 
 	function extend(targetBrowsers, globalBrowsers) {
 		var result = targetBrowsers;

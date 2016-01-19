@@ -345,8 +345,6 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var hintPositioner = new _hintPositioner2.default();
-
 	var Hint = function () {
 	    function Hint(text, css, gotItHandler) {
 	        _classCallCheck(this, Hint);
@@ -414,7 +412,7 @@
 	        key: 'updatePosition',
 	        value: function updatePosition() {
 	            if (this.$spot) {
-	                hintPositioner.updatePosition(this);
+	                (0, _hintPositioner2.default)().updatePosition(this);
 	            }
 	        }
 	    }]);
@@ -1273,6 +1271,10 @@
 
 	var _hintController2 = _interopRequireDefault(_hintController);
 
+	var _dialogController = __webpack_require__(27);
+
+	var _dialogController2 = _interopRequireDefault(_dialogController);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1300,6 +1302,7 @@
 	        key: 'updatePositions',
 	        value: function updatePositions() {
 	            this.spotCollection.updatePositions();
+	            _dialogController2.default.updatePositionIfNeeded();
 	        }
 	    }, {
 	        key: 'renderSpots',
@@ -1493,8 +1496,6 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var spotPositioner = new _spotPositioner2.default();
-
 	var Spot = function () {
 	    function Spot(id, $contextElement) {
 	        _classCallCheck(this, Spot);
@@ -1539,7 +1540,7 @@
 	    }, {
 	        key: 'updatePosition',
 	        value: function updatePosition() {
-	            spotPositioner.updatePosition(this);
+	            new _spotPositioner2.default().updatePosition(this);
 	        }
 	    }, {
 	        key: 'remove',
@@ -1796,21 +1797,20 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var $html = $('html');
-
 	var Dialog = function () {
 	    function Dialog() {
 	        _classCallCheck(this, Dialog);
 
 	        var that = this;
 	        this.isShown = false;
+	        this.$html = $('html');
 	        this.dialogPositioner = new _dialogPositioner2.default();
 	        this.$dialog = $(_htmlMarkupProvider2.default.getHtmlMarkup(_dialog2.default));
 	        this.commentForm = new _commentForm2.default(function () {
 	            that.hide();
 	        });
 
-	        var closeBtn = new _controls2.default.Button(this.$dialog, _constants2.default.selectors.closeDialogBtn);
+	        var closeBtn = _controls2.default.Button(this.$dialog, _constants2.default.selectors.closeDialogBtn);
 	        closeBtn.click(function () {
 	            that.hide();
 	        });
@@ -1837,7 +1837,7 @@
 	            $parent.on(_constants2.default.events.elementShown, this.updatePositionProxy);
 	            $parent.on(_constants2.default.events.elementDestroyed, this.detachProxy);
 
-	            $html.on('keyup', this.hideOnEscapeProxy);
+	            this.$html.on('keyup', this.hideOnEscapeProxy);
 
 	            this.isShown = true;
 	        }
@@ -1862,7 +1862,7 @@
 	                this.$parent.off(_constants2.default.events.elementDestroyed, this.detachProxy);
 	            }
 
-	            $html.off('keyup', this.hideOnEscapeProxy);
+	            this.$html.off('keyup', this.hideOnEscapeProxy);
 	        }
 	    }, {
 	        key: 'updatePosition',
@@ -2080,13 +2080,13 @@
 
 	var CommentFormControls = function CommentFormControls($dialog) {
 	    var formControls = {
-	        cancelBtn: new Button(_constants2.default.selectors.cancelBtn),
-	        submitBtn: new Button(_constants2.default.selectors.commentBtn),
+	        cancelBtn: Button(_constants2.default.selectors.cancelBtn),
+	        submitBtn: Button(_constants2.default.selectors.commentBtn),
 
-	        commentStatusMessage: new CommentStatusMessage(),
+	        commentStatusMessage: CommentStatusMessage(),
 
-	        messageForm: new MessageForm(),
-	        identifyForm: new IdentifyForm()
+	        messageForm: MessageForm(),
+	        identifyForm: IdentifyForm()
 	    };
 
 	    return formControls;
@@ -2094,8 +2094,8 @@
 	    function CommentStatusMessage() {
 	        var control = Control.call(this, _constants2.default.selectors.commentStatusMessage);
 
-	        control.success = new Message(_constants2.default.selectors.commentStatusMessage + _constants2.default.selectors.success);
-	        control.fail = new Message(_constants2.default.selectors.commentStatusMessage + _constants2.default.selectors.fail);
+	        control.success = Message(_constants2.default.selectors.commentStatusMessage + _constants2.default.selectors.success);
+	        control.fail = Message(_constants2.default.selectors.commentStatusMessage + _constants2.default.selectors.fail);
 
 	        return control;
 	    }
@@ -2103,7 +2103,7 @@
 	    function MessageForm() {
 	        var control = Control.call(this, _constants2.default.selectors.messageWrapper);
 
-	        control.messageField = new TextField(_constants2.default.selectors.message);
+	        control.messageField = TextField(_constants2.default.selectors.message);
 
 	        return control;
 	    }
@@ -2111,28 +2111,28 @@
 	    function IdentifyForm() {
 	        var control = Control.call(this, _constants2.default.selectors.identifyUserWrapper);
 
-	        control.nameField = new TextField(_constants2.default.selectors.nameInput);
-	        control.mailField = new TextField(_constants2.default.selectors.mailInput);
-	        control.nameErrorMessage = new Message(_constants2.default.selectors.errorMessage + _constants2.default.selectors.name);
-	        control.mailErrorMassage = new Message(_constants2.default.selectors.errorMessage + _constants2.default.selectors.email);
+	        control.nameField = TextField(_constants2.default.selectors.nameInput);
+	        control.mailField = TextField(_constants2.default.selectors.mailInput);
+	        control.nameErrorMessage = Message(_constants2.default.selectors.errorMessage + _constants2.default.selectors.name);
+	        control.mailErrorMassage = Message(_constants2.default.selectors.errorMessage + _constants2.default.selectors.email);
 
 	        return control;
 	    }
 
 	    function Message(selector) {
-	        return new _controls2.default.Message($dialog, selector);
+	        return _controls2.default.Message($dialog, selector);
 	    }
 
 	    function Button(selector) {
-	        return new _controls2.default.Button($dialog, selector);
+	        return _controls2.default.Button($dialog, selector);
 	    }
 
 	    function TextField(selector) {
-	        return new _controls2.default.TextField($dialog, selector);
+	        return _controls2.default.TextField($dialog, selector);
 	    }
 
 	    function Control(selector) {
-	        return new _controls2.default.Control($dialog, selector);
+	        return _controls2.default.Control($dialog, selector);
 	    }
 	};
 
@@ -2303,7 +2303,7 @@
 /* 32 */
 /***/ function(module, exports) {
 
-	module.exports = "<form class=\"add-comment-form\">\r\n    <div class=\"message-wrapper\">\r\n        <div class=\"add-comment-form-title\">{{leaveYourComment}}</div>\r\n        <textarea class=\"comment-text-block message\" placeholder=\"{{typeYourCommentHere}}\"></textarea>\r\n    </div>\r\n    <div class=\"identify-user-wrapper\">\r\n        <div class=\"identify-user-title\">{{identifyMessage}}</div>\r\n        <div class=\"identify-user-row\">\r\n            <input class=\"name-input\" type=\"text\" />\r\n            <label>{{name}}</label>\r\n            <span class=\"error-message name\">{{enterYourNameError}}</span>\r\n        </div>\r\n        <div class=\"identify-user-row\">\r\n            <input class=\"email-input\" type=\"email\" />\r\n            <label>{{email}}</label>\r\n            <span class=\"error-message email\">{{enterValidEmailError}}</span>\r\n        </div>\r\n    </div>\r\n    <div class=\"comment-action-wrapper\">\r\n        <div class=\"comment-status-message success\" title=\"{{commentWasSent}}\">{{commentWasSent}}</div>\r\n        <div class=\"comment-status-message fail\" title=\"{{commentWasNotSent}}\">{{commentWasNotSent}}<br />{{tryAgain}}</div>\r\n        <div class=\"comment-actions\">\r\n            <button title=\"{{cancel}}\" class=\"cancel-btn\">{{cancel}}</button>\r\n            <button title=\"{{postComment}}\" class=\"comment-btn\">{{postComment}}</button>\r\n        </div>\r\n    </div>\r\n</form>";
+	module.exports = "<form class=\"add-comment-form\">\r\n    <div class=\"message-wrapper\">\r\n        <div class=\"add-comment-form-title\">{{leaveYourComment}}</div>\r\n        <textarea class=\"comment-text-block message\" placeholder=\"{{typeYourCommentHere}}\"></textarea>\r\n    </div>\r\n    <div class=\"identify-user-wrapper\">\r\n        <div class=\"identify-user-title\">{{identifyMessage}}</div>\r\n        <div class=\"identify-user-row\">\r\n            <input class=\"name-input\" type=\"text\" />\r\n            <label>{{name}}</label>\r\n            <span class=\"error-message name\">{{enterYourNameError}}</span>\r\n        </div>\r\n        <div class=\"identify-user-row\">\r\n            <input class=\"email-input\" type=\"email\" />\r\n            <label>{{email}}</label>\r\n            <span class=\"error-message email\">{{enterValidEmailError}}</span>\r\n        </div>\r\n    </div>\r\n    <div class=\"comment-action-wrapper\">\r\n        <div class=\"comment-status-message success\" title=\"{{commentWasSent}}\">{{commentWasSent}}</div>\r\n        <div class=\"comment-status-message fail\" title=\"{{commentWasNotSent}}\">{{commentWasNotSent}}<br />{{tryAgain}}</div>\r\n        <div class=\"comment-actions\">\r\n            <button title=\"{{cancel}}\" class=\"cancel-btn\" type=\"reset\">{{cancel}}</button>\r\n            <button title=\"{{postComment}}\" class=\"comment-btn\" type=\"submit\">{{postComment}}</button>\r\n        </div>\r\n    </div>\r\n</form>";
 
 /***/ },
 /* 33 */
@@ -3297,6 +3297,8 @@
 
 			return supportedBrowser;
 		};
+
+		supportedBrowser.isBrowserSupported = isBrowserSupported;
 
 		function extend(targetBrowsers, globalBrowsers) {
 			var result = targetBrowsers;

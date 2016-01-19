@@ -5,8 +5,6 @@ import htmlMarkupProvider from './../infrastructure/htmlMarkupProvider';
 import dialogController from './../dialogs/dialogController';
 import hintController from './../hints/hintController';
 
-var spotPositioner = new SpotPositioner();
-
 class Spot {
     constructor(id, $contextElement) {
         this.id = id;
@@ -44,7 +42,7 @@ class Spot {
     }
   
     updatePosition() {
-        spotPositioner.updatePosition(this);
+        new SpotPositioner().updatePosition(this);
     }
 
     remove(){

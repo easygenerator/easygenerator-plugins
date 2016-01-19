@@ -5,19 +5,18 @@ import controls from './../controls/controls';
 import DialogPositioner from './dialogPositioner';
 import dialogHtml from './dialog.html';
 
-var $html = $('html');
-
 class Dialog{
     constructor(){
         var that=this;
         this.isShown=false;
+        this.$html = $('html');
         this.dialogPositioner = new DialogPositioner();
         this.$dialog = $(htmlMarkupProvider.getHtmlMarkup(dialogHtml));
         this.commentForm =  new CommentForm(function(){
             that.hide();
         });
 
-        var closeBtn = new controls.Button(this.$dialog, constants.selectors.closeDialogBtn);
+        var closeBtn = controls.Button(this.$dialog, constants.selectors.closeDialogBtn);
         closeBtn.click(function(){
             that.hide();
         });
@@ -42,7 +41,7 @@ class Dialog{
         $parent.on(constants.events.elementShown, this.updatePositionProxy);
         $parent.on(constants.events.elementDestroyed, this.detachProxy);
 
-        $html.on('keyup',  this.hideOnEscapeProxy);
+        this.$html.on('keyup',  this.hideOnEscapeProxy);
 
         this.isShown = true;
     }
@@ -65,7 +64,7 @@ class Dialog{
             this.$parent.off(constants.events.elementDestroyed, this.detachProxy);
         }
 
-        $html.off('keyup',  this.hideOnEscapeProxy);
+        this.$html.off('keyup',  this.hideOnEscapeProxy);
     }
 
     updatePosition() {

@@ -3,6 +3,7 @@ import SpotCollection from './SpotCollection';
 import Spot from './Spot';
 import MultiEventTracker from './../infrastructure/domInteraction/multiEventTracker';
 import hintController from './../hints/hintController';
+import dialogController from './../dialogs/dialogController';
 
 class SpotController{
     constructor() {
@@ -21,6 +22,7 @@ class SpotController{
 
     updatePositions(){
         this.spotCollection.updatePositions();
+        dialogController.updatePositionIfNeeded();
     }
 
     renderSpots() {
