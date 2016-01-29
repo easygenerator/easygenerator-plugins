@@ -1,18 +1,17 @@
 ﻿import Hint from './hint';
 import constants from './../infrastructure/constants';
 import clientContext from './../infrastructure/clientContext';
-import localizationService from './../../localization/localizationService';
+import localizationService from './../../../localization/localizationService';
 
 class HintController{
     init(){
-        var that = this;
         this.spotReviewHint = new Hint(localizationService.localize('elementReviewHint'), constants.css.spotReviewHint,
-            function () {
-                that.closeSpotReviewHint();
+            () => {
+                this.closeSpotReviewHint();
             }),
         this.generalReviewHint = new Hint(localizationService.localize('generalReviewHint'), constants.css.generalReviewHint + ' ' + constants.css.top,
-            function () {
-                that.closeGeneralReviewHint();
+            () => {
+                this.closeGeneralReviewHint();
             });
     }
 
@@ -47,7 +46,7 @@ class HintController{
         }
 
         if (clientContext.get(constants.clientContextKeys.reviewSpotHintShown) !== true) {
-            var $spots = $(constants.selectors.reviewSpotWrapper);
+            let $spots = $(constants.selectors.reviewSpotWrapper);
             if ($spots.length > 0) {
                 this.spotReviewHint.open($($spots[0]));
                 return;
@@ -70,5 +69,5 @@ class HintController{
     }
 }
 
-var hintController = new HintController();
+let hintController = new HintController();
 export default hintController;

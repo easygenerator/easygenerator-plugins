@@ -5,7 +5,7 @@ import htmlMarkupProvider from './../infrastructure/htmlMarkupProvider';
 import dialogController from './../dialogs/dialogController';
 import hintController from './../hints/hintController';
 
-class Spot {
+export default class Spot {
     constructor(id, $contextElement) {
         this.id = id;
         this.$element = null;
@@ -14,19 +14,17 @@ class Spot {
     }
 
     render(){
-        var $element = $(this.spotMarkup).appendTo(constants.selectors.body);
-        this.$element = $element;
-        $element.hide();
+        this.$element = $(this.spotMarkup).appendTo(constants.selectors.body);
 
         this.$element.data({ reviewSpotId: this.id });
         this.$contextElement.data({ reviewSpotId: this.id });
 
-        this.$element.find(constants.selectors.reviewSpot).click(function () {
+        this.$element.find(constants.selectors.reviewSpot).click(() => {
             if (hintController.isSpotReviewHintOpened()) {
                 hintController.closeSpotReviewHint();
             } 
 
-            dialogController.showElementReviewDialog($element);
+            dialogController.showElementReviewDialog(this.$element);
         });
     }
 
@@ -50,5 +48,3 @@ class Spot {
         this.$element.remove();
     }
 }
-
-export default Spot;

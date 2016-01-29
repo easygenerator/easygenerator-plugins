@@ -1,19 +1,17 @@
-﻿import constants from './../infrastructure/constants';
-import ElementReviewDialog from './elementReview/dialog';
+﻿import ElementReviewDialog from './elementReview/dialog';
 import GeneralReviewDialog from './generalReview/dialog';
 import hintController from './../hints/hintController';
 
 class DialogController{
     init(){
-        var that = this;
         this.elementReviewDialog = new ElementReviewDialog();
-        this.generalReviewDialog = new GeneralReviewDialog(function () {
+        this.generalReviewDialog = new GeneralReviewDialog(() => {
             if (hintController.isGeneralReviewHintOpened()) {
                 hintController.closeGeneralReviewHint();
             }
 
-            if (that.elementReviewDialog.isShown) {
-                that.elementReviewDialog.hide();
+            if (this.elementReviewDialog.isShown) {
+                this.elementReviewDialog.hide();
             }
         });
     }
@@ -28,7 +26,7 @@ class DialogController{
         }
 
         if (this.elementReviewDialog.isShown) {
-            var isShownForElement = this.elementReviewDialog.isShownForElement($spot);
+            let isShownForElement = this.elementReviewDialog.isShownForElement($spot);
             this.elementReviewDialog.hide();
             if (isShownForElement) {
                 return;
@@ -45,5 +43,5 @@ class DialogController{
     }
 }
 
-var dialogController = new DialogController();
+let dialogController = new DialogController();
 export default dialogController;

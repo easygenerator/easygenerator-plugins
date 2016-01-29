@@ -45,15 +45,15 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	__webpack_require__(39);
-	__webpack_require__(10);
-	__webpack_require__(40);
-	__webpack_require__(41);
 	__webpack_require__(42);
 	__webpack_require__(43);
 	__webpack_require__(44);
-	__webpack_require__(49);
-	module.exports = __webpack_require__(51);
+	__webpack_require__(45);
+	__webpack_require__(10);
+	__webpack_require__(46);
+	__webpack_require__(47);
+	__webpack_require__(52);
+	module.exports = __webpack_require__(54);
 
 
 /***/ },
@@ -80,11 +80,11 @@
 
 	var _spotController2 = _interopRequireDefault(_spotController);
 
-	var _dialogController = __webpack_require__(27);
+	var _dialogController = __webpack_require__(23);
 
 	var _dialogController2 = _interopRequireDefault(_dialogController);
 
-	var _eventTracker = __webpack_require__(38);
+	var _eventTracker = __webpack_require__(40);
 
 	var _eventTracker2 = _interopRequireDefault(_eventTracker);
 
@@ -145,7 +145,6 @@
 	}();
 
 	window.ReviewPlugin = Plugin;
-
 	exports.default = Plugin;
 
 /***/ },
@@ -239,11 +238,12 @@
 	    _createClass(HintController, [{
 	        key: 'init',
 	        value: function init() {
-	            var that = this;
+	            var _this = this;
+
 	            this.spotReviewHint = new _hint2.default(_localizationService2.default.localize('elementReviewHint'), _constants2.default.css.spotReviewHint, function () {
-	                that.closeSpotReviewHint();
+	                _this.closeSpotReviewHint();
 	            }), this.generalReviewHint = new _hint2.default(_localizationService2.default.localize('generalReviewHint'), _constants2.default.css.generalReviewHint + ' ' + _constants2.default.css.top, function () {
-	                that.closeGeneralReviewHint();
+	                _this.closeGeneralReviewHint();
 	            });
 	        }
 	    }, {
@@ -746,7 +746,8 @@
 	    shown: 'shown',
 	    success: 'success',
 	    fail: 'fail',
-	    disabled: 'disabled'
+	    disabled: 'disabled',
+	    fast: 'fast'
 	};
 
 	constants.selectors = {
@@ -779,14 +780,16 @@
 
 	    body: 'body',
 	    iframe: 'iframe',
-	    img: 'img'
+	    img: 'img',
+	    html: 'html'
 	};
 
 	constants.events = {
 	    positionUpdated: 'positionUpdated',
 	    elementHidden: 'elementHidden',
 	    elementDestroyed: 'elementDestroyed',
-	    elementShown: 'elementShown'
+	    elementShown: 'elementShown',
+	    keyUp: 'keyup'
 	};
 
 	exports.default = constants;
@@ -896,8 +899,7 @@
 	        key: 'init',
 	        value: function init(locale) {
 	            this.locale = locale;
-	            var lang = _langs2.default[this.locale];
-	            if (!lang) {
+	            if (!_langs2.default[this.locale]) {
 	                this.locale = 'en';
 	            }
 	        }
@@ -909,9 +911,9 @@
 	    }, {
 	        key: 'localizeHtml',
 	        value: function localizeHtml(html) {
-	            var regExp = /\{\{(.*?)\}\}/gi;
-	            var result = '',
-	                localizedHtml = html;
+	            var regExp = /\{\{(.*?)\}\}/gi,
+	                localizedHtml = html,
+	                result = '';
 
 	            while (result = regExp.exec(localizedHtml)) {
 	                var match = result[0],
@@ -932,9 +934,7 @@
 	}();
 
 	var localizationService = new LocalizationService();
-
 	window.pluginsLocalizationService = localizationService;
-
 	exports.default = localizationService;
 
 /***/ },
@@ -1255,25 +1255,17 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _SpotCollection = __webpack_require__(23);
-
-	var _SpotCollection2 = _interopRequireDefault(_SpotCollection);
-
-	var _Spot = __webpack_require__(24);
-
-	var _Spot2 = _interopRequireDefault(_Spot);
-
-	var _multiEventTracker = __webpack_require__(37);
-
-	var _multiEventTracker2 = _interopRequireDefault(_multiEventTracker);
-
 	var _hintController = __webpack_require__(3);
 
 	var _hintController2 = _interopRequireDefault(_hintController);
 
-	var _dialogController = __webpack_require__(27);
+	var _dialogController = __webpack_require__(23);
 
 	var _dialogController2 = _interopRequireDefault(_dialogController);
+
+	var _SpotCollection = __webpack_require__(36);
+
+	var _SpotCollection2 = _interopRequireDefault(_SpotCollection);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1307,44 +1299,44 @@
 	    }, {
 	        key: 'renderSpots',
 	        value: function renderSpots() {
-	            var spotIds = [];
-	            var that = this;
-	            $(_constants2.default.selectors.reviewable).each(function () {
-	                var $element = $(this);
-	                var spot = that.renderSpot($element);
+	            var _this = this;
+
+	            var existingSpotIds = [];
+	            $(_constants2.default.selectors.reviewable).each(function (index, value) {
+	                var $element = $(value),
+	                    spot = _this.renderSpot($element);
+
 	                if (spot) {
-	                    spotIds.push(spot.id);
+	                    existingSpotIds.push(spot.id);
 	                }
 	            });
 
-	            this.spotCollection.filterSpots(spotIds);
+	            this.spotCollection.filterSpots(existingSpotIds);
 	            _hintController2.default.openHintsIfNeeded();
 	        }
 	    }, {
 	        key: 'renderSpot',
 	        value: function renderSpot($element) {
-	            var spotId = getReviewSpotIdAttachedToElement($element);
+	            var spotId = getAttachedSpotId($element);
 	            if (spotId) {
 	                var spot = this.spotCollection.getSpotById(spotId);
 	                spot.updatePosition();
 	                return spot;
 	            }
 
-	            var spot = this.spotCollection.addSpot($element);
-	            spot.show();
-	            return spot;
-
-	            function getReviewSpotIdAttachedToElement($element) {
-	                var data = $element.data();
-	                if (!data) return false;
-
-	                return data.reviewSpotId;
-	            }
+	            return this.spotCollection.addSpot($element);
 	        }
 	    }]);
 
 	    return SpotController;
 	}();
+
+	function getAttachedSpotId($element) {
+	    var data = $element.data();
+	    if (!data) return false;
+
+	    return data.reviewSpotId;
+	}
 
 	var spotController = new SpotController();
 	exports.default = spotController;
@@ -1361,334 +1353,11 @@
 	    value: true
 	});
 
-	var _Spot = __webpack_require__(24);
-
-	var _Spot2 = _interopRequireDefault(_Spot);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var SpotCollection = function () {
-	    function SpotCollection() {
-	        _classCallCheck(this, SpotCollection);
-
-	        this.collection = [];
-	        this.maxId = 0;
-	    }
-
-	    _createClass(SpotCollection, [{
-	        key: 'addSpot',
-	        value: function addSpot($contextElement) {
-	            var that = this;
-	            var spot = new _Spot2.default(this.maxId + 1, $contextElement);
-	            spot.render();
-	            this.collection.push(spot);
-	            this.maxId++;
-
-	            new ResizeSensor(spot.$contextElement, function () {
-	                that.updatePositions();
-	            });
-
-	            return spot;
-	        }
-	    }, {
-	        key: 'getSpotById',
-	        value: function getSpotById(id) {
-	            var result = null;
-	            this.collection.forEach(function (spot) {
-	                if (spot.id === id) {
-	                    result = spot;
-	                }
-	            });
-
-	            return result;
-	        }
-	    }, {
-	        key: 'hideSpots',
-	        value: function hideSpots() {
-	            this.collection.forEach(function (spot) {
-	                spot.hide();
-	            });
-	        }
-	    }, {
-	        key: 'showSpots',
-	        value: function showSpots() {
-	            this.collection.forEach(function (spot) {
-	                spot.show();
-	            });
-	        }
-	    }, {
-	        key: 'updatePositions',
-	        value: function updatePositions(animate) {
-	            this.collection.forEach(function (spot) {
-	                spot.updatePosition(animate);
-	            });
-	        }
-	    }, {
-	        key: 'detachSpot',
-	        value: function detachSpot(spot) {
-	            ResizeSensor.detach(spot.$contextElement);
-	            spot.remove();
-	        }
-	    }, {
-	        key: 'filterSpots',
-	        value: function filterSpots(ids) {
-	            var that = this;
-	            var arr = this.collection.filter(function (item) {
-	                return ids.some(function (id) {
-	                    return item.id === id;
-	                });
-	            });
-
-	            this.collection.forEach(function (spot) {
-	                if (arr.indexOf(spot) === -1) {
-	                    that.detachSpot(spot);
-	                }
-	            });
-
-	            this.collection = arr;
-	        }
-	    }]);
-
-	    return SpotCollection;
-	}();
-
-	exports.default = SpotCollection;
-
-/***/ },
-/* 24 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _spotPositioner = __webpack_require__(25);
-
-	var _spotPositioner2 = _interopRequireDefault(_spotPositioner);
-
-	var _spot = __webpack_require__(26);
-
-	var _spot2 = _interopRequireDefault(_spot);
-
-	var _constants = __webpack_require__(7);
-
-	var _constants2 = _interopRequireDefault(_constants);
-
-	var _htmlMarkupProvider = __webpack_require__(9);
-
-	var _htmlMarkupProvider2 = _interopRequireDefault(_htmlMarkupProvider);
-
-	var _dialogController = __webpack_require__(27);
-
-	var _dialogController2 = _interopRequireDefault(_dialogController);
-
-	var _hintController = __webpack_require__(3);
-
-	var _hintController2 = _interopRequireDefault(_hintController);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Spot = function () {
-	    function Spot(id, $contextElement) {
-	        _classCallCheck(this, Spot);
-
-	        this.id = id;
-	        this.$element = null;
-	        this.$contextElement = $contextElement;
-	        this.spotMarkup = _htmlMarkupProvider2.default.getHtmlMarkup(_spot2.default);
-	    }
-
-	    _createClass(Spot, [{
-	        key: 'render',
-	        value: function render() {
-	            var $element = $(this.spotMarkup).appendTo(_constants2.default.selectors.body);
-	            this.$element = $element;
-	            $element.hide();
-
-	            this.$element.data({ reviewSpotId: this.id });
-	            this.$contextElement.data({ reviewSpotId: this.id });
-
-	            this.$element.find(_constants2.default.selectors.reviewSpot).click(function () {
-	                if (_hintController2.default.isSpotReviewHintOpened()) {
-	                    _hintController2.default.closeSpotReviewHint();
-	                }
-
-	                _dialogController2.default.showElementReviewDialog($element);
-	            });
-	        }
-	    }, {
-	        key: 'show',
-	        value: function show() {
-	            this.updatePosition();
-	            this.$element.trigger(_constants2.default.events.elementShown);
-	            this.$element.show();
-	        }
-	    }, {
-	        key: 'hide',
-	        value: function hide() {
-	            this.$element.trigger(_constants2.default.events.elementHidden);
-	            this.$element.hide();
-	        }
-	    }, {
-	        key: 'updatePosition',
-	        value: function updatePosition() {
-	            new _spotPositioner2.default().updatePosition(this);
-	        }
-	    }, {
-	        key: 'remove',
-	        value: function remove() {
-	            this.$element.trigger(_constants2.default.events.elementDestroyed);
-	            this.$element.remove();
-	        }
-	    }]);
-
-	    return Spot;
-	}();
-
-	exports.default = Spot;
-
-/***/ },
-/* 25 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _constants = __webpack_require__(7);
-
-	var _constants2 = _interopRequireDefault(_constants);
-
-	var _windowPropertiesProvider = __webpack_require__(8);
-
-	var _windowPropertiesProvider2 = _interopRequireDefault(_windowPropertiesProvider);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var margin = {
-	    x: 3,
-	    y: 10
-	},
-	    size = {
-	    width: 32,
-	    height: 32
-	};
-
-	var SpotPositioner = function () {
-	    function SpotPositioner() {
-	        _classCallCheck(this, SpotPositioner);
-
-	        this.$windowContainer = $(window);
-	    }
-
-	    _createClass(SpotPositioner, [{
-	        key: 'updatePosition',
-	        value: function updatePosition(spot) {
-	            var currentPosition = spot.$element.position();
-	            var position = this.calculatePosition(spot);
-
-	            if (currentPosition.left === position.x && currentPosition.top === position.y) return;
-
-	            var styles = {
-	                left: position.x,
-	                top: position.y
-	            };
-
-	            spot.$element.css(styles);
-	            spot.$element.trigger(_constants2.default.events.positionUpdated);
-	        }
-	    }, {
-	        key: 'calculatePosition',
-	        value: function calculatePosition(spot) {
-	            var that = this;
-
-	            var position = getContextElementTopRightPosition(spot.$contextElement);
-
-	            position.x = fitsInOuterCornerHirizonatlly(position) ? position.x + margin.x : position.x - size.width;
-
-	            if (isElementPartlyScrolledUp(spot.$contextElement)) {
-	                position.y = _windowPropertiesProvider2.default.scrollTop() + margin.y;
-	            } else {
-	                position.y = fitsInOuterCornerVertically(position) ? position.y + margin.y - size.width : position.y + margin.y;
-	            }
-
-	            return position;
-
-	            function isElementPartlyScrolledUp($contextElement) {
-	                var scrollTop = _windowPropertiesProvider2.default.scrollTop();
-	                if (scrollTop === 0) return false;
-
-	                var y = $contextElement.offset().top - scrollTop;
-	                var height = $contextElement.outerHeight();
-
-	                return y - size.height + margin.y < 0 && y + height >= size.height + margin.y;
-	            }
-
-	            function getContextElementTopRightPosition($contextElement) {
-	                var offset = $contextElement.offset();
-	                return {
-	                    y: offset.top,
-	                    x: offset.left + $contextElement.outerWidth()
-	                };
-	            }
-
-	            function fitsInOuterCornerHirizonatlly(position) {
-	                var windowWidth = that.$windowContainer.width();
-	                return windowWidth - position.x - size.width - margin.x > 0;
-	            }
-
-	            function fitsInOuterCornerVertically(position) {
-	                return position.y + margin.y - size.width > 0;
-	            }
-	        }
-	    }]);
-
-	    return SpotPositioner;
-	}();
-
-	exports.default = SpotPositioner;
-
-/***/ },
-/* 26 */
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"review-spot-wrapper\">\r\n    <div class=\"review-spot\"></div>\r\n</div>";
-
-/***/ },
-/* 27 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _constants = __webpack_require__(7);
-
-	var _constants2 = _interopRequireDefault(_constants);
-
-	var _dialog = __webpack_require__(28);
+	var _dialog = __webpack_require__(24);
 
 	var _dialog2 = _interopRequireDefault(_dialog);
 
-	var _dialog3 = __webpack_require__(35);
+	var _dialog3 = __webpack_require__(34);
 
 	var _dialog4 = _interopRequireDefault(_dialog3);
 
@@ -1708,15 +1377,16 @@
 	    _createClass(DialogController, [{
 	        key: 'init',
 	        value: function init() {
-	            var that = this;
+	            var _this = this;
+
 	            this.elementReviewDialog = new _dialog2.default();
 	            this.generalReviewDialog = new _dialog4.default(function () {
 	                if (_hintController2.default.isGeneralReviewHintOpened()) {
 	                    _hintController2.default.closeGeneralReviewHint();
 	                }
 
-	                if (that.elementReviewDialog.isShown) {
-	                    that.elementReviewDialog.hide();
+	                if (_this.elementReviewDialog.isShown) {
+	                    _this.elementReviewDialog.hide();
 	                }
 	            });
 	        }
@@ -1758,7 +1428,7 @@
 	exports.default = dialogController;
 
 /***/ },
-/* 28 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1773,7 +1443,7 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _commentForm = __webpack_require__(29);
+	var _commentForm = __webpack_require__(25);
 
 	var _commentForm2 = _interopRequireDefault(_commentForm);
 
@@ -1781,15 +1451,15 @@
 
 	var _htmlMarkupProvider2 = _interopRequireDefault(_htmlMarkupProvider);
 
-	var _controls = __webpack_require__(31);
+	var _button = __webpack_require__(29);
 
-	var _controls2 = _interopRequireDefault(_controls);
+	var _button2 = _interopRequireDefault(_button);
 
-	var _dialogPositioner = __webpack_require__(33);
+	var _dialogPositioner = __webpack_require__(32);
 
 	var _dialogPositioner2 = _interopRequireDefault(_dialogPositioner);
 
-	var _dialog = __webpack_require__(34);
+	var _dialog = __webpack_require__(33);
 
 	var _dialog2 = _interopRequireDefault(_dialog);
 
@@ -1799,20 +1469,20 @@
 
 	var Dialog = function () {
 	    function Dialog() {
+	        var _this = this;
+
 	        _classCallCheck(this, Dialog);
 
-	        var that = this;
 	        this.isShown = false;
-	        this.$html = $('html');
+	        this.$html = $(_constants2.default.selectors.html);
 	        this.dialogPositioner = new _dialogPositioner2.default();
 	        this.$dialog = $(_htmlMarkupProvider2.default.getHtmlMarkup(_dialog2.default));
 	        this.commentForm = new _commentForm2.default(function () {
-	            that.hide();
+	            _this.hide();
 	        });
 
-	        var closeBtn = _controls2.default.Button(this.$dialog, _constants2.default.selectors.closeDialogBtn);
-	        closeBtn.click(function () {
-	            that.hide();
+	        new _button2.default(this.$dialog, _constants2.default.selectors.closeDialogBtn).click(function () {
+	            _this.hide();
 	        });
 
 	        this.$dialog.addClass(_constants2.default.css.elementReviewDialog).find(_constants2.default.selectors.addCommentForm).replaceWith(this.commentForm.$element);
@@ -1824,20 +1494,21 @@
 	    _createClass(Dialog, [{
 	        key: 'show',
 	        value: function show($parent) {
-	            var that = this;
+	            var _this2 = this;
+
 	            this.$parent = $parent;
 	            this.$dialog.finish().css({ opacity: 0 }).removeClass(_constants2.default.css.shown).show().appendTo($parent);
 	            this.updatePosition();
 
 	            this.commentForm.init();
 	            this.$dialog.fadeTo(50, 1, function () {
-	                that.$dialog.addClass(_constants2.default.css.shown);
+	                _this2.$dialog.addClass(_constants2.default.css.shown);
 	            });
 
 	            $parent.on(_constants2.default.events.elementShown, this.updatePositionProxy);
 	            $parent.on(_constants2.default.events.elementDestroyed, this.detachProxy);
 
-	            this.$html.on('keyup', this.hideOnEscapeProxy);
+	            this.$html.on(_constants2.default.events.keyUp, this.hideOnEscapeProxy);
 
 	            this.isShown = true;
 	        }
@@ -1851,25 +1522,25 @@
 	    }, {
 	        key: 'hide',
 	        value: function hide() {
-	            var that = this;
+	            var _this3 = this;
+
 	            this.$dialog.finish().fadeOut(50, function () {
-	                that.$dialog.removeClass(_constants2.default.css.shown);
-	                that.detach();
+	                _this3.$dialog.removeClass(_constants2.default.css.shown);
+	                _this3.$dialog.detach();
 	            });
 
-	            if (this.$parent) {
-	                this.$parent.off(_constants2.default.events.elementShown, this.updatePositionProxy);
-	                this.$parent.off(_constants2.default.events.elementDestroyed, this.detachProxy);
-	            }
+	            this.$parent.off(_constants2.default.events.elementShown, this.updatePositionProxy);
+	            this.$parent.off(_constants2.default.events.elementDestroyed, this.detachProxy);
 
-	            this.$html.off('keyup', this.hideOnEscapeProxy);
+	            this.$html.off(_constants2.default.events.keyUp, this.hideOnEscapeProxy);
+
+	            this.isShown = false;
+	            this.$parent = null;
 	        }
 	    }, {
 	        key: 'updatePosition',
 	        value: function updatePosition() {
-	            if (this.$parent) {
-	                this.dialogPositioner.setPosition(this.$parent, this.$dialog);
-	            }
+	            this.dialogPositioner.setPosition(this.$parent, this.$dialog);
 	        }
 	    }, {
 	        key: 'isShownForElement',
@@ -1891,7 +1562,7 @@
 	exports.default = Dialog;
 
 /***/ },
-/* 29 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1914,11 +1585,11 @@
 
 	var _htmlMarkupProvider2 = _interopRequireDefault(_htmlMarkupProvider);
 
-	var _CommentFormControls = __webpack_require__(30);
+	var _CommentFormControls = __webpack_require__(26);
 
 	var _CommentFormControls2 = _interopRequireDefault(_CommentFormControls);
 
-	var _commentForm = __webpack_require__(32);
+	var _commentForm = __webpack_require__(31);
 
 	var _commentForm2 = _interopRequireDefault(_commentForm);
 
@@ -1932,9 +1603,10 @@
 
 	var CommentForm = function () {
 	    function CommentForm(closeHandler) {
+	        var _this = this;
+
 	        _classCallCheck(this, CommentForm);
 
-	        var that = this;
 	        this.$element = $(_htmlMarkupProvider2.default.getHtmlMarkup(_commentForm2.default));
 	        this.controls = new _CommentFormControls2.default(this.$element);
 
@@ -1944,10 +1616,10 @@
 	            }
 	        });
 	        this.controls.submitBtn.click(function () {
-	            that.submit();
+	            _this.submit();
 	        });
 	        this.controls.messageForm.messageField.onfocus(function () {
-	            that.controls.commentStatusMessage.fadeOut();
+	            _this.controls.commentStatusMessage.fadeOut();
 	        });
 	    }
 
@@ -2057,6 +1729,255 @@
 	}();
 
 	exports.default = CommentForm;
+	;
+
+/***/ },
+/* 26 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _constants = __webpack_require__(7);
+
+	var _constants2 = _interopRequireDefault(_constants);
+
+	var _control = __webpack_require__(27);
+
+	var _control2 = _interopRequireDefault(_control);
+
+	var _message = __webpack_require__(28);
+
+	var _message2 = _interopRequireDefault(_message);
+
+	var _button = __webpack_require__(29);
+
+	var _button2 = _interopRequireDefault(_button);
+
+	var _textField = __webpack_require__(30);
+
+	var _textField2 = _interopRequireDefault(_textField);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var CommentFormControls = function CommentFormControls($dialog) {
+	    _classCallCheck(this, CommentFormControls);
+
+	    this.cancelBtn = new _button2.default($dialog, _constants2.default.selectors.cancelBtn);
+	    this.submitBtn = new _button2.default($dialog, _constants2.default.selectors.commentBtn);
+
+	    this.commentStatusMessage = createCommentStatusMessage($dialog);
+	    this.messageForm = createMessageForm($dialog);
+	    this.identifyForm = createIdentifyForm($dialog);
+	};
+
+	exports.default = CommentFormControls;
+	;
+
+	function createCommentStatusMessage($dialog) {
+	    var control = new _control2.default($dialog, _constants2.default.selectors.commentStatusMessage);
+
+	    control.success = new _message2.default($dialog, _constants2.default.selectors.commentStatusMessage + _constants2.default.selectors.success);
+	    control.fail = new _message2.default($dialog, _constants2.default.selectors.commentStatusMessage + _constants2.default.selectors.fail);
+
+	    return control;
+	}
+
+	function createMessageForm($dialog) {
+	    var control = new _control2.default($dialog, _constants2.default.selectors.messageWrapper);
+
+	    control.messageField = new _textField2.default($dialog, _constants2.default.selectors.message);
+
+	    return control;
+	}
+
+	function createIdentifyForm($dialog) {
+	    var control = new _control2.default($dialog, _constants2.default.selectors.identifyUserWrapper);
+
+	    control.nameField = new _textField2.default($dialog, _constants2.default.selectors.nameInput);
+	    control.mailField = new _textField2.default($dialog, _constants2.default.selectors.mailInput);
+	    control.nameErrorMessage = new _message2.default($dialog, _constants2.default.selectors.errorMessage + _constants2.default.selectors.name);
+	    control.mailErrorMassage = new _message2.default($dialog, _constants2.default.selectors.errorMessage + _constants2.default.selectors.email);
+
+	    return control;
+	}
+
+/***/ },
+/* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _constants = __webpack_require__(7);
+
+	var _constants2 = _interopRequireDefault(_constants);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Control = function () {
+	    function Control($parent, selector) {
+	        _classCallCheck(this, Control);
+
+	        this.$control = $parent.find(selector);
+	        this.isShown = true;
+	    }
+
+	    _createClass(Control, [{
+	        key: 'addClass',
+	        value: function addClass(css) {
+	            this.$control.addClass(css);
+	        }
+	    }, {
+	        key: 'removeClass',
+	        value: function removeClass(css) {
+	            this.$control.removeClass(css);
+	        }
+	    }, {
+	        key: 'show',
+	        value: function show() {
+	            this.$control.show();
+	            this.isShown = true;
+	        }
+	    }, {
+	        key: 'hide',
+	        value: function hide() {
+	            this.$control.hide();
+	            this.isShown = false;
+	        }
+	    }, {
+	        key: 'fadeOut',
+	        value: function fadeOut() {
+	            this.$control.fadeOut(_constants2.default.css.fast);
+	            this.isShown = false;
+	        }
+	    }, {
+	        key: 'fadeIn',
+	        value: function fadeIn() {
+	            this.$control.fadeIn(_constants2.default.css.fast);
+	            this.isShown = true;
+	        }
+	    }, {
+	        key: 'focus',
+	        value: function focus() {
+	            this.$control.focus();
+	        }
+	    }, {
+	        key: 'disable',
+	        value: function disable() {
+	            this.$control.prop(_constants2.default.css.disabled, true);
+	            this.addClass(_constants2.default.css.disabled);
+	        }
+	    }, {
+	        key: 'enable',
+	        value: function enable() {
+	            this.$control.prop(_constants2.default.css.disabled, false);
+	            this.removeClass(_constants2.default.css.disabled);
+	        }
+	    }]);
+
+	    return Control;
+	}();
+
+	exports.default = Control;
+
+/***/ },
+/* 28 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _control = __webpack_require__(27);
+
+	var _control2 = _interopRequireDefault(_control);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Message = function (_Control) {
+	    _inherits(Message, _Control);
+
+	    function Message($parent, selector) {
+	        _classCallCheck(this, Message);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Message).call(this, $parent, selector));
+	    }
+
+	    return Message;
+	}(_control2.default);
+
+	exports.default = Message;
+
+/***/ },
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _control = __webpack_require__(27);
+
+	var _control2 = _interopRequireDefault(_control);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Button = function (_Control) {
+	    _inherits(Button, _Control);
+
+	    function Button($parent, selector) {
+	        _classCallCheck(this, Button);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Button).call(this, $parent, selector));
+	    }
+
+	    _createClass(Button, [{
+	        key: 'click',
+	        value: function click(handler) {
+	            this.$control.click(function (e) {
+	                e.preventDefault();
+	                e.stopPropagation();
+	                handler();
+	                return false;
+	            });
+	        }
+	    }]);
+
+	    return Button;
+	}(_control2.default);
+
+	exports.default = Button;
 
 /***/ },
 /* 30 */
@@ -2064,249 +1985,109 @@
 
 	'use strict';
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _control = __webpack_require__(27);
+
+	var _control2 = _interopRequireDefault(_control);
 
 	var _constants = __webpack_require__(7);
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _controls = __webpack_require__(31);
-
-	var _controls2 = _interopRequireDefault(_controls);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var CommentFormControls = function CommentFormControls($dialog) {
-	    var formControls = {
-	        cancelBtn: Button(_constants2.default.selectors.cancelBtn),
-	        submitBtn: Button(_constants2.default.selectors.commentBtn),
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	        commentStatusMessage: CommentStatusMessage(),
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	        messageForm: MessageForm(),
-	        identifyForm: IdentifyForm()
-	    };
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	    return formControls;
+	var TextField = function (_Control) {
+	    _inherits(TextField, _Control);
 
-	    function CommentStatusMessage() {
-	        var control = Control.call(this, _constants2.default.selectors.commentStatusMessage);
+	    function TextField($parent, selector) {
+	        _classCallCheck(this, TextField);
 
-	        control.success = Message(_constants2.default.selectors.commentStatusMessage + _constants2.default.selectors.success);
-	        control.fail = Message(_constants2.default.selectors.commentStatusMessage + _constants2.default.selectors.fail);
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TextField).call(this, $parent, selector));
 
-	        return control;
+	        _this.$errorMessage = _this.$control.nextAll(_constants2.default.selectors.errorMessage);
+	        _this.onfocusHandler = null;
+
+	        _this.$control.change(function () {
+	            return onChange(_this);
+	        });
+	        _this.$control.focus(function () {
+	            _this.removeErrorMark();
+	            if (_this.onfocusHandler) {
+	                _this.onfocusHandler();
+	            }
+	        });
+	        return _this;
 	    }
 
-	    function MessageForm() {
-	        var control = Control.call(this, _constants2.default.selectors.messageWrapper);
+	    _createClass(TextField, [{
+	        key: 'onfocus',
+	        value: function onfocus(handler) {
+	            this.onfocusHandler = handler;
+	        }
+	    }, {
+	        key: 'getValue',
+	        value: function getValue() {
+	            return this.$control.val();
+	        }
+	    }, {
+	        key: 'setValue',
+	        value: function setValue(value) {
+	            this.$control.val(value);
+	            onChange(this);
+	        }
+	    }, {
+	        key: 'clear',
+	        value: function clear() {
+	            this.setValue('');
+	            this.removeErrorMark();
+	        }
+	    }, {
+	        key: 'setErrorMark',
+	        value: function setErrorMark() {
+	            this.addClass(_constants2.default.css.error);
+	            this.$errorMessage.addClass(_constants2.default.css.shown);
+	        }
+	    }, {
+	        key: 'removeErrorMark',
+	        value: function removeErrorMark() {
+	            this.removeClass(_constants2.default.css.error);
+	            this.$errorMessage.removeClass(_constants2.default.css.shown);
+	        }
+	    }]);
 
-	        control.messageField = TextField(_constants2.default.selectors.message);
+	    return TextField;
+	}(_control2.default);
 
-	        return control;
+	exports.default = TextField;
+
+	function onChange(control) {
+	    control.removeErrorMark();
+	    if (control.getValue().length === 0) {
+	        control.addClass(_constants2.default.css.empty);
+	    } else {
+	        control.removeClass(_constants2.default.css.empty);
 	    }
-
-	    function IdentifyForm() {
-	        var control = Control.call(this, _constants2.default.selectors.identifyUserWrapper);
-
-	        control.nameField = TextField(_constants2.default.selectors.nameInput);
-	        control.mailField = TextField(_constants2.default.selectors.mailInput);
-	        control.nameErrorMessage = Message(_constants2.default.selectors.errorMessage + _constants2.default.selectors.name);
-	        control.mailErrorMassage = Message(_constants2.default.selectors.errorMessage + _constants2.default.selectors.email);
-
-	        return control;
-	    }
-
-	    function Message(selector) {
-	        return _controls2.default.Message($dialog, selector);
-	    }
-
-	    function Button(selector) {
-	        return _controls2.default.Button($dialog, selector);
-	    }
-
-	    function TextField(selector) {
-	        return _controls2.default.TextField($dialog, selector);
-	    }
-
-	    function Control(selector) {
-	        return _controls2.default.Control($dialog, selector);
-	    }
-	};
-
-	exports.default = CommentFormControls;
+	}
 
 /***/ },
 /* 31 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _constants = __webpack_require__(7);
-
-	var _constants2 = _interopRequireDefault(_constants);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var controls = {
-	    Message: Message,
-	    Button: Button,
-	    TextField: TextField,
-	    Control: Control
-	};
-
-	function Message($parent, selector) {
-	    return controls.Control.call(this, $parent, selector);
-	}
-
-	function Button($parent, selector) {
-	    var control = controls.Control.call(this, $parent, selector),
-	        $control = control.$control;
-
-	    control.click = function (handler) {
-	        $control.click(function (e) {
-	            e.preventDefault();
-	            e.stopPropagation();
-	            handler();
-	            return false;
-	        });
-	    };
-
-	    return control;
-	}
-
-	function TextField($parent, selector) {
-	    var control = controls.Control.call(this, $parent, selector),
-	        $control = control.$control,
-	        $errorMessage = $control.nextAll(_constants2.default.selectors.errorMessage),
-	        onfocus = null;
-
-	    $control.change(onChange);
-	    $control.focus(function () {
-	        control.removeErrorMark();
-	        if (onfocus) {
-	            onfocus();
-	        }
-	    });
-
-	    control.onfocus = function (handler) {
-	        onfocus = handler;
-	    };
-
-	    control.getValue = function () {
-	        return $control.val();
-	    };
-
-	    control.setValue = function (value) {
-	        $control.val(value);
-	        onChange();
-	    };
-
-	    control.clear = function () {
-	        control.setValue('');
-	        control.removeErrorMark();
-	    };
-
-	    control.setErrorMark = function () {
-	        control.addClass(_constants2.default.css.error);
-	        $errorMessage.addClass(_constants2.default.css.shown);
-	    };
-
-	    control.removeErrorMark = function () {
-	        control.removeClass(_constants2.default.css.error);
-	        $errorMessage.removeClass(_constants2.default.css.shown);
-	    };
-
-	    function onChange() {
-	        control.removeErrorMark();
-	        if (control.getValue().length === 0) {
-	            control.addClass(_constants2.default.css.empty);
-	        } else {
-	            control.removeClass(_constants2.default.css.empty);
-	        }
-	    }
-
-	    return control;
-	}
-
-	function Control($parent, selector) {
-	    var $control = $parent.find(selector);
-
-	    var control = {
-	        isShown: true,
-	        show: show,
-	        hide: hide,
-	        focus: focus,
-	        addClass: addClass,
-	        removeClass: removeClass,
-	        fadeIn: fadeIn,
-	        fadeOut: fadeOut,
-	        disable: disable,
-	        enable: enable,
-	        $control: $control
-	    };
-
-	    return control;
-
-	    function addClass(css) {
-	        $control.addClass(css);
-	    }
-
-	    function removeClass(css) {
-	        $control.removeClass(css);
-	    }
-
-	    function show() {
-	        $control.show();
-	        control.isShown = true;
-	    }
-
-	    function hide() {
-	        $control.hide();
-	        control.isShown = false;
-	    }
-
-	    function fadeOut() {
-	        $control.fadeOut('fast');
-	        control.isShown = false;
-	    }
-
-	    function fadeIn() {
-	        $control.fadeIn('fast');
-	        control.isShown = true;
-	    }
-
-	    function focus() {
-	        $control.focus();
-	    }
-
-	    function disable() {
-	        $control.prop('disabled', true);
-	        addClass('disabled');
-	    }
-
-	    function enable() {
-	        $control.prop('disabled', false);
-	        removeClass('disabled');
-	    }
-	}
-
-	exports.default = controls;
-
-/***/ },
-/* 32 */
 /***/ function(module, exports) {
 
 	module.exports = "<form class=\"add-comment-form\">\r\n    <div class=\"message-wrapper\">\r\n        <div class=\"add-comment-form-title\">{{leaveYourComment}}</div>\r\n        <textarea class=\"comment-text-block message\" placeholder=\"{{typeYourCommentHere}}\"></textarea>\r\n    </div>\r\n    <div class=\"identify-user-wrapper\">\r\n        <div class=\"identify-user-title\">{{identifyMessage}}</div>\r\n        <div class=\"identify-user-row\">\r\n            <input class=\"name-input\" type=\"text\" />\r\n            <label>{{name}}</label>\r\n            <span class=\"error-message name\">{{enterYourNameError}}</span>\r\n        </div>\r\n        <div class=\"identify-user-row\">\r\n            <input class=\"email-input\" type=\"email\" />\r\n            <label>{{email}}</label>\r\n            <span class=\"error-message email\">{{enterValidEmailError}}</span>\r\n        </div>\r\n    </div>\r\n    <div class=\"comment-action-wrapper\">\r\n        <div class=\"comment-status-message success\" title=\"{{commentWasSent}}\">{{commentWasSent}}</div>\r\n        <div class=\"comment-status-message fail\" title=\"{{commentWasNotSent}}\">{{commentWasNotSent}}<br />{{tryAgain}}</div>\r\n        <div class=\"comment-actions\">\r\n            <button title=\"{{cancel}}\" class=\"cancel-btn\" type=\"reset\">{{cancel}}</button>\r\n            <button title=\"{{postComment}}\" class=\"comment-btn\" type=\"submit\">{{postComment}}</button>\r\n        </div>\r\n    </div>\r\n</form>";
 
 /***/ },
-/* 33 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2359,13 +2140,13 @@
 	exports.default = DialogPositioner;
 
 /***/ },
-/* 34 */
+/* 33 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"review-dialog element-review-dialog\">\r\n    <button class=\"close-dialog-btn\"></button>\r\n    <form class=\"add-comment-form\">\r\n    </form>\r\n</div>";
 
 /***/ },
-/* 35 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2380,7 +2161,7 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _commentForm = __webpack_require__(29);
+	var _commentForm = __webpack_require__(25);
 
 	var _commentForm2 = _interopRequireDefault(_commentForm);
 
@@ -2388,11 +2169,11 @@
 
 	var _htmlMarkupProvider2 = _interopRequireDefault(_htmlMarkupProvider);
 
-	var _controls = __webpack_require__(31);
+	var _button = __webpack_require__(29);
 
-	var _controls2 = _interopRequireDefault(_controls);
+	var _button2 = _interopRequireDefault(_button);
 
-	var _dialog = __webpack_require__(36);
+	var _dialog = __webpack_require__(35);
 
 	var _dialog2 = _interopRequireDefault(_dialog);
 
@@ -2402,9 +2183,10 @@
 
 	var Dialog = function () {
 	    function Dialog(onExpansionChanged) {
+	        var _this = this;
+
 	        _classCallCheck(this, Dialog);
 
-	        var that = this;
 	        this.isExpanded = false;
 	        this.commentForm = new _commentForm2.default();
 	        this.onExpansionChanged = onExpansionChanged;
@@ -2412,9 +2194,8 @@
 
 	        this.$dialog.find(_constants2.default.selectors.addCommentForm).replaceWith(this.commentForm.$element);
 
-	        var expandCollapseBtn = new _controls2.default.Button(this.$dialog, _constants2.default.selectors.commentsHeader);
-	        expandCollapseBtn.click(function () {
-	            that.toggleExpansion();
+	        new _button2.default(this.$dialog, _constants2.default.selectors.commentsHeader).click(function () {
+	            _this.toggleExpansion();
 	        });
 	    }
 
@@ -2444,53 +2225,18 @@
 	}();
 
 	exports.default = Dialog;
-	//var GeneralReviewDialog = function (reviewService, onExpansionChanhed) {
-	//    var commentForm = new CommentForm(reviewService),
-	//        $dialog = $(htmlMarkupProvider.getHtmlMarkup(dialogHtml)),
-	//        expandCollapseBtn = new controls.Button($dialog, constants.selectors.commentsHeader),
-	//        dialog = {
-	//            show: show,
-	//            isExpanded: false,
-	//            toggleExpansion: toggleExpansion
-	//        };
-
-	//    $dialog.find(constants.selectors.addCommentForm).replaceWith(commentForm.$element);
-	//    expandCollapseBtn.click(toggleExpansion);
-
-	//    return dialog;
-
-	//    function show() {
-	//        $dialog.appendTo(constants.selectors.body);
-	//        commentForm.init();
-	//    }
-
-	//    function toggleExpansion() {
-	//        var isExpanded = $dialog.hasClass(constants.css.expanded);
-	//        $dialog.toggleClass(constants.css.expanded);
-	//        dialog.isExpanded = false;
-
-	//        if (!isExpanded) {
-	//            commentForm.init();
-	//            dialog.isExpanded = true;
-	//        }
-
-	//        onExpansionChanhed();
-	//    }
-	//};
-
-	//module.exports = GeneralReviewDialog;
 
 /***/ },
-/* 36 */
+/* 35 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"review-dialog general-review-dialog\">\r\n    <div class=\"comments-header\">\r\n        <div class=\"comment-header-text\">{{leaveGeneralComment}}</div>\r\n        <div class=\"comments-expander\"></div>\r\n    </div>\r\n    <form class=\"add-comment-form\">\r\n    </form>\r\n</div>";
 
 /***/ },
-/* 37 */
-/***/ function(module, exports) {
+/* 36 */
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -2498,112 +2244,211 @@
 	    value: true
 	});
 
+	var _Spot = __webpack_require__(37);
+
+	var _Spot2 = _interopRequireDefault(_Spot);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var MultiEventTracker = function () {
-	    function MultiEventTracker(startHandler, endHandler, useFirstTimeTimeout, interval) {
-	        _classCallCheck(this, MultiEventTracker);
+	var SpotCollection = function () {
+	    function SpotCollection() {
+	        _classCallCheck(this, SpotCollection);
 
-	        this.startHandler = startHandler;
-	        this.endHandler = endHandler;
-	        this.useFirstTimeTimeout = useFirstTimeTimeout;
-	        this.delta = interval ? interval : 200;
-	        this.timeout = false;
-	        this.runTime = null;
+	        this.collection = [];
+	        this.maxId = 0;
 	    }
 
-	    _createClass(MultiEventTracker, [{
-	        key: "eventTrigerred",
-	        value: function eventTrigerred() {
-	            var that = this;
-	            if (this.useFirstTimeTimeout) {
-	                setTimeout(function () {
-	                    that.handleEvent();
-	                }, 0);
-	            } else {
-	                this.handleEvent();
-	            }
-	        }
-	    }, {
-	        key: "handleEvent",
-	        value: function handleEvent() {
-	            var that = this;
-	            this.runTime = new Date();
-	            if (this.timeout === false) {
-	                if (this.startHandler) {
-	                    this.startHandler();
-	                }
+	    _createClass(SpotCollection, [{
+	        key: 'addSpot',
+	        value: function addSpot($contextElement) {
+	            var _this = this;
 
-	                this.timeout = true;
-	                setTimeout(function () {
-	                    that.eventStoppedTrigerring();
-	                }, this.delta);
-	            }
+	            var maxId = getArrayElementMaxId(this.collection),
+	                spot = new _Spot2.default(maxId + 1, $contextElement);
+
+	            this.collection.push(spot);
+	            spot.render();
+	            spot.show();
+
+	            new ResizeSensor(spot.$contextElement, function () {
+	                _this.updatePositions();
+	            });
+
+	            return spot;
 	        }
 	    }, {
-	        key: "eventStoppedTrigerring",
-	        value: function eventStoppedTrigerring() {
-	            var that = this;
-	            if (new Date() - this.runTime < this.delta) {
-	                setTimeout(function () {
-	                    that.eventStoppedTrigerring();
-	                }, this.delta);
-	            } else {
-	                this.timeout = false;
-	                if (this.endHandler) {
-	                    this.endHandler();
+	        key: 'getSpotById',
+	        value: function getSpotById(id) {
+	            var result = null;
+	            this.collection.forEach(function (spot) {
+	                if (spot.id === id) {
+	                    result = spot;
 	                }
-	            }
+	            });
+
+	            return result;
+	        }
+	    }, {
+	        key: 'hideSpots',
+	        value: function hideSpots() {
+	            this.collection.forEach(function (spot) {
+	                return spot.hide();
+	            });
+	        }
+	    }, {
+	        key: 'showSpots',
+	        value: function showSpots() {
+	            this.collection.forEach(function (spot) {
+	                return spot.show();
+	            });
+	        }
+	    }, {
+	        key: 'updatePositions',
+	        value: function updatePositions() {
+	            this.collection.forEach(function (spot) {
+	                return spot.updatePosition();
+	            });
+	        }
+	    }, {
+	        key: 'detachSpot',
+	        value: function detachSpot(spot) {
+	            ResizeSensor.detach(spot.$contextElement);
+	            spot.remove();
+	        }
+	    }, {
+	        key: 'filterSpots',
+	        value: function filterSpots(ids) {
+	            var _this2 = this;
+
+	            var arr = this.collection.filter(function (item) {
+	                return ids.some(function (id) {
+	                    return item.id === id;
+	                });
+	            });
+
+	            this.collection.forEach(function (spot) {
+	                if (arr.indexOf(spot) === -1) {
+	                    _this2.detachSpot(spot);
+	                }
+	            });
+
+	            this.collection = arr;
 	        }
 	    }]);
 
-	    return MultiEventTracker;
+	    return SpotCollection;
 	}();
 
-	//var MultiEventTracker = function (startHandler, endHandler, useFirstTimeTimeout, interval) {
-	//    var rtime;
-	//    var timeout = false;
-	//    var delta = interval ? interval : 200;
+	exports.default = SpotCollection;
 
-	//    function eventTrigerred(){
-	//        if (useFirstTimeTimeout) {
-	//            setTimeout(function() {
-	//                eventHandler();
-	//            }, 0);
-	//        }else {
-	//            eventHandler();
-	//        }
-	//    }
+	function getArrayElementMaxId(arr) {
+	    if (arr.length === 0) return 0;
 
-	//    function eventHandler(){
-	//        rtime = new Date();
-	//        if (timeout === false) {
-	//            if (startHandler) {
-	//                startHandler();
-	//            }
+	    return Math.max.apply(null, arr.map(function (i) {
+	        return i.id;
+	    }));
+	}
 
-	//            timeout = true;
-	//            setTimeout(eventStoppedTrigerring, delta);
-	//        }
-	//    }
+/***/ },
+/* 37 */
+/***/ function(module, exports, __webpack_require__) {
 
-	//    function eventStoppedTrigerring() {
-	//        if (new Date() - rtime < delta) {
-	//            setTimeout(eventStoppedTrigerring, delta);
-	//        } else {
-	//            timeout = false;
-	//            if (endHandler) {
-	//                endHandler();
-	//            }
-	//        }
-	//    }
+	'use strict';
 
-	//    return {
-	//        eventTrigerred: eventTrigerred
-	//    };
-	//};
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	exports.default = MultiEventTracker;
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _spotPositioner = __webpack_require__(38);
+
+	var _spotPositioner2 = _interopRequireDefault(_spotPositioner);
+
+	var _spot = __webpack_require__(39);
+
+	var _spot2 = _interopRequireDefault(_spot);
+
+	var _constants = __webpack_require__(7);
+
+	var _constants2 = _interopRequireDefault(_constants);
+
+	var _htmlMarkupProvider = __webpack_require__(9);
+
+	var _htmlMarkupProvider2 = _interopRequireDefault(_htmlMarkupProvider);
+
+	var _dialogController = __webpack_require__(23);
+
+	var _dialogController2 = _interopRequireDefault(_dialogController);
+
+	var _hintController = __webpack_require__(3);
+
+	var _hintController2 = _interopRequireDefault(_hintController);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Spot = function () {
+	    function Spot(id, $contextElement) {
+	        _classCallCheck(this, Spot);
+
+	        this.id = id;
+	        this.$element = null;
+	        this.$contextElement = $contextElement;
+	        this.spotMarkup = _htmlMarkupProvider2.default.getHtmlMarkup(_spot2.default);
+	    }
+
+	    _createClass(Spot, [{
+	        key: 'render',
+	        value: function render() {
+	            var _this = this;
+
+	            this.$element = $(this.spotMarkup).appendTo(_constants2.default.selectors.body);
+
+	            this.$element.data({ reviewSpotId: this.id });
+	            this.$contextElement.data({ reviewSpotId: this.id });
+
+	            this.$element.find(_constants2.default.selectors.reviewSpot).click(function () {
+	                if (_hintController2.default.isSpotReviewHintOpened()) {
+	                    _hintController2.default.closeSpotReviewHint();
+	                }
+
+	                _dialogController2.default.showElementReviewDialog(_this.$element);
+	            });
+	        }
+	    }, {
+	        key: 'show',
+	        value: function show() {
+	            this.updatePosition();
+	            this.$element.trigger(_constants2.default.events.elementShown);
+	            this.$element.show();
+	        }
+	    }, {
+	        key: 'hide',
+	        value: function hide() {
+	            this.$element.trigger(_constants2.default.events.elementHidden);
+	            this.$element.hide();
+	        }
+	    }, {
+	        key: 'updatePosition',
+	        value: function updatePosition() {
+	            new _spotPositioner2.default().updatePosition(this);
+	        }
+	    }, {
+	        key: 'remove',
+	        value: function remove() {
+	            this.$element.trigger(_constants2.default.events.elementDestroyed);
+	            this.$element.remove();
+	        }
+	    }]);
+
+	    return Spot;
+	}();
+
+	exports.default = Spot;
 
 /***/ },
 /* 38 */
@@ -2617,7 +2462,120 @@
 	    value: true
 	});
 
-	var _multiEventTracker = __webpack_require__(37);
+	var _constants = __webpack_require__(7);
+
+	var _constants2 = _interopRequireDefault(_constants);
+
+	var _windowPropertiesProvider = __webpack_require__(8);
+
+	var _windowPropertiesProvider2 = _interopRequireDefault(_windowPropertiesProvider);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var margin = {
+	    x: 3,
+	    y: 10
+	},
+	    size = {
+	    width: 32,
+	    height: 32
+	};
+
+	var SpotPositioner = function () {
+	    function SpotPositioner() {
+	        _classCallCheck(this, SpotPositioner);
+
+	        this.$windowContainer = $(window);
+	    }
+
+	    _createClass(SpotPositioner, [{
+	        key: 'updatePosition',
+	        value: function updatePosition(spot) {
+	            var currentPosition = spot.$element.position(),
+	                position = this.calculatePosition(spot);
+
+	            if (currentPosition.left === position.x && currentPosition.top === position.y) return;
+
+	            var styles = {
+	                left: position.x,
+	                top: position.y
+	            };
+
+	            spot.$element.css(styles);
+	            spot.$element.trigger(_constants2.default.events.positionUpdated);
+	        }
+	    }, {
+	        key: 'calculatePosition',
+	        value: function calculatePosition(spot) {
+	            var that = this;
+
+	            var position = getContextElementTopRightPosition(spot.$contextElement);
+
+	            position.x = fitsInOuterCornerHirizonatlly(position) ? position.x + margin.x : position.x - size.width;
+
+	            if (isElementPartlyScrolledUp(spot.$contextElement)) {
+	                position.y = _windowPropertiesProvider2.default.scrollTop() + margin.y;
+	            } else {
+	                position.y = fitsInOuterCornerVertically(position) ? position.y + margin.y - size.width : position.y + margin.y;
+	            }
+
+	            return position;
+
+	            function isElementPartlyScrolledUp($contextElement) {
+	                var scrollTop = _windowPropertiesProvider2.default.scrollTop();
+	                if (scrollTop === 0) return false;
+
+	                var y = $contextElement.offset().top - scrollTop;
+	                var height = $contextElement.outerHeight();
+
+	                return y - size.height + margin.y < 0 && y + height >= size.height + margin.y;
+	            }
+
+	            function getContextElementTopRightPosition($contextElement) {
+	                var offset = $contextElement.offset();
+	                return {
+	                    y: offset.top,
+	                    x: offset.left + $contextElement.outerWidth()
+	                };
+	            }
+
+	            function fitsInOuterCornerHirizonatlly(position) {
+	                var windowWidth = that.$windowContainer.width();
+	                return windowWidth - position.x - size.width - margin.x > 0;
+	            }
+
+	            function fitsInOuterCornerVertically(position) {
+	                return position.y + margin.y - size.width > 0;
+	            }
+	        }
+	    }]);
+
+	    return SpotPositioner;
+	}();
+
+	exports.default = SpotPositioner;
+
+/***/ },
+/* 39 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"review-spot-wrapper\">\r\n    <div class=\"review-spot\"></div>\r\n</div>";
+
+/***/ },
+/* 40 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _multiEventTracker = __webpack_require__(41);
 
 	var _multiEventTracker2 = _interopRequireDefault(_multiEventTracker);
 
@@ -2658,171 +2616,86 @@
 	exports.default = EventTracker;
 
 /***/ },
-/* 39 */
+/* 41 */
 /***/ function(module, exports) {
 
-	'use strict';
+	"use strict";
 
-	/**
-	 * Copyright Marc J. Schmidt. See the LICENSE file at the top-level
-	 * directory of this distribution and at
-	 * https://github.com/marcj/css-element-queries/blob/master/LICENSE.
-	 */
-	;
-	(function () {
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	    /**
-	     * Class for dimension change detection.
-	     *
-	     * @param {Element|Element[]|Elements|jQuery} element
-	     * @param {Function} callback
-	     *
-	     * @constructor
-	     */
-	    window.ResizeSensor = function (element, callback) {
-	        /**
-	         *
-	         * @constructor
-	         */
-	        function EventQueue() {
-	            this.q = [];
-	            this.add = function (ev) {
-	                this.q.push(ev);
-	            };
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
 
-	            var i, j;
-	            this.call = function () {
-	                for (i = 0, j = this.q.length; i < j; i++) {
-	                    this.q[i].call();
-	                }
-	            };
-	        }
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	        /**
-	         * @param {HTMLElement} element
-	         * @param {String}      prop
-	         * @returns {String|Number}
-	         */
-	        function getComputedStyle(element, prop) {
-	            if (element.currentStyle) {
-	                return element.currentStyle[prop];
-	            } else if (window.getComputedStyle) {
-	                return window.getComputedStyle(element, null).getPropertyValue(prop);
+	var MultiEventTracker = function () {
+	    function MultiEventTracker(startHandler, endHandler, useFirstTimeTimeout, interval) {
+	        _classCallCheck(this, MultiEventTracker);
+
+	        this.startHandler = startHandler;
+	        this.endHandler = endHandler;
+	        this.useFirstTimeTimeout = useFirstTimeTimeout;
+	        this.delta = interval ? interval : 200;
+	        this.timeout = false;
+	        this.runTime = null;
+	    }
+
+	    _createClass(MultiEventTracker, [{
+	        key: "eventTrigerred",
+	        value: function eventTrigerred() {
+	            var _this = this;
+
+	            if (this.useFirstTimeTimeout) {
+	                setTimeout(function () {
+	                    _this.handleEvent();
+	                }, 0);
 	            } else {
-	                return element.style[prop];
+	                this.handleEvent();
 	            }
 	        }
+	    }, {
+	        key: "handleEvent",
+	        value: function handleEvent() {
+	            var _this2 = this;
 
-	        /**
-	         *
-	         * @param {HTMLElement} element
-	         * @param {Function}    resized
-	         */
-	        function attachResizeEvent(element, resized) {
-	            if (!element.resizedAttached) {
-	                element.resizedAttached = new EventQueue();
-	                element.resizedAttached.add(resized);
-	            } else if (element.resizedAttached) {
-	                element.resizedAttached.add(resized);
-	                return;
+	            this.runTime = new Date();
+	            if (this.timeout === false) {
+	                if (this.startHandler) {
+	                    this.startHandler();
+	                }
+
+	                this.timeout = true;
+	                setTimeout(function () {
+	                    _this2.eventStoppedTrigerring();
+	                }, this.delta);
 	            }
-
-	            element.resizeSensor = document.createElement('div');
-	            element.resizeSensor.className = 'resize-sensor';
-	            var style = 'position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: scroll; z-index: -1; visibility: hidden;';
-	            var styleChild = 'position: absolute; left: 0; top: 0;';
-
-	            element.resizeSensor.style.cssText = style;
-	            element.resizeSensor.innerHTML = '<div class="resize-sensor-expand" style="' + style + '">' + '<div style="' + styleChild + '"></div>' + '</div>' + '<div class="resize-sensor-shrink" style="' + style + '">' + '<div style="' + styleChild + ' width: 200%; height: 200%"></div>' + '</div>';
-	            element.appendChild(element.resizeSensor);
-
-	            if (!{ fixed: 1, absolute: 1 }[getComputedStyle(element, 'position')]) {
-	                element.style.position = 'relative';
-	            }
-
-	            var expand = element.resizeSensor.childNodes[0];
-	            var expandChild = expand.childNodes[0];
-	            var shrink = element.resizeSensor.childNodes[1];
-
-	            var lastWidth, lastHeight;
-
-	            var reset = function reset() {
-	                expandChild.style.width = expand.offsetWidth + 10 + 'px';
-	                expandChild.style.height = expand.offsetHeight + 10 + 'px';
-	                expand.scrollLeft = expand.scrollWidth;
-	                expand.scrollTop = expand.scrollHeight;
-	                shrink.scrollLeft = shrink.scrollWidth;
-	                shrink.scrollTop = shrink.scrollHeight;
-	                lastWidth = element.offsetWidth;
-	                lastHeight = element.offsetHeight;
-	            };
-
-	            reset();
-
-	            var changed = function changed() {
-	                if (element.resizedAttached) {
-	                    element.resizedAttached.call();
-	                }
-	            };
-
-	            var addEvent = function addEvent(el, name, cb) {
-	                if (el.attachEvent) {
-	                    el.attachEvent('on' + name, cb);
-	                } else {
-	                    el.addEventListener(name, cb);
-	                }
-	            };
-
-	            var onScroll = function onScroll() {
-	                if (element.offsetWidth != lastWidth || element.offsetHeight != lastHeight) {
-	                    changed();
-	                }
-	                reset();
-	            };
-
-	            addEvent(expand, 'scroll', onScroll);
-	            addEvent(shrink, 'scroll', onScroll);
 	        }
+	    }, {
+	        key: "eventStoppedTrigerring",
+	        value: function eventStoppedTrigerring() {
+	            var _this3 = this;
 
-	        var elementType = Object.prototype.toString.call(element);
-	        var isCollectionTyped = '[object Array]' === elementType || '[object NodeList]' === elementType || '[object HTMLCollection]' === elementType || 'undefined' !== typeof jQuery && element instanceof jQuery //jquery
-	         || 'undefined' !== typeof Elements && element instanceof Elements //mootools
-	        ;
-
-	        if (isCollectionTyped) {
-	            var i = 0,
-	                j = element.length;
-	            for (; i < j; i++) {
-	                attachResizeEvent(element[i], callback);
-	            }
-	        } else {
-	            attachResizeEvent(element, callback);
-	        }
-
-	        this.detach = function () {
-	            if (isCollectionTyped) {
-	                var i = 0,
-	                    j = element.length;
-	                for (; i < j; i++) {
-	                    ResizeSensor.detach(element[i]);
-	                }
+	            if (new Date() - this.runTime < this.delta) {
+	                setTimeout(function () {
+	                    _this3.eventStoppedTrigerring();
+	                }, this.delta);
 	            } else {
-	                ResizeSensor.detach(element);
+	                this.timeout = false;
+	                if (this.endHandler) {
+	                    this.endHandler();
+	                }
 	            }
-	        };
-	    };
-
-	    window.ResizeSensor.detach = function (element) {
-	        if (element.resizeSensor) {
-	            element.removeChild(element.resizeSensor);
-	            delete element.resizeSensor;
-	            delete element.resizedAttached;
 	        }
-	    };
-	})();
+	    }]);
+
+	    return MultiEventTracker;
+	}();
+
+	exports.default = MultiEventTracker;
 
 /***/ },
-/* 40 */
+/* 42 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2933,7 +2806,7 @@
 	})();
 
 /***/ },
-/* 41 */
+/* 43 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3260,7 +3133,7 @@
 	})();
 
 /***/ },
-/* 42 */
+/* 44 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3501,7 +3374,171 @@
 	})(window.supportedBrowser = window.supportedBrowser || {});
 
 /***/ },
-/* 43 */
+/* 45 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	/**
+	 * Copyright Marc J. Schmidt. See the LICENSE file at the top-level
+	 * directory of this distribution and at
+	 * https://github.com/marcj/css-element-queries/blob/master/LICENSE.
+	 */
+	;
+	(function () {
+
+	    /**
+	     * Class for dimension change detection.
+	     *
+	     * @param {Element|Element[]|Elements|jQuery} element
+	     * @param {Function} callback
+	     *
+	     * @constructor
+	     */
+	    window.ResizeSensor = function (element, callback) {
+	        /**
+	         *
+	         * @constructor
+	         */
+	        function EventQueue() {
+	            this.q = [];
+	            this.add = function (ev) {
+	                this.q.push(ev);
+	            };
+
+	            var i, j;
+	            this.call = function () {
+	                for (i = 0, j = this.q.length; i < j; i++) {
+	                    this.q[i].call();
+	                }
+	            };
+	        }
+
+	        /**
+	         * @param {HTMLElement} element
+	         * @param {String}      prop
+	         * @returns {String|Number}
+	         */
+	        function getComputedStyle(element, prop) {
+	            if (element.currentStyle) {
+	                return element.currentStyle[prop];
+	            } else if (window.getComputedStyle) {
+	                return window.getComputedStyle(element, null).getPropertyValue(prop);
+	            } else {
+	                return element.style[prop];
+	            }
+	        }
+
+	        /**
+	         *
+	         * @param {HTMLElement} element
+	         * @param {Function}    resized
+	         */
+	        function attachResizeEvent(element, resized) {
+	            if (!element.resizedAttached) {
+	                element.resizedAttached = new EventQueue();
+	                element.resizedAttached.add(resized);
+	            } else if (element.resizedAttached) {
+	                element.resizedAttached.add(resized);
+	                return;
+	            }
+
+	            element.resizeSensor = document.createElement('div');
+	            element.resizeSensor.className = 'resize-sensor';
+	            var style = 'position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: scroll; z-index: -1; visibility: hidden;';
+	            var styleChild = 'position: absolute; left: 0; top: 0;';
+
+	            element.resizeSensor.style.cssText = style;
+	            element.resizeSensor.innerHTML = '<div class="resize-sensor-expand" style="' + style + '">' + '<div style="' + styleChild + '"></div>' + '</div>' + '<div class="resize-sensor-shrink" style="' + style + '">' + '<div style="' + styleChild + ' width: 200%; height: 200%"></div>' + '</div>';
+	            element.appendChild(element.resizeSensor);
+
+	            if (!{ fixed: 1, absolute: 1 }[getComputedStyle(element, 'position')]) {
+	                element.style.position = 'relative';
+	            }
+
+	            var expand = element.resizeSensor.childNodes[0];
+	            var expandChild = expand.childNodes[0];
+	            var shrink = element.resizeSensor.childNodes[1];
+
+	            var lastWidth, lastHeight;
+
+	            var reset = function reset() {
+	                expandChild.style.width = expand.offsetWidth + 10 + 'px';
+	                expandChild.style.height = expand.offsetHeight + 10 + 'px';
+	                expand.scrollLeft = expand.scrollWidth;
+	                expand.scrollTop = expand.scrollHeight;
+	                shrink.scrollLeft = shrink.scrollWidth;
+	                shrink.scrollTop = shrink.scrollHeight;
+	                lastWidth = element.offsetWidth;
+	                lastHeight = element.offsetHeight;
+	            };
+
+	            reset();
+
+	            var changed = function changed() {
+	                if (element.resizedAttached) {
+	                    element.resizedAttached.call();
+	                }
+	            };
+
+	            var addEvent = function addEvent(el, name, cb) {
+	                if (el.attachEvent) {
+	                    el.attachEvent('on' + name, cb);
+	                } else {
+	                    el.addEventListener(name, cb);
+	                }
+	            };
+
+	            var onScroll = function onScroll() {
+	                if (element.offsetWidth != lastWidth || element.offsetHeight != lastHeight) {
+	                    changed();
+	                }
+	                reset();
+	            };
+
+	            addEvent(expand, 'scroll', onScroll);
+	            addEvent(shrink, 'scroll', onScroll);
+	        }
+
+	        var elementType = Object.prototype.toString.call(element);
+	        var isCollectionTyped = '[object Array]' === elementType || '[object NodeList]' === elementType || '[object HTMLCollection]' === elementType || 'undefined' !== typeof jQuery && element instanceof jQuery //jquery
+	         || 'undefined' !== typeof Elements && element instanceof Elements //mootools
+	        ;
+
+	        if (isCollectionTyped) {
+	            var i = 0,
+	                j = element.length;
+	            for (; i < j; i++) {
+	                attachResizeEvent(element[i], callback);
+	            }
+	        } else {
+	            attachResizeEvent(element, callback);
+	        }
+
+	        this.detach = function () {
+	            if (isCollectionTyped) {
+	                var i = 0,
+	                    j = element.length;
+	                for (; i < j; i++) {
+	                    ResizeSensor.detach(element[i]);
+	                }
+	            } else {
+	                ResizeSensor.detach(element);
+	            }
+	        };
+	    };
+
+	    window.ResizeSensor.detach = function (element) {
+	        if (element.resizeSensor) {
+	            element.removeChild(element.resizeSensor);
+	            delete element.resizeSensor;
+	            delete element.resizedAttached;
+	        }
+	    };
+	})();
+
+/***/ },
+/* 46 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3523,24 +3560,24 @@
 	})();
 
 /***/ },
-/* 44 */
+/* 47 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 45 */,
-/* 46 */,
-/* 47 */,
 /* 48 */,
-/* 49 */
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 50 */,
-/* 51 */
+/* 53 */,
+/* 54 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin

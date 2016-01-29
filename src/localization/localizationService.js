@@ -7,8 +7,7 @@ class LocalizationService{
 
     init(locale) {
         this.locale = locale;
-        var lang = langs[this.locale];
-        if (!lang) {
+        if (!langs[this.locale]) {
             this.locale = 'en';
         }
     }
@@ -18,11 +17,12 @@ class LocalizationService{
     }
 
     localizeHtml(html) {
-        var regExp = /\{\{(.*?)\}\}/gi;
-        var result = '', localizedHtml = html;
+        let regExp = /\{\{(.*?)\}\}/gi,
+            localizedHtml = html,
+            result = '';
             
         while ((result = regExp.exec(localizedHtml))) {
-            var match = result[0],
+            let match = result[0],
                 key = result[1];
 
             localizedHtml = localizedHtml.replace(match, this.localize(key));
@@ -37,7 +37,5 @@ class LocalizationService{
 }
 
 var localizationService = new LocalizationService();
-
 window.pluginsLocalizationService = localizationService;
-
 export default localizationService;

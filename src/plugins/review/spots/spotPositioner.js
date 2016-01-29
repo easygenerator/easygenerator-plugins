@@ -1,10 +1,10 @@
 ﻿import constants from './../infrastructure/constants';
 import windowPropertiesProvider from './../infrastructure/domInteraction/windowPropertiesProvider';
 
-var margin = {
-    x: 3,
-    y: 10
-},
+let margin = {
+        x: 3,
+        y: 10
+    },
     size = {
         width: 32,
         height: 32
@@ -16,8 +16,8 @@ class SpotPositioner{
     }
 
     updatePosition(spot) {
-        var currentPosition = spot.$element.position();
-        var position = this.calculatePosition(spot);
+        let currentPosition = spot.$element.position(),
+            position = this.calculatePosition(spot);
 
         if (currentPosition.left === position.x && currentPosition.top === position.y)
             return;

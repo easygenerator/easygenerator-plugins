@@ -51,7 +51,8 @@ constants.css = {
     shown: 'shown',
     success: 'success',
     fail: 'fail',
-    disabled: 'disabled'
+    disabled: 'disabled',
+    fast: 'fast'
 };
 
 constants.selectors = {
@@ -84,14 +85,16 @@ constants.selectors = {
 
     body: 'body',
     iframe: 'iframe',
-    img: 'img'
+    img: 'img',
+    html: 'html'
 };
 
 constants.events = {
     positionUpdated: 'positionUpdated',
     elementHidden: 'elementHidden',
     elementDestroyed: 'elementDestroyed',
-    elementShown: 'elementShown'
+    elementShown: 'elementShown',
+    keyUp: 'keyup'
 };
 
 export default constants;

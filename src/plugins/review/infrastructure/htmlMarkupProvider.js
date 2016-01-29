@@ -1,4 +1,4 @@
-﻿import localizationService from './../../localization/localizationService';
+﻿import localizationService from './../../../localization/localizationService';
     
 class HtmlMarkupProvider{
     getHtmlMarkup(html) {

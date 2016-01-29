@@ -5,22 +5,21 @@ import CommentFormControls from './CommentFormControls';
 import commentFormHtml from './commentForm.html';
 import reviewService from './../../reviewService';
 
-class CommentForm{
+export default class CommentForm{
     constructor(closeHandler){
-        var that = this;
         this.$element = $(htmlMarkupProvider.getHtmlMarkup(commentFormHtml));
         this.controls = new CommentFormControls(this.$element);
 
-        this.controls.cancelBtn.click(function(){
+        this.controls.cancelBtn.click(() => {
             if (closeHandler) {
                 closeHandler();
             }
         });
-        this.controls.submitBtn.click(function(){
-            that.submit();
+        this.controls.submitBtn.click(() =>{
+            this.submit();
         });
-        this.controls.messageForm.messageField.onfocus(function () {
-            that.controls.commentStatusMessage.fadeOut();
+        this.controls.messageForm.messageField.onfocus(() => {
+            this.controls.commentStatusMessage.fadeOut();
         });
     }
 
@@ -118,6 +117,4 @@ class CommentForm{
         var value = this.controls.identifyForm.mailField.getValue();
         return value && value.trim() && value.trim().length <= 254 && constants.patterns.email.test(value.trim());
     }
-}
-
-export default CommentForm;
+};

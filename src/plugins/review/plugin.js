@@ -28,13 +28,13 @@ class Plugin{
 
         var eventTracker = new EventTracker();
 
-        eventTracker.trackWindowResize(function () {
+        eventTracker.trackWindowResize(() => {
             spotController.hideSpots();
-        }, function () {
+        }, () => {
             spotController.showSpots();
         });
 
-        eventTracker.trackWindowScroll(function () {
+        eventTracker.trackWindowScroll(() => {
             spotController.updatePositions();
         });
 
@@ -47,5 +47,4 @@ class Plugin{
 }
 
 window.ReviewPlugin = Plugin;
-
 export default Plugin;

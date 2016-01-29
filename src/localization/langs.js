@@ -4,7 +4,7 @@ import en from './lang/en.json';
 import es from './lang/es.json';
 import fr from './lang/fr.json';
 import nl from './lang/nl.json';
-import pt_br from './lang/pt-br.json';
+import ptBr from './lang/pt-br.json';
 import ua from './lang/ua.json';
 
 const langs = {
@@ -14,7 +14,7 @@ const langs = {
 	'es': es,
 	'fr': fr,
 	'nl': nl,
-	'pt-br': pt_br,
+	'pt-br': ptBr,
 	'ua': ua
 };
 
