@@ -1,30 +1,34 @@
 ﻿import SpotPositioner from './spotPositioner';
 import reviewSpotHtml from './spot.html';
+import SpotContextValidator from './spotContextValidator';
 import constants from './../infrastructure/constants';
 import htmlMarkupProvider from './../infrastructure/htmlMarkupProvider';
 import dialogController from './../dialogs/dialogController';
 import hintController from './../hints/hintController';
 
 export default class Spot {
-    constructor(id, $contextElement) {
+    constructor(id, $contextElement) {    
         this.id = id;
         this.$element = null;
         this.$contextElement = $contextElement;
+        this.context = this.$contextElement.data(constants.dataKeys.reviewContext);        
         this.spotMarkup = htmlMarkupProvider.getHtmlMarkup(reviewSpotHtml);
+        
+        new SpotContextValidator().validate(this.context);
     }
 
-    render(){
+    render() {        
         this.$element = $(this.spotMarkup).appendTo(constants.selectors.body);
 
-        this.$element.data({ reviewSpotId: this.id });
-        this.$contextElement.data({ reviewSpotId: this.id });
+        this.$element.data(constants.dataKeys.reviewSpotId, this.id);
+        this.$contextElement.data(constants.dataKeys.reviewSpotId, this.id);
 
         this.$element.find(constants.selectors.reviewSpot).click(() => {
             if (hintController.isSpotReviewHintOpened()) {
                 hintController.closeSpotReviewHint();
             } 
 
-            dialogController.showElementReviewDialog(this.$element);
+            dialogController.showElementReviewDialog(this);
         });
     }
 
