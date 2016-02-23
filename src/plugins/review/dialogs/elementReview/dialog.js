@@ -25,20 +25,20 @@ export default class Dialog{
         this.updatePositionProxy = this.updatePosition.bind(this);
     }
 
-    show($parent) {
-        this.$parent = $parent;
-        this.$dialog.finish().css({ opacity: 0 }).removeClass(constants.css.shown).show().appendTo($parent);
+    show(spot) {
+        this.spot = spot;
+        this.$dialog.finish().css({ opacity: 0 }).removeClass(constants.css.shown).show().appendTo(this.spot.$element);
         this.updatePosition();
 
-        this.commentForm.init();
+        this.commentForm.init(spot.context);
         this.$dialog.fadeTo(50, 1, () => {
             this.$dialog.addClass(constants.css.shown);
         });
 
-        $parent.on(constants.events.elementShown, this.updatePositionProxy);
-        $parent.on(constants.events.elementDestroyed, this.detachProxy);
+        this.spot.$element.on(constants.events.elementShown, this.updatePositionProxy);
+        this.spot.$element.on(constants.events.elementDestroyed, this.detachProxy);
 
-        this.$html.on(constants.events.keyUp,  this.hideOnEscapeProxy);
+        this.$html.on(constants.events.keyUp, this.hideOnEscapeProxy);
 
         this.isShown = true;
     }
@@ -55,26 +55,26 @@ export default class Dialog{
             this.$dialog.detach();
         });
 
-        this.$parent.off(constants.events.elementShown, this.updatePositionProxy);
-        this.$parent.off(constants.events.elementDestroyed, this.detachProxy);
+        this.spot.$element.off(constants.events.elementShown, this.updatePositionProxy);
+        this.spot.$element.off(constants.events.elementDestroyed, this.detachProxy);
 
         this.$html.off(constants.events.keyUp, this.hideOnEscapeProxy);
 
         this.isShown = false;
-        this.$parent = null;
+        this.spot = null;
     }
 
     updatePosition() {
-        this.dialogPositioner.setPosition(this.$parent, this.$dialog);
+        this.dialogPositioner.setPosition(this.spot.$element, this.$dialog);
     }
 
-    isShownForElement($spot) {
-        return $spot.find(constants.selectors.reviewDialog).length > 0;
+    isShownForElement(spot) {
+        return spot.$element.find(constants.selectors.reviewDialog).length > 0;
     }
 
     detach(){
         this.$dialog.detach();
         this.isShown = false;
-        this.$parent = null;
+        this.spot = null;
     }
 }

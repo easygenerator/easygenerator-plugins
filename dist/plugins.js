@@ -45,15 +45,15 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	__webpack_require__(42);
 	__webpack_require__(43);
 	__webpack_require__(44);
 	__webpack_require__(45);
-	__webpack_require__(10);
 	__webpack_require__(46);
+	__webpack_require__(10);
 	__webpack_require__(47);
-	__webpack_require__(52);
-	module.exports = __webpack_require__(54);
+	__webpack_require__(48);
+	__webpack_require__(53);
+	module.exports = __webpack_require__(55);
 
 
 /***/ },
@@ -84,7 +84,7 @@
 
 	var _dialogController2 = _interopRequireDefault(_dialogController);
 
-	var _eventTracker = __webpack_require__(40);
+	var _eventTracker = __webpack_require__(41);
 
 	var _eventTracker2 = _interopRequireDefault(_eventTracker);
 
@@ -174,10 +174,10 @@
 	        }
 	    }, {
 	        key: 'postComment',
-	        value: function postComment(message, username, useremail) {
+	        value: function postComment(message, username, useremail, context) {
 	            return $.ajax({
 	                url: this.getApiUrl('api/comment/create'),
-	                data: { courseId: this.courseId, text: message.trim(), createdByName: username.trim(), createdBy: useremail.trim() },
+	                data: { courseId: this.courseId, text: message.trim(), createdByName: username.trim(), createdBy: useremail.trim(), context: context ? JSON.stringify(context) : context },
 	                type: 'POST'
 	            });
 	        }
@@ -792,6 +792,11 @@
 	    keyUp: 'keyup'
 	};
 
+	constants.dataKeys = {
+	    reviewSpotId: 'reviewSpotId',
+	    reviewContext: 'review-context'
+	};
+
 	exports.default = constants;
 
 /***/ },
@@ -1317,7 +1322,7 @@
 	    }, {
 	        key: 'renderSpot',
 	        value: function renderSpot($element) {
-	            var spotId = getAttachedSpotId($element);
+	            var spotId = $element.data(_constants2.default.dataKeys.reviewSpotId);
 	            if (spotId) {
 	                var spot = this.spotCollection.getSpotById(spotId);
 	                spot.updatePosition();
@@ -1330,13 +1335,6 @@
 
 	    return SpotController;
 	}();
-
-	function getAttachedSpotId($element) {
-	    var data = $element.data();
-	    if (!data) return false;
-
-	    return data.reviewSpotId;
-	}
 
 	var spotController = new SpotController();
 	exports.default = spotController;
@@ -1397,20 +1395,20 @@
 	        }
 	    }, {
 	        key: 'showElementReviewDialog',
-	        value: function showElementReviewDialog($spot) {
+	        value: function showElementReviewDialog(spot) {
 	            if (this.generalReviewDialog.isExpanded) {
 	                this.generalReviewDialog.toggleExpansion();
 	            }
 
 	            if (this.elementReviewDialog.isShown) {
-	                var isShownForElement = this.elementReviewDialog.isShownForElement($spot);
+	                var isShownForElement = this.elementReviewDialog.isShownForElement(spot);
 	                this.elementReviewDialog.hide();
 	                if (isShownForElement) {
 	                    return;
 	                }
 	            }
 
-	            this.elementReviewDialog.show($spot);
+	            this.elementReviewDialog.show(spot);
 	        }
 	    }, {
 	        key: 'updatePositionIfNeeded',
@@ -1493,20 +1491,20 @@
 
 	    _createClass(Dialog, [{
 	        key: 'show',
-	        value: function show($parent) {
+	        value: function show(spot) {
 	            var _this2 = this;
 
-	            this.$parent = $parent;
-	            this.$dialog.finish().css({ opacity: 0 }).removeClass(_constants2.default.css.shown).show().appendTo($parent);
+	            this.spot = spot;
+	            this.$dialog.finish().css({ opacity: 0 }).removeClass(_constants2.default.css.shown).show().appendTo(this.spot.$element);
 	            this.updatePosition();
 
-	            this.commentForm.init();
+	            this.commentForm.init(spot.context);
 	            this.$dialog.fadeTo(50, 1, function () {
 	                _this2.$dialog.addClass(_constants2.default.css.shown);
 	            });
 
-	            $parent.on(_constants2.default.events.elementShown, this.updatePositionProxy);
-	            $parent.on(_constants2.default.events.elementDestroyed, this.detachProxy);
+	            this.spot.$element.on(_constants2.default.events.elementShown, this.updatePositionProxy);
+	            this.spot.$element.on(_constants2.default.events.elementDestroyed, this.detachProxy);
 
 	            this.$html.on(_constants2.default.events.keyUp, this.hideOnEscapeProxy);
 
@@ -1529,30 +1527,30 @@
 	                _this3.$dialog.detach();
 	            });
 
-	            this.$parent.off(_constants2.default.events.elementShown, this.updatePositionProxy);
-	            this.$parent.off(_constants2.default.events.elementDestroyed, this.detachProxy);
+	            this.spot.$element.off(_constants2.default.events.elementShown, this.updatePositionProxy);
+	            this.spot.$element.off(_constants2.default.events.elementDestroyed, this.detachProxy);
 
 	            this.$html.off(_constants2.default.events.keyUp, this.hideOnEscapeProxy);
 
 	            this.isShown = false;
-	            this.$parent = null;
+	            this.spot = null;
 	        }
 	    }, {
 	        key: 'updatePosition',
 	        value: function updatePosition() {
-	            this.dialogPositioner.setPosition(this.$parent, this.$dialog);
+	            this.dialogPositioner.setPosition(this.spot.$element, this.$dialog);
 	        }
 	    }, {
 	        key: 'isShownForElement',
-	        value: function isShownForElement($spot) {
-	            return $spot.find(_constants2.default.selectors.reviewDialog).length > 0;
+	        value: function isShownForElement(spot) {
+	            return spot.$element.find(_constants2.default.selectors.reviewDialog).length > 0;
 	        }
 	    }, {
 	        key: 'detach',
 	        value: function detach() {
 	            this.$dialog.detach();
 	            this.isShown = false;
-	            this.$parent = null;
+	            this.spot = null;
 	        }
 	    }]);
 
@@ -1649,7 +1647,7 @@
 	            var message = this.controls.messageForm.messageField.getValue().trim();
 	            this.controls.submitBtn.disable();
 	            var that = this;
-	            _reviewService2.default.postComment(message, username, usermail).done(function (response) {
+	            _reviewService2.default.postComment(message, username, usermail, this.context).done(function (response) {
 	                that.switchToMessageForm();
 	                that.controls.submitBtn.enable();
 	                if (response) {
@@ -1668,9 +1666,10 @@
 	        }
 	    }, {
 	        key: 'init',
-	        value: function init() {
+	        value: function init(context) {
 	            this.clear();
 	            this.controls.messageForm.messageField.focus();
+	            this.context = context;
 	        }
 	    }, {
 	        key: 'clear',
@@ -2371,6 +2370,10 @@
 
 	var _spot2 = _interopRequireDefault(_spot);
 
+	var _spotContextValidator = __webpack_require__(40);
+
+	var _spotContextValidator2 = _interopRequireDefault(_spotContextValidator);
+
 	var _constants = __webpack_require__(7);
 
 	var _constants2 = _interopRequireDefault(_constants);
@@ -2398,7 +2401,10 @@
 	        this.id = id;
 	        this.$element = null;
 	        this.$contextElement = $contextElement;
+	        this.context = this.$contextElement.data(_constants2.default.dataKeys.reviewContext);
 	        this.spotMarkup = _htmlMarkupProvider2.default.getHtmlMarkup(_spot2.default);
+
+	        new _spotContextValidator2.default().validate(this.context);
 	    }
 
 	    _createClass(Spot, [{
@@ -2408,15 +2414,15 @@
 
 	            this.$element = $(this.spotMarkup).appendTo(_constants2.default.selectors.body);
 
-	            this.$element.data({ reviewSpotId: this.id });
-	            this.$contextElement.data({ reviewSpotId: this.id });
+	            this.$element.data(_constants2.default.dataKeys.reviewSpotId, this.id);
+	            this.$contextElement.data(_constants2.default.dataKeys.reviewSpotId, this.id);
 
 	            this.$element.find(_constants2.default.selectors.reviewSpot).click(function () {
 	                if (_hintController2.default.isSpotReviewHintOpened()) {
 	                    _hintController2.default.closeSpotReviewHint();
 	                }
 
-	                _dialogController2.default.showElementReviewDialog(_this.$element);
+	                _dialogController2.default.showElementReviewDialog(_this);
 	            });
 	        }
 	    }, {
@@ -2565,6 +2571,107 @@
 
 /***/ },
 /* 40 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var SpotContextValidator = function () {
+	    function SpotContextValidator() {
+	        _classCallCheck(this, SpotContextValidator);
+	    }
+
+	    _createClass(SpotContextValidator, [{
+	        key: 'validate',
+	        value: function validate(context) {
+	            if (!context) return true;
+
+	            switch (context.type) {
+	                case 'course':
+	                    validateCourseContext();
+	                    break;
+	                case 'question':
+	                    validateQuestionContext();
+	                    break;
+	                case 'informationContent':
+	                    validateInformationContentContext();
+	                    break;
+	                case 'objective':
+	                    validateObjectiveContext();
+	                    break;
+	                default:
+	                    trowError('Unknown review context type \'' + context.type + '\'. Possible values are: \'course\', \'question\', \'informationContent\', \'objective\'.');
+	            }
+
+	            function validateCourseContext() {
+	                if (!context.property || !(context.property === 'title' || context.property === 'introduction')) {
+	                    trowError('Unknown course review context property \'' + context.property + '\'. Possible values are: \'title\', \'introduction\'.');
+	                }
+	            }
+
+	            function validateQuestionContext() {
+	                validateContextTitle();
+	                validateContextId();
+
+	                if (context.property && !(context.property === 'voiceOver' || context.property === 'learningContent')) {
+	                    trowError('Unknown question review context property \'' + context.property + '\'. Possible values are: \'voiceOver\', \'learningContent\'.');
+	                }
+	            }
+
+	            function validateInformationContentContext() {
+	                validateContextTitle();
+	                validateContextId();
+
+	                if (context.property && context.property !== 'voiceOver') {
+	                    trowError('Unknown information content review context property \'' + context.property + '\'. Possible values are: \'voiceOver\'.');
+	                }
+	            }
+
+	            function validateObjectiveContext() {
+	                validateContextTitle();
+	                validateContextId();
+
+	                if (context.property !== 'title') {
+	                    trowError('Unknown objective review context property \'' + context.property + '\'.');
+	                }
+	            }
+
+	            function validateContextId() {
+	                if (!context.id) {
+	                    trowError('Review context id is not defined.');
+	                }
+	            }
+
+	            function validateContextTitle() {
+	                if (!context.title) {
+	                    trowError('Review context title is not defined.');
+	                }
+
+	                if (context.title.trim().length < 1 || context.title.trim().length >= 256) {
+	                    trowError('Review context title \'' + context.title + '\' is invalid.');
+	                }
+	            }
+
+	            function trowError(error) {
+	                throw '[Review plugin] ' + error + ' Context object: ' + JSON.stringify(context);
+	            }
+	        }
+	    }]);
+
+	    return SpotContextValidator;
+	}();
+
+	exports.default = SpotContextValidator;
+
+/***/ },
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2575,7 +2682,7 @@
 	    value: true
 	});
 
-	var _multiEventTracker = __webpack_require__(41);
+	var _multiEventTracker = __webpack_require__(42);
 
 	var _multiEventTracker2 = _interopRequireDefault(_multiEventTracker);
 
@@ -2616,7 +2723,7 @@
 	exports.default = EventTracker;
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2695,7 +2802,7 @@
 	exports.default = MultiEventTracker;
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2806,7 +2913,7 @@
 	})();
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3133,7 +3240,7 @@
 	})();
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3374,7 +3481,7 @@
 	})(window.supportedBrowser = window.supportedBrowser || {});
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3538,7 +3645,7 @@
 	})();
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3560,24 +3667,24 @@
 	})();
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 48 */,
 /* 49 */,
 /* 50 */,
 /* 51 */,
-/* 52 */
+/* 52 */,
+/* 53 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 53 */,
-/* 54 */
+/* 54 */,
+/* 55 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin

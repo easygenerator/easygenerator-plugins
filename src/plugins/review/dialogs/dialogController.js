@@ -20,20 +20,20 @@ class DialogController{
         this.generalReviewDialog.show();
     }
 
-    showElementReviewDialog($spot) {
+    showElementReviewDialog(spot) {
         if (this.generalReviewDialog.isExpanded) {
             this.generalReviewDialog.toggleExpansion();
         }
 
         if (this.elementReviewDialog.isShown) {
-            let isShownForElement = this.elementReviewDialog.isShownForElement($spot);
+            let isShownForElement = this.elementReviewDialog.isShownForElement(spot);
             this.elementReviewDialog.hide();
             if (isShownForElement) {
                 return;
             }
         }
 
-        this.elementReviewDialog.show($spot);
+        this.elementReviewDialog.show(spot);
     }
 
     updatePositionIfNeeded() {

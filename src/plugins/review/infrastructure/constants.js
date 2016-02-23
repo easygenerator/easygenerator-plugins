@@ -97,4 +97,10 @@ constants.events = {
     keyUp: 'keyup'
 };
 
+constants.dataKeys = {
+    reviewSpotId: 'reviewSpotId',
+    reviewContext: 'review-context'
+};
+
+
 export default constants;

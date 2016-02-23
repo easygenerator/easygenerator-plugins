@@ -4,10 +4,10 @@
         this.courseId=courseId;
     }
     
-    postComment(message, username, useremail) {
+    postComment(message, username, useremail, context) {
         return $.ajax({
             url: this.getApiUrl('api/comment/create'),
-            data: { courseId: this.courseId, text: message.trim(), createdByName: username.trim(), createdBy: useremail.trim() },
+            data: { courseId: this.courseId, text: message.trim(), createdByName: username.trim(), createdBy: useremail.trim(), context: context ? JSON.stringify(context) : context },
             type: 'POST'
         });
     }

@@ -6,7 +6,7 @@ import commentFormHtml from './commentForm.html';
 import reviewService from './../../reviewService';
 
 export default class CommentForm{
-    constructor(closeHandler){
+    constructor(closeHandler) {
         this.$element = $(htmlMarkupProvider.getHtmlMarkup(commentFormHtml));
         this.controls = new CommentFormControls(this.$element);
 
@@ -49,7 +49,7 @@ export default class CommentForm{
         var message = this.controls.messageForm.messageField.getValue().trim();
         this.controls.submitBtn.disable();
         var that=this;
-        reviewService.postComment(message, username, usermail)
+        reviewService.postComment(message, username, usermail, this.context)
             .done(function (response) {
                 that.switchToMessageForm();
                 that.controls.submitBtn.enable();
@@ -68,9 +68,10 @@ export default class CommentForm{
             });
     }
 
-    init() {
+    init(context) {
         this.clear();
         this.controls.messageForm.messageField.focus();
+        this.context = context;
     }
 
     clear() {

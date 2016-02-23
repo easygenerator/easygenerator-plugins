@@ -39,7 +39,7 @@ class SpotController{
     }
 
     renderSpot($element) {
-        var spotId = getAttachedSpotId($element);
+        var spotId = $element.data(constants.dataKeys.reviewSpotId);
         if (spotId) {
             let spot = this.spotCollection.getSpotById(spotId);
             spot.updatePosition();
@@ -48,14 +48,6 @@ class SpotController{
 
         return this.spotCollection.addSpot($element);
     }
-}
-
-function getAttachedSpotId($element) {
-    var data = $element.data();
-    if (!data)
-        return false;
-
-    return data.reviewSpotId;
 }
 
 var spotController = new SpotController();
