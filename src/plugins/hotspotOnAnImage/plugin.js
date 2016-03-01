@@ -256,67 +256,119 @@
         }
     };
     
-    window.HotspotOnImage = function(element, settings) {
-        var that = this,
-            resizeTimer,
-            refreshRate = 250,
-            settings = settings || {};
-        that.element = element;
-        that.renderedImage = that.element.getElementsByTagName('img')[0];
-        that.spots = [];
-        that.ratio = 1;
-        that.defaultImageWidth = 0;
-        
-        if (typeof settings.useContainerOffsetLeft !== 'undefined'){
-            config.useContainerOffsetLeft = settings.useContainerOffsetLeft;
-        }
-        
-        init();
-        
-        function init(){
-            generateSpots();
-            loadImage();
-        }
-        
-        function loadImage(){
-            var image = new Image();
-            image.onload = function(){
-                that.defaultImageWidth = this.width;
-                that.ratio = that.renderedImage.offsetWidth / that.defaultImageWidth;
-                updateSpotsPosition();
-            };
-            image.src = that.renderedImage.getAttribute('src');
-        }
-        
-        function generateSpots(){
-            var spots = getElementsByAttribute(that.element, 'data-id');
-            eachSpots(spots, function(spot){
-                that.spots.push(new Spot(spot, that.element, that.ratio));
-            });
-        }
-        
-        function updateSpotsPosition(){
-            that.ratio = that.renderedImage.offsetWidth / that.defaultImageWidth;
-            eachSpots(that.spots, function(spot){
-                spot.updatePosition(that.ratio);
-                spot.show();
-            });
-        }
-        
-        function eachSpots(spots, callback){
-            var spotsLength = spots.length;
-            for (var i = 0; i < spotsLength; i++){
-                if (typeof callback === 'function'){
-                    callback.call(this, spots[i]);
+	var HotspotOnImage = function (id, element, settings) {
+	        var that = this,
+	            resizeTimer,
+                spotsPositionChecker,
+                refreshRate = 250,
+                settings = settings || {};
+
+	        that.id = id;
+	        that.element = element;
+	        that.renderedImage = that.element.getElementsByTagName('img')[0];
+	        that.spots = [];
+	        that.ratio = 1;
+	        that.defaultImageWidth = 0;
+
+	        that.resizeSpots = function() {
+	            eachSpots(that.spots, function(spot) {
+	                spot.hide();
+	            });
+
+	            clearTimeout(resizeTimer);
+	            resizeTimer = setTimeout(updateSpotsPosition, 250);
+	        };
+
+	        that.destroy = function () {
+	            if (spotsPositionChecker) {
+	                clearInterval(spotsPositionChecker);
+	            }
+	        };
+
+	        if (typeof settings.useContainerOffsetLeft !== 'undefined') {
+	            config.useContainerOffsetLeft = settings.useContainerOffsetLeft;
+	        }
+
+	        init();
+
+	        function init() {
+	            generateSpots();
+	            loadImage();
+	        }
+
+	        function loadImage() {
+	            var image = new Image();
+	            image.onload = function () {
+	                that.defaultImageWidth = this.width;
+	                updateSpotsPosition();
+	            };
+	            image.src = that.renderedImage.getAttribute('src');
+	        }
+
+	        function generateSpots() {
+	            var spots = getElementsByAttribute(that.element, 'data-id');
+	            eachSpots(spots, function (spot) {
+	                that.spots.push(new Spot(spot, that.element, that.ratio));
+	            });
+	        }
+
+	        function updateSpotsPosition() {
+	            if (spotsPositionChecker) {
+	                clearInterval(spotsPositionChecker);
+	            }
+
+	            if (that.renderedImage.offsetWidth > 0) {
+	                updateSpotsPositionOnImageWithRatio();
+	            } else {
+	                spotsPositionChecker = setInterval(function () {
+	                    if (that.renderedImage.offsetWidth > 0) {
+							updateSpotsPositionOnImageWithRatio();
+							clearInterval(spotsPositionChecker);
+						}
+                    }, 500);
+	            }
+	        }
+			
+			function updateSpotsPositionOnImageWithRatio(){
+			that.ratio = that.renderedImage.offsetWidth / that.defaultImageWidth;
+	            eachSpots(that.spots, function (spot) {
+	                spot.updatePosition(that.ratio);
+	                spot.show();
+	            });
+			}
+
+	        function eachSpots(spots, callback) {
+	            var spotsLength = spots.length;
+	            for (var i = 0; i < spotsLength; i++) {
+	                if (typeof callback === 'function') {
+	                    callback.call(this, spots[i]);
+	                }
+	            }
+	        }
+	    };
+
+	    var id = 1;
+
+	    window.HotspotStorage = {
+            hotspots: {},
+
+            create: function (element) {
+	            this.hotspots[id] = new HotspotOnImage(id, element);
+	            return this.hotspots[id++];
+	        },
+
+	        remove: function (hotspot) {
+	            if (hotspot && hotspot.id && this.hotspots[hotspot.id]) {
+	                this.hotspots[hotspot.id].destroy();
+	                delete this.hotspots[hotspot.id];
                 }
             }
-        }
+	    };
 
-        window.addEventListener('resize', function(){
-            eachSpots(that.spots, function(spot){ spot.hide(); });
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(updateSpotsPosition, 250);
-        });
-    };
+	    window.addEventListener('resize', function () {
+	        $.each(HotspotStorage.hotspots, function(key, item) {
+	            item.resizeSpots();
+	        });
+	    });
     
 })();
