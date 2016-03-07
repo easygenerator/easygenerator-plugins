@@ -56,7 +56,7 @@
             if (data.provider !== messageProvider) {
                 return;
             }
-            var projectId = data.details.project.permalink,
+            var projectId = data.details.project.token,
                 messageDataType = data.type,
                 branchtrackInstance = instances[projectId];
 
