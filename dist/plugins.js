@@ -2605,11 +2605,11 @@
 	                case 'informationContent':
 	                    validateInformationContentContext();
 	                    break;
-	                case 'objective':
-	                    validateObjectiveContext();
+	                case 'section':
+	                    validateSectionContext();
 	                    break;
 	                default:
-	                    trowError('Unknown review context type \'' + context.type + '\'. Possible values are: \'course\', \'question\', \'informationContent\', \'objective\'.');
+	                    trowError('Unknown review context type \'' + context.type + '\'. Possible values are: \'course\', \'question\', \'informationContent\', \'section\'.');
 	            }
 
 	            function validateCourseContext() {
@@ -2636,12 +2636,12 @@
 	                }
 	            }
 
-	            function validateObjectiveContext() {
+	            function validateSectionContext() {
 	                validateContextTitle();
 	                validateContextId();
 
 	                if (context.property !== 'title') {
-	                    trowError('Unknown objective review context property \'' + context.property + '\'.');
+	                    trowError('Unknown section review context property \'' + context.property + '\'.');
 	                }
 	            }
 

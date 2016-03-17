@@ -43,7 +43,7 @@ If the course is opened for review, the query string parameter `'reviewApiUrl'` 
 To mark an element for review, add `'reviewable'` class in the html markup.
 
 ```
- <li class="objective reviewable">
+ <li class="section reviewable">
     ...
  </li>
 ```
