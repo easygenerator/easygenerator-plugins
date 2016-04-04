@@ -6,6 +6,7 @@ import fr from './lang/fr.json';
 import nl from './lang/nl.json';
 import ptBr from './lang/pt-br.json';
 import ua from './lang/ua.json';
+import ru from './lang/ru.json';
 
 const langs = {
 	'cn': cn,
@@ -15,7 +16,8 @@ const langs = {
 	'fr': fr,
 	'nl': nl,
 	'pt-br': ptBr,
-	'ua': ua
+	'ua': ua,
+	'ru': ru,
 };
 
 export default langs;
