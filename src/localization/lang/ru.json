@@ -1,0 +1,20 @@
+{
+    "commentWasNotSent": "Комментарий не был отправлен",
+    "commentWasSent": "Отправлено",
+    "leaveYourComment": "Оставьте свой комментарий",
+    "send": "Отправить комментарий",
+    "tryAgain": "Попробовать снова",
+    "yourMessage": "Введите Ваше сообщение...",
+    "identifyMessage": "Пожалуйста, представьтесь",
+    "name": "Имя",
+    "email": "E-mail",
+    "enterValidEmailError": "Укажите валидный e-mail",
+    "enterYourNameError": "Введите Ваше имя",
+    "gotIt": "Понятно",
+    "elementReviewHint": "Нажмите на иконку, чтобы оставить комментарий.",
+    "generalReviewHint": "Нажмите на панель, чтобы оставить общий комментарий.",
+    "leaveGeneralComment": "Оставьте общий комментарий",
+    "typeYourCommentHere": "Ваш комментарий...",
+    "cancel": "Отмена",
+    "postComment": "Отправить комментарий"
+}
