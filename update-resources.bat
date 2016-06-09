@@ -1,1 +1,1 @@
-easyresources generate --worksheetName "Plugins" --outputPath "./src/localization/lang"
+easyresources generate --worksheetName "Simple course plugins" --outputPath "./src/localization/lang"
