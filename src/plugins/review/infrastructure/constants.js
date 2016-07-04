@@ -1,7 +1,7 @@
 ﻿var constants = {};
 
 constants.patterns = {
-    email: /^[^@]+@[^@]+\.[^@]+$/
+    email: /^[^@\s]+@[^@\s]+$/
 };
 
 constants.clientContextKeys = {
