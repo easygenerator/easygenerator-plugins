@@ -2936,10 +2936,10 @@
 	            }
 
 	            if (messageDataType === supportedMessageTypes.scene) {
-	                if (typeof data.details.scene.score === "number" && data.details.scene.score > 0) {
-	                    branchtrackInstance.score = data.details.scene.score;
-	                } else if (typeof data.details.playlog === "number" && data.details.playlog > 0) {
+	                if (typeof data.details.playlog === "number" && data.details.playlog > 0) {
 	                    branchtrackInstance.score = data.details.playlog;
+	                } else if (typeof data.details.scene.score === "number" && data.details.scene.score > 0) {
+	                    branchtrackInstance.score = data.details.scene.score;
 	                }
 	            }
 
