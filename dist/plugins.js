@@ -3171,7 +3171,7 @@
 	        };
 	    }();
 
-	    var Spot = function Spot(element, container, ratio) {
+	    var Spot = function Spot(element, container) {
 	        var that = this;
 	        that.element = element;
 	        that.defaultTopStyle = parseFloat(element.style.top);
@@ -3190,11 +3190,11 @@
 	            that.element.style.display = 'inline-block';
 	        };
 
-	        that.updatePosition = function (ratio) {
-	            that.element.style.top = that.defaultTopStyle * ratio + config.units;
-	            that.element.style.left = that.defaultLeftStyle * ratio + config.units;
-	            that.element.style.width = that.defaultWidthStyle * ratio + config.units;
-	            that.element.style.height = that.defaultHeightStyle * ratio + config.units;
+	        that.updatePosition = function (defaultWidth, defaultHeight) {
+	            that.element.style.top = that.defaultTopStyle * 100 / defaultHeight + '%';
+	            that.element.style.left = that.defaultLeftStyle * 100 / defaultWidth + '%';
+	            that.element.style.width = that.defaultWidthStyle * 100 / defaultWidth + '%';
+	            that.element.style.height = that.defaultHeightStyle * 100 / defaultHeight + '%';
 	        };
 
 	        init();
@@ -3246,8 +3246,8 @@
 	        that.element = element;
 	        that.renderedImage = that.element.getElementsByTagName('img')[0];
 	        that.spots = [];
-	        that.ratio = 1;
 	        that.defaultImageWidth = 0;
+	        that.defaultImageHeight = 0;
 
 	        that.resizeSpots = function () {
 	            eachSpots(that.spots, function (spot) {
@@ -3279,6 +3279,7 @@
 	            var image = new Image();
 	            image.onload = function () {
 	                that.defaultImageWidth = this.width;
+	                that.defaultImageHeight = this.height;
 	                updateSpotsPosition();
 	            };
 	            image.src = that.renderedImage.getAttribute('src');
@@ -3287,7 +3288,7 @@
 	        function generateSpots() {
 	            var spots = getElementsByAttribute(that.element, 'data-id');
 	            eachSpots(spots, function (spot) {
-	                that.spots.push(new Spot(spot, that.element, that.ratio));
+	                that.spots.push(new Spot(spot, that.element));
 	            });
 	        }
 
@@ -3297,21 +3298,20 @@
 	            }
 
 	            if (that.renderedImage.offsetWidth > 0) {
-	                updateSpotsPositionOnImageWithRatio();
+	                updateSpotsPositionOnImage();
 	            } else {
 	                spotsPositionChecker = setInterval(function () {
 	                    if (that.renderedImage.offsetWidth > 0) {
-	                        updateSpotsPositionOnImageWithRatio();
+	                        updateSpotsPositionOnImage();
 	                        clearInterval(spotsPositionChecker);
 	                    }
 	                }, 500);
 	            }
 	        }
 
-	        function updateSpotsPositionOnImageWithRatio() {
-	            that.ratio = that.renderedImage.offsetWidth / that.defaultImageWidth;
+	        function updateSpotsPositionOnImage() {
 	            eachSpots(that.spots, function (spot) {
-	                spot.updatePosition(that.ratio);
+	                spot.updatePosition(that.defaultImageWidth, that.defaultImageHeight);
 	                spot.show();
 	            });
 	        }
@@ -3343,12 +3343,6 @@
 	            }
 	        }
 	    };
-
-	    window.addEventListener('resize', function () {
-	        $.each(HotspotStorage.hotspots, function (key, item) {
-	            item.resizeSpots();
-	        });
-	    });
 	})();
 
 /***/ },
