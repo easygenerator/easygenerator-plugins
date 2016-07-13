@@ -2936,8 +2936,8 @@
 	            }
 
 	            if (messageDataType === supportedMessageTypes.scene) {
-	                if (typeof data.details.playlog === "number" && data.details.playlog > 0) {
-	                    branchtrackInstance.score = data.details.playlog;
+	                if (typeof data.details.playlog.score === "number" && data.details.playlog.score > 0) {
+	                    branchtrackInstance.score = data.details.playlog.score;
 	                } else if (typeof data.details.scene.score === "number" && data.details.scene.score > 0) {
 	                    branchtrackInstance.score = data.details.scene.score;
 	                }
