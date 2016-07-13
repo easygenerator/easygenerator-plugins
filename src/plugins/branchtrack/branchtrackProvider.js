@@ -63,10 +63,14 @@
             if (typeof branchtrackInstance === 'undefined' || branchtrackInstance === null) {
                 return;
             }
-
-            if (messageDataType === supportedMessageTypes.scene && data.details.scene.score > 0) {
-                branchtrackInstance.score = data.details.scene.score;
-            }
+		
+            if (messageDataType === supportedMessageTypes.scene) {
+	            if (typeof data.details.playlog.score === "number" && data.details.playlog.score > 0) {
+	                branchtrackInstance.score = data.details.playlog.score;
+	            } else if (typeof data.details.scene.score === "number" && data.details.scene.score > 0) {
+	                branchtrackInstance.score = data.details.scene.score;
+	            }
+	        }
             
             if (messageDataType === supportedMessageTypes.finish){
                 branchtrackInstance.isFinished = true;
