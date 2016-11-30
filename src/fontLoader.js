@@ -1,5 +1,5 @@
 ﻿(function () {
-    if (!WebFont) {
+    if (!window.WebFont) {
         var wf = document.createElement('script');
         wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
             '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
@@ -7,10 +7,12 @@
         var s = document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(wf, s);
     }
-
-    WebFont.load({
-        google: {
-            families: ['Open+Sans:400,600:latin,cyrillic-ext']
-        }
-    });
+    
+    window.onload = function(){
+        WebFont.load({
+            google: {
+                families: ['Open+Sans:400,600:latin,cyrillic-ext']
+            }
+        });
+    }    
 })();

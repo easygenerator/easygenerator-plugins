@@ -9,10 +9,13 @@ var path = require('path'),
 module.exports = {
     context: __dirname,
     entry: [
+        'babel-polyfill',
         path.resolve(__dirname, 'src/plugins/review/plugin.js'),
         path.resolve(__dirname, 'src/plugins/branchtrack/branchtrackProvider.js'),
         path.resolve(__dirname, 'src/plugins/hotspotOnAnImage/plugin.js'),
         path.resolve(__dirname, 'src/plugins/supportedBrowser/plugin.js'),
+        path.resolve(__dirname, 'src/plugins/configurationReader/plugin.js'),
+        path.resolve(__dirname, 'src/plugins/translation/plugin.js'),
         path.resolve(__dirname, 'src/libs/ResizeSensor.js'),
         path.resolve(__dirname, 'src/localization/localizationService.js'),
         path.resolve(__dirname, 'src/fontLoader.js'),
