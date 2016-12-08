@@ -10,7 +10,7 @@ bower install easygenerator-plugins
 ```
 
 ### Add scripts to page
-```
+```html
 <body>
   ...
   <script src="[path]/easygenerator-plugins/dist/plugins.js" type="text/javascript"></script>
@@ -19,7 +19,7 @@ bower install easygenerator-plugins
 ```
 
 ### Add styles to page
-```
+```html
 <head>
   ...
   <link href="[path]/easygenerator-plugins/dist/styles.css" rel="stylesheet"/>
@@ -29,7 +29,7 @@ bower install easygenerator-plugins
 
 ## Localization
 
-```
+```javascript
 pluginsLocalizationService.init('en');
 ```
 
@@ -42,7 +42,7 @@ If the course is opened for review, the query string parameter `'reviewApiUrl'` 
 
 To mark an element for review, add `'reviewable'` class in the html markup.
 
-```
+```html
  <li class="section reviewable">
     ...
  </li>
@@ -50,7 +50,7 @@ To mark an element for review, add `'reviewable'` class in the html markup.
 
 ### Init plugin
 
-```
+```javascript
 var reviewPlugin = new ReviewPlugin();
 
  reviewPlugin.init({
@@ -61,9 +61,102 @@ var reviewPlugin = new ReviewPlugin();
 
 When page html changes, call `renderSpots()` method.
 
-```
+```javascript
  reviewPlugin.renderSpots();
 ```
+
+## Translation plugin
+
+Add translate functionality to course.
+This plugin will translate pages in course.
+
+### How to use
+
+To translate page you should have on page attributes for some cases of translation:
+
+#### For default text translation:
+```html
+ <span data-translate-text="some-text-key">
+    ...
+ </span>
+```
+
+#### For placeholder translation:
+```html
+ <input type="text" data-translate-placeholder="some-text-key"/>
+```
+
+#### For title translation:
+```html
+ <img data-translate-title="some-text-key"/>
+```
+
+After that you should call method *localize* of global class *TranslationPlugin*:
+
+```javascript
+ TranslationPlugin.localize();
+```
+
+### Init plugin
+
+To init plugin you must have translations object, where we have keys and current translation as value.
+To init plugin just call method init with translations.
+
+```javascript
+ var translation = {
+     "some-text-key1" : "My translated text 1",
+     "some-text-key2" : "My translated text 2",
+     "some-text-key3" : "My translated text 3"
+ };
+
+ TranslationPlugin.localize(translation);
+```
+
+## Configuration reader plugin
+
+This plugin provide functionality of read and merge configurations from Simple Course to *ConfigurationReader* global class.
+Here is list of configurations:
+
+* manifest.json
+* themeSetting.js
+* publishSettins.js
+* settings.js
+* *.json (lang files with translations from manifest.json)
+
+### How to use
+
+Method *read* of *ConfigurationReader* is async and return 5 configs:
+
+```javascript
+ ConfigurationReader.read(path).then(function(configs){
+     /*configs = {
+         manifest: {...},
+         publishSettings: {...},
+         templateSettings: {...},
+         themeSettings: {...},
+         translations: {...}
+     }*/  
+     ...
+ });
+```
+Where *path* is path to configs.
+
+Method *init* take configs from *read* method, merge it and return 2 configs:
+
+```javascript
+ ConfigurationReader.read(path).then(function(configs){
+     var settings = ConfigurationReader.init(configs);
+     
+     /*settings = {
+         templateSettings: {...},
+         translations: {...}
+     }*/
+     ...
+ });
+```
+
+Where templateSettings is merged **templateSettings** with **themeSetting** and **defaultTemplateSettings** from manifest;
+And translations is merged translations;
 
 ## Branchtrack
 Helper for easygenerator templates that support **Scenario question**
@@ -84,7 +177,7 @@ Easygenerator 'Browser not supported' page.
 ### Configuration
 
 You must configure list of browsers you want to support.
-```
+```javascript
   supportedBrowser.configure({
     browsers: {
         win: {
@@ -149,7 +242,7 @@ parameter | description
 
 #### Browsers list configuration
 `browsers` should contain list of supported platforms and each platform should contain list of supported browsers for this platform.
-```
+```javascript
 browsers: {
     win: {
         chrome: {},
@@ -198,11 +291,11 @@ code | browser name
 ### Initialization
 
 After you configure plugin you must call `init` function:
-```
+```javascript
  supportedBrowser.init();
 ```
 Also supported chaining:
-```
+```javascript
  supportedBrowser.configure({...}).init();
 ```
 
@@ -210,7 +303,7 @@ Also supported chaining:
 
 To turn on the debug mode set `debug` parameter to true.
 
-```
+```javascript
  supportedBrowser.configure({
     ...,
     debug: true
