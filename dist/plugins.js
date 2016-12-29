@@ -12022,6 +12022,7 @@
 	    defaultSettings.allowLoginViaSocialMedia = fullSettings.allowLoginViaSocialMedia;
 
 	    defaultSettings.hideFinishActionButtons = fullSettings.hideFinishActionButtons;
+	    defaultSettings.hideTryAgain = fullSettings.hideTryAgain;
 
 	    defaultSettings.languages.selected = fullSettings.languages.selected;
 	    defaultSettings.languages.customTranslations = fullSettings.languages.customTranslations;
