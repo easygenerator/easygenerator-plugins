@@ -70,6 +70,7 @@ export default (settings, themeSettings, manifest) => {
     
     defaultSettings.languages.selected = fullSettings.languages.selected;
     defaultSettings.languages.customTranslations = fullSettings.languages.customTranslations;
+    defaultSettings.copyright = fullSettings.copyright;
 
     updateSettingsFromQueryString();
     updateSettingsByMode();
