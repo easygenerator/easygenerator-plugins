@@ -4,11 +4,11 @@ import getTranslations from './tasks/translations';
 export default initialize;
 
 function initialize(configs) {
-    let templateSetting = getTemplateSettings(configs.templateSettings, configs.themeSettings, configs.manifest);
-    let translations = getTranslations(configs.translations, templateSetting);
+    let templateSettings = getTemplateSettings(configs.templateSettings, configs.themeSettings, configs.manifest);
+    let translations = getTranslations(configs.translations, templateSettings);
 
     return {
-        templateSetting: templateSetting,
+        templateSettings: templateSettings,
         translations: translations
     };
 }

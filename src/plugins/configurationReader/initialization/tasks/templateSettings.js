@@ -1,15 +1,17 @@
+import PropertyChecker from '../../../../utils/PropertyChecker.js';
+
 let defaultSettings = {
-        masteryScore: {
-            score: 100
-        },
-        logoUrl: '',
-        sectionsLayout: {
-            key: ''
-        },
-        xApi: {},
-        pdfExport: {},
-        languages: {}
-    };
+    masteryScore: {
+        score: 100
+    },
+    logoUrl: '',
+    sectionsLayout: {
+        key: ''
+    },
+    xApi: {},
+    pdfExport: {},
+    languages: {}
+};
 
 export default (settings, themeSettings, manifest) => {
     let preset = manifest && Array.isArray(manifest.presets) ? manifest.presets[0] : null;
@@ -37,40 +39,53 @@ export default (settings, themeSettings, manifest) => {
     var templateSettings = Object.assign(defaultTemplateSettings, settings);
     var fullSettings = deepExtend(templateSettings, designSettings);
 
-    /** Mastery score */
-    if (fullSettings.masteryScore) {
-        let score = Number(fullSettings.masteryScore.score);
-        defaultSettings.masteryScore.score = (typeof score === 'number' && score >= 0 && score <= 100) ? score : 100;
-    }
+    PropertyChecker.isPropertiesDefined( fullSettings, { attempt: ['hasLimit', 'limit'] } ) && ( defaultSettings.attempt = fullSettings.attempt );
 
-    /** Course logo */
-    if (fullSettings.branding.logo && fullSettings.branding.logo.url && fullSettings.branding.logo.url.length) {
-        defaultSettings.logoUrl = fullSettings.branding.logo.url;
-    }
+    PropertyChecker.isPropertyDefined( fullSettings, 'languages.customTranslations' ) && ( defaultSettings.languages.customTranslations = fullSettings.languages.customTranslations );
 
-    /** Sections layout */
-    if (fullSettings.sectionsLayout.key !== null || fullSettings.sectionsLayout.key.trim() !== '') {
-        defaultSettings.sectionsLayout = fullSettings.sectionsLayout.key;
-    }
+    PropertyChecker.isPropertyDefined( fullSettings, 'allowLoginViaSocialMedia' ) && ( defaultSettings.allowLoginViaSocialMedia = fullSettings.allowLoginViaSocialMedia );
+
+    PropertyChecker.isPropertyDefined( fullSettings, 'allowContentPagesScoring' ) && ( defaultSettings.allowContentPagesScoring = fullSettings.allowContentPagesScoring );
+
+    PropertyChecker.isPropertyDefined( fullSettings, 'hideFinishActionButtons' ) && ( defaultSettings.hideFinishActionButtons = fullSettings.hideFinishActionButtons );
+
+    PropertyChecker.isPropertyDefined( fullSettings, 'allowCrossDeviceSaving' ) && ( defaultSettings.allowCrossDeviceSaving = fullSettings.allowCrossDeviceSaving );
+
+    PropertyChecker.isPropertyDefined( fullSettings, 'showConfirmationPopup' ) && ( defaultSettings.showConfirmationPopup = fullSettings.showConfirmationPopup );
+
+    PropertyChecker.isPropertyDefined( fullSettings, 'branding.background' ) && ( defaultSettings.background = fullSettings.branding.background );
+
+    PropertyChecker.isPropertyDefined( fullSettings, 'languages.selected' ) && ( defaultSettings.languages.selected = fullSettings.languages.selected );
+
+    PropertyChecker.isPropertyDefined( fullSettings, 'sectionsLayout.key' ) && ( defaultSettings.sectionsLayout = fullSettings.sectionsLayout.key );
+
+    PropertyChecker.isPropertyDefined( fullSettings, 'masteryScore.score' ) && ( defaultSettings.masteryScore.score = fullSettings.masteryScore.score );
+
+    PropertyChecker.isPropertyDefined( fullSettings, 'branding.logo.url' ) && ( defaultSettings.logoUrl = fullSettings.branding.logo.url );
+
+    PropertyChecker.isPropertyDefined( fullSettings, 'questionPool.mode' ) && ( defaultSettings.questionPool = fullSettings.questionPool );
+
+    PropertyChecker.isPropertyDefined( fullSettings, 'answers.randomize' ) && ( defaultSettings.answers = fullSettings.answers );
+
+    PropertyChecker.isPropertyDefined( fullSettings, 'showGivenAnswers' ) && ( defaultSettings.showGivenAnswers = fullSettings.showGivenAnswers );
+
+    PropertyChecker.isPropertyDefined( fullSettings, 'branding.colors' ) && ( defaultSettings.colors = fullSettings.branding.colors );
+
+    PropertyChecker.isPropertyDefined( fullSettings, 'assessmentMode' ) && ( defaultSettings.assessmentMode = fullSettings.assessmentMode );
+
+    PropertyChecker.isPropertyDefined( fullSettings, 'treeOfContent' ) && ( defaultSettings.treeOfContent = fullSettings.treeOfContent );
+
+    PropertyChecker.isPropertyDefined( fullSettings, 'timer.enabled' ) && ( defaultSettings.timer = fullSettings.timer );
+
+    PropertyChecker.isPropertyDefined( fullSettings, 'hideTryAgain' ) && ( defaultSettings.hideTryAgain = fullSettings.hideTryAgain );
+
+    PropertyChecker.isPropertyDefined( fullSettings, 'pdfExport' ) && ( defaultSettings.pdfExport = fullSettings.pdfExport );
+
+    PropertyChecker.isPropertyDefined( fullSettings, 'copyright' ) && ( defaultSettings.copyright = fullSettings.copyright );
+
+    PropertyChecker.isPropertyDefined( fullSettings, 'fonts' ) && ( defaultSettings.fonts = fullSettings.fonts );
     
-    defaultSettings.treeOfContent = fullSettings.treeOfContent;
-    defaultSettings.colors = fullSettings.branding.colors;
-    defaultSettings.fonts = fullSettings.fonts;
-
-    defaultSettings.background = fullSettings.branding.background;
-    defaultSettings.xApi = fullSettings.xApi;
-    defaultSettings.pdfExport = fullSettings.pdfExport;
-    defaultSettings.showConfirmationPopup = fullSettings.showConfirmationPopup;
-    defaultSettings.allowContentPagesScoring = fullSettings.allowContentPagesScoring;
-    defaultSettings.allowCrossDeviceSaving = fullSettings.allowCrossDeviceSaving;
-    defaultSettings.allowLoginViaSocialMedia = fullSettings.allowLoginViaSocialMedia;
-
-    defaultSettings.hideFinishActionButtons = fullSettings.hideFinishActionButtons;
-    defaultSettings.hideTryAgain = fullSettings.hideTryAgain;
-    
-    defaultSettings.languages.selected = fullSettings.languages.selected;
-    defaultSettings.languages.customTranslations = fullSettings.languages.customTranslations;
-    defaultSettings.copyright = fullSettings.copyright;
+    PropertyChecker.isPropertyDefined( fullSettings, 'xApi' ) && ( defaultSettings.xApi = fullSettings.xApi );
 
     updateSettingsFromQueryString();
     updateSettingsByMode();
