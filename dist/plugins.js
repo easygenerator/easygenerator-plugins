@@ -50,13 +50,15 @@
 	__webpack_require__(343);
 	__webpack_require__(344);
 	__webpack_require__(345);
-	__webpack_require__(350);
 	__webpack_require__(351);
-	__webpack_require__(307);
 	__webpack_require__(352);
 	__webpack_require__(353);
-	__webpack_require__(358);
-	module.exports = __webpack_require__(360);
+	__webpack_require__(354);
+	__webpack_require__(307);
+	__webpack_require__(355);
+	__webpack_require__(356);
+	__webpack_require__(361);
+	module.exports = __webpack_require__(363);
 
 
 /***/ },
@@ -7309,8 +7311,7 @@
 	!(function(global) {
 	  "use strict";
 
-	  var Op = Object.prototype;
-	  var hasOwn = Op.hasOwnProperty;
+	  var hasOwn = Object.prototype.hasOwnProperty;
 	  var undefined; // More compressible than void 0.
 	  var $Symbol = typeof Symbol === "function" ? Symbol : {};
 	  var iteratorSymbol = $Symbol.iterator || "@@iterator";
@@ -7382,29 +7383,10 @@
 	  function GeneratorFunction() {}
 	  function GeneratorFunctionPrototype() {}
 
-	  // This is a polyfill for %IteratorPrototype% for environments that
-	  // don't natively support it.
-	  var IteratorPrototype = {};
-	  IteratorPrototype[iteratorSymbol] = function () {
-	    return this;
-	  };
-
-	  var getProto = Object.getPrototypeOf;
-	  var NativeIteratorPrototype = getProto && getProto(getProto(values([])));
-	  if (NativeIteratorPrototype &&
-	      NativeIteratorPrototype !== Op &&
-	      hasOwn.call(NativeIteratorPrototype, iteratorSymbol)) {
-	    // This environment has a native %IteratorPrototype%; use it instead
-	    // of the polyfill.
-	    IteratorPrototype = NativeIteratorPrototype;
-	  }
-
-	  var Gp = GeneratorFunctionPrototype.prototype =
-	    Generator.prototype = Object.create(IteratorPrototype);
+	  var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype;
 	  GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
 	  GeneratorFunctionPrototype.constructor = GeneratorFunction;
-	  GeneratorFunctionPrototype[toStringTagSymbol] =
-	    GeneratorFunction.displayName = "GeneratorFunction";
+	  GeneratorFunctionPrototype[toStringTagSymbol] = GeneratorFunction.displayName = "GeneratorFunction";
 
 	  // Helper for defining the .next, .throw, and .return methods of the
 	  // Iterator interface in terms of a single ._invoke method.
@@ -7441,11 +7423,16 @@
 
 	  // Within the body of any async function, `await x` is transformed to
 	  // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
-	  // `hasOwn.call(value, "__await")` to determine if the yielded value is
-	  // meant to be awaited.
+	  // `value instanceof AwaitArgument` to determine if the yielded value is
+	  // meant to be awaited. Some may consider the name of this method too
+	  // cutesy, but they are curmudgeons.
 	  runtime.awrap = function(arg) {
-	    return { __await: arg };
+	    return new AwaitArgument(arg);
 	  };
+
+	  function AwaitArgument(arg) {
+	    this.arg = arg;
+	  }
 
 	  function AsyncIterator(generator) {
 	    function invoke(method, arg, resolve, reject) {
@@ -7455,10 +7442,8 @@
 	      } else {
 	        var result = record.arg;
 	        var value = result.value;
-	        if (value &&
-	            typeof value === "object" &&
-	            hasOwn.call(value, "__await")) {
-	          return Promise.resolve(value.__await).then(function(value) {
+	        if (value instanceof AwaitArgument) {
+	          return Promise.resolve(value.arg).then(function(value) {
 	            invoke("next", value, resolve, reject);
 	          }, function(err) {
 	            invoke("throw", err, resolve, reject);
@@ -7527,7 +7512,6 @@
 	  }
 
 	  defineIteratorMethods(AsyncIterator.prototype);
-	  runtime.AsyncIterator = AsyncIterator;
 
 	  // Note that simple async functions are implemented on top of
 	  // AsyncIterator objects; they just return a Promise for the value of
@@ -7562,34 +7546,90 @@
 	        return doneResult();
 	      }
 
-	      context.method = method;
-	      context.arg = arg;
-
 	      while (true) {
 	        var delegate = context.delegate;
 	        if (delegate) {
-	          var delegateResult = maybeInvokeDelegate(delegate, context);
-	          if (delegateResult) {
-	            if (delegateResult === ContinueSentinel) continue;
-	            return delegateResult;
+	          if (method === "return" ||
+	              (method === "throw" && delegate.iterator[method] === undefined)) {
+	            // A return or throw (when the delegate iterator has no throw
+	            // method) always terminates the yield* loop.
+	            context.delegate = null;
+
+	            // If the delegate iterator has a return method, give it a
+	            // chance to clean up.
+	            var returnMethod = delegate.iterator["return"];
+	            if (returnMethod) {
+	              var record = tryCatch(returnMethod, delegate.iterator, arg);
+	              if (record.type === "throw") {
+	                // If the return method threw an exception, let that
+	                // exception prevail over the original return or throw.
+	                method = "throw";
+	                arg = record.arg;
+	                continue;
+	              }
+	            }
+
+	            if (method === "return") {
+	              // Continue with the outer return, now that the delegate
+	              // iterator has been terminated.
+	              continue;
+	            }
 	          }
+
+	          var record = tryCatch(
+	            delegate.iterator[method],
+	            delegate.iterator,
+	            arg
+	          );
+
+	          if (record.type === "throw") {
+	            context.delegate = null;
+
+	            // Like returning generator.throw(uncaught), but without the
+	            // overhead of an extra function call.
+	            method = "throw";
+	            arg = record.arg;
+	            continue;
+	          }
+
+	          // Delegate generator ran and handled its own exceptions so
+	          // regardless of what the method was, we continue as if it is
+	          // "next" with an undefined arg.
+	          method = "next";
+	          arg = undefined;
+
+	          var info = record.arg;
+	          if (info.done) {
+	            context[delegate.resultName] = info.value;
+	            context.next = delegate.nextLoc;
+	          } else {
+	            state = GenStateSuspendedYield;
+	            return info;
+	          }
+
+	          context.delegate = null;
 	        }
 
-	        if (context.method === "next") {
+	        if (method === "next") {
 	          // Setting context._sent for legacy support of Babel's
 	          // function.sent implementation.
-	          context.sent = context._sent = context.arg;
+	          context.sent = context._sent = arg;
 
-	        } else if (context.method === "throw") {
+	        } else if (method === "throw") {
 	          if (state === GenStateSuspendedStart) {
 	            state = GenStateCompleted;
-	            throw context.arg;
+	            throw arg;
 	          }
 
-	          context.dispatchException(context.arg);
+	          if (context.dispatchException(arg)) {
+	            // If the dispatched exception was caught by a catch block,
+	            // then let that catch block handle the exception normally.
+	            method = "next";
+	            arg = undefined;
+	          }
 
-	        } else if (context.method === "return") {
-	          context.abrupt("return", context.arg);
+	        } else if (method === "return") {
+	          context.abrupt("return", arg);
 	        }
 
 	        state = GenStateExecuting;
@@ -7602,111 +7642,39 @@
 	            ? GenStateCompleted
 	            : GenStateSuspendedYield;
 
-	          if (record.arg === ContinueSentinel) {
-	            continue;
-	          }
-
-	          return {
+	          var info = {
 	            value: record.arg,
 	            done: context.done
 	          };
 
+	          if (record.arg === ContinueSentinel) {
+	            if (context.delegate && method === "next") {
+	              // Deliberately forget the last sent value so that we don't
+	              // accidentally pass it on to the delegate.
+	              arg = undefined;
+	            }
+	          } else {
+	            return info;
+	          }
+
 	        } else if (record.type === "throw") {
 	          state = GenStateCompleted;
 	          // Dispatch the exception by looping back around to the
-	          // context.dispatchException(context.arg) call above.
-	          context.method = "throw";
-	          context.arg = record.arg;
+	          // context.dispatchException(arg) call above.
+	          method = "throw";
+	          arg = record.arg;
 	        }
 	      }
 	    };
 	  }
 
-	  // Call delegate.iterator[context.method](context.arg) and handle the
-	  // result, either by returning a { value, done } result from the
-	  // delegate iterator, or by modifying context.method and context.arg,
-	  // setting context.delegate to null, and returning the ContinueSentinel.
-	  function maybeInvokeDelegate(delegate, context) {
-	    var method = delegate.iterator[context.method];
-	    if (method === undefined) {
-	      // A .throw or .return when the delegate iterator has no .throw
-	      // method always terminates the yield* loop.
-	      context.delegate = null;
-
-	      if (context.method === "throw") {
-	        if (delegate.iterator.return) {
-	          // If the delegate iterator has a return method, give it a
-	          // chance to clean up.
-	          context.method = "return";
-	          context.arg = undefined;
-	          maybeInvokeDelegate(delegate, context);
-
-	          if (context.method === "throw") {
-	            // If maybeInvokeDelegate(context) changed context.method from
-	            // "return" to "throw", let that override the TypeError below.
-	            return ContinueSentinel;
-	          }
-	        }
-
-	        context.method = "throw";
-	        context.arg = new TypeError(
-	          "The iterator does not provide a 'throw' method");
-	      }
-
-	      return ContinueSentinel;
-	    }
-
-	    var record = tryCatch(method, delegate.iterator, context.arg);
-
-	    if (record.type === "throw") {
-	      context.method = "throw";
-	      context.arg = record.arg;
-	      context.delegate = null;
-	      return ContinueSentinel;
-	    }
-
-	    var info = record.arg;
-
-	    if (! info) {
-	      context.method = "throw";
-	      context.arg = new TypeError("iterator result is not an object");
-	      context.delegate = null;
-	      return ContinueSentinel;
-	    }
-
-	    if (info.done) {
-	      // Assign the result of the finished delegate to the temporary
-	      // variable specified by delegate.resultName (see delegateYield).
-	      context[delegate.resultName] = info.value;
-
-	      // Resume execution at the desired location (see delegateYield).
-	      context.next = delegate.nextLoc;
-
-	      // If context.method was "throw" but the delegate handled the
-	      // exception, let the outer generator proceed normally. If
-	      // context.method was "next", forget context.arg since it has been
-	      // "consumed" by the delegate iterator. If context.method was
-	      // "return", allow the original .return call to continue in the
-	      // outer generator.
-	      if (context.method !== "return") {
-	        context.method = "next";
-	        context.arg = undefined;
-	      }
-
-	    } else {
-	      // Re-yield the result returned by the delegate method.
-	      return info;
-	    }
-
-	    // The delegate iterator is finished, so forget it and continue with
-	    // the outer generator.
-	    context.delegate = null;
-	    return ContinueSentinel;
-	  }
-
 	  // Define Generator.prototype.{next,throw,return} in terms of the
 	  // unified ._invoke helper method.
 	  defineIteratorMethods(Gp);
+
+	  Gp[iteratorSymbol] = function() {
+	    return this;
+	  };
 
 	  Gp[toStringTagSymbol] = "Generator";
 
@@ -7824,9 +7792,6 @@
 	      this.done = false;
 	      this.delegate = null;
 
-	      this.method = "next";
-	      this.arg = undefined;
-
 	      this.tryEntries.forEach(resetTryEntry);
 
 	      if (!skipTempReset) {
@@ -7863,15 +7828,7 @@
 	        record.type = "throw";
 	        record.arg = exception;
 	        context.next = loc;
-
-	        if (caught) {
-	          // If the dispatched exception was caught by a catch block,
-	          // then let that catch block handle the exception normally.
-	          context.method = "next";
-	          context.arg = undefined;
-	        }
-
-	        return !! caught;
+	        return !!caught;
 	      }
 
 	      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
@@ -7939,12 +7896,12 @@
 	      record.arg = arg;
 
 	      if (finallyEntry) {
-	        this.method = "next";
 	        this.next = finallyEntry.finallyLoc;
-	        return ContinueSentinel;
+	      } else {
+	        this.complete(record);
 	      }
 
-	      return this.complete(record);
+	      return ContinueSentinel;
 	    },
 
 	    complete: function(record, afterLoc) {
@@ -7956,14 +7913,11 @@
 	          record.type === "continue") {
 	        this.next = record.arg;
 	      } else if (record.type === "return") {
-	        this.rval = this.arg = record.arg;
-	        this.method = "return";
+	        this.rval = record.arg;
 	        this.next = "end";
 	      } else if (record.type === "normal" && afterLoc) {
 	        this.next = afterLoc;
 	      }
-
-	      return ContinueSentinel;
 	    },
 
 	    finish: function(finallyLoc) {
@@ -8001,12 +7955,6 @@
 	        resultName: resultName,
 	        nextLoc: nextLoc
 	      };
-
-	      if (this.method === "next") {
-	        // Deliberately forget the last sent value so that we don't
-	        // accidentally pass it on to the delegate.
-	        this.arg = undefined;
-	      }
 
 	      return ContinueSentinel;
 	    }
@@ -11779,10 +11727,6 @@
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -11847,8 +11791,6 @@
 	}();
 
 	window.ConfigurationReader = Plugin;
-	exports.default = Plugin;
-
 
 	function readConfigurations() {
 	    return new Promise(function (resolve, reject) {
@@ -11980,7 +11922,7 @@
 
 	var _templateSettings2 = _interopRequireDefault(_templateSettings);
 
-	var _translations = __webpack_require__(349);
+	var _translations = __webpack_require__(350);
 
 	var _translations2 = _interopRequireDefault(_translations);
 
@@ -11990,24 +11932,31 @@
 
 
 	function initialize(configs) {
-	    var templateSetting = (0, _templateSettings2.default)(configs.templateSettings, configs.themeSettings, configs.manifest);
-	    var translations = (0, _translations2.default)(configs.translations, templateSetting);
+	    var templateSettings = (0, _templateSettings2.default)(configs.templateSettings, configs.themeSettings, configs.manifest);
+	    var translations = (0, _translations2.default)(configs.translations, templateSettings);
 
 	    return {
-	        templateSetting: templateSetting,
+	        templateSettings: templateSettings,
 	        translations: translations
 	    };
 	}
 
 /***/ },
 /* 348 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _PropertyChecker = __webpack_require__(349);
+
+	var _PropertyChecker2 = _interopRequireDefault(_PropertyChecker);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	var defaultSettings = {
 	    masteryScore: {
 	        score: 100
@@ -12047,40 +11996,53 @@
 	    var templateSettings = Object.assign(defaultTemplateSettings, settings);
 	    var fullSettings = deepExtend(templateSettings, designSettings);
 
-	    /** Mastery score */
-	    if (fullSettings.masteryScore) {
-	        var score = Number(fullSettings.masteryScore.score);
-	        defaultSettings.masteryScore.score = typeof score === 'number' && score >= 0 && score <= 100 ? score : 100;
-	    }
+	    _PropertyChecker2.default.isPropertiesDefined(fullSettings, { attempt: ['hasLimit', 'limit'] }) && (defaultSettings.attempt = fullSettings.attempt);
 
-	    /** Course logo */
-	    if (fullSettings.branding.logo && fullSettings.branding.logo.url && fullSettings.branding.logo.url.length) {
-	        defaultSettings.logoUrl = fullSettings.branding.logo.url;
-	    }
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'languages.customTranslations') && (defaultSettings.languages.customTranslations = fullSettings.languages.customTranslations);
 
-	    /** Sections layout */
-	    if (fullSettings.sectionsLayout.key !== null || fullSettings.sectionsLayout.key.trim() !== '') {
-	        defaultSettings.sectionsLayout = fullSettings.sectionsLayout.key;
-	    }
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'allowLoginViaSocialMedia') && (defaultSettings.allowLoginViaSocialMedia = fullSettings.allowLoginViaSocialMedia);
 
-	    defaultSettings.treeOfContent = fullSettings.treeOfContent;
-	    defaultSettings.colors = fullSettings.branding.colors;
-	    defaultSettings.fonts = fullSettings.fonts;
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'allowContentPagesScoring') && (defaultSettings.allowContentPagesScoring = fullSettings.allowContentPagesScoring);
 
-	    defaultSettings.background = fullSettings.branding.background;
-	    defaultSettings.xApi = fullSettings.xApi;
-	    defaultSettings.pdfExport = fullSettings.pdfExport;
-	    defaultSettings.showConfirmationPopup = fullSettings.showConfirmationPopup;
-	    defaultSettings.allowContentPagesScoring = fullSettings.allowContentPagesScoring;
-	    defaultSettings.allowCrossDeviceSaving = fullSettings.allowCrossDeviceSaving;
-	    defaultSettings.allowLoginViaSocialMedia = fullSettings.allowLoginViaSocialMedia;
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'hideFinishActionButtons') && (defaultSettings.hideFinishActionButtons = fullSettings.hideFinishActionButtons);
 
-	    defaultSettings.hideFinishActionButtons = fullSettings.hideFinishActionButtons;
-	    defaultSettings.hideTryAgain = fullSettings.hideTryAgain;
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'allowCrossDeviceSaving') && (defaultSettings.allowCrossDeviceSaving = fullSettings.allowCrossDeviceSaving);
 
-	    defaultSettings.languages.selected = fullSettings.languages.selected;
-	    defaultSettings.languages.customTranslations = fullSettings.languages.customTranslations;
-	    defaultSettings.copyright = fullSettings.copyright;
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'showConfirmationPopup') && (defaultSettings.showConfirmationPopup = fullSettings.showConfirmationPopup);
+
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'branding.background') && (defaultSettings.background = fullSettings.branding.background);
+
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'languages.selected') && (defaultSettings.languages.selected = fullSettings.languages.selected);
+
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'sectionsLayout.key') && (defaultSettings.sectionsLayout = fullSettings.sectionsLayout.key);
+
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'masteryScore.score') && (defaultSettings.masteryScore.score = fullSettings.masteryScore.score);
+
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'branding.logo.url') && (defaultSettings.logoUrl = fullSettings.branding.logo.url);
+
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'questionPool.mode') && (defaultSettings.questionPool = fullSettings.questionPool);
+
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'answers.randomize') && (defaultSettings.answers = fullSettings.answers);
+
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'showGivenAnswers') && (defaultSettings.showGivenAnswers = fullSettings.showGivenAnswers);
+
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'branding.colors') && (defaultSettings.colors = fullSettings.branding.colors);
+
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'assessmentMode') && (defaultSettings.assessmentMode = fullSettings.assessmentMode);
+
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'treeOfContent') && (defaultSettings.treeOfContent = fullSettings.treeOfContent);
+
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'timer.enabled') && (defaultSettings.timer = fullSettings.timer);
+
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'hideTryAgain') && (defaultSettings.hideTryAgain = fullSettings.hideTryAgain);
+
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'pdfExport') && (defaultSettings.pdfExport = fullSettings.pdfExport);
+
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'copyright') && (defaultSettings.copyright = fullSettings.copyright);
+
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'fonts') && (defaultSettings.fonts = fullSettings.fonts);
+
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'xApi') && (defaultSettings.xApi = fullSettings.xApi);
 
 	    updateSettingsFromQueryString();
 	    updateSettingsByMode();
@@ -12173,6 +12135,92 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var PropertyChecker = function () {
+	    function PropertyChecker() {
+	        _classCallCheck(this, PropertyChecker);
+	    }
+
+	    _createClass(PropertyChecker, null, [{
+	        key: 'isPropertyDefined',
+	        value: function isPropertyDefined(obj, path) {
+	            if (path.trim() === '') {
+	                throw 'Path can\'t be empty!';
+	            }
+
+	            var properties = path.trim().split('.'),
+	                property = void 0;
+
+	            while (property = properties.shift()) {
+	                if (!obj.hasOwnProperty(property) || obj[property] === null) {
+	                    return false;
+	                }
+
+	                obj = obj[property];
+	            }
+
+	            return typeof obj !== 'string' || obj.trim() !== '';
+	        }
+	    }, {
+	        key: 'isPropertiesDefined',
+	        value: function isPropertiesDefined(obj, path) {
+	            var stack = [{ obj: obj, path: path }],
+	                data = void 0;
+
+	            while (data = stack.shift()) {
+	                if (Array.isArray(data.path)) {
+	                    if (data.path.length === 0) {
+	                        throw 'Path array can\'t be empty';
+	                    }
+
+	                    for (var i = 0; i < data.path.length; i++) {
+	                        stack.push({ obj: data.obj, path: data.path[i] });
+	                    }
+	                } else if (_typeof(data.path) === 'object') {
+	                    if (Object.keys(data.path).length === 0) {
+	                        throw 'Path object can\'t be empty';
+	                    }
+
+	                    for (var prop in data.path) {
+	                        if (!data.obj.hasOwnProperty(prop)) {
+	                            return false;
+	                        }
+
+	                        stack.push({ obj: data.obj[prop], path: data.path[prop] });
+	                    }
+	                } else if (typeof data.path === 'string') {
+	                    if (!this.isPropertyDefined(data.obj, data.path)) {
+	                        return false;
+	                    }
+	                } else {
+	                    throw 'Invalid path argument!';
+	                }
+	            }
+
+	            return true;
+	        }
+	    }]);
+
+	    return PropertyChecker;
+	}();
+
+	exports.default = PropertyChecker;
+
+/***/ },
+/* 350 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
 	var defaultTranslationsCode = 'en';
 
 	exports.default = function (translations, templateSettings) {
@@ -12197,7 +12245,209 @@
 	};
 
 /***/ },
-/* 350 */
+/* 351 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Plugin = function () {
+	    function Plugin() {
+	        _classCallCheck(this, Plugin);
+
+	        this.vars = {};
+	    }
+
+	    _createClass(Plugin, [{
+	        key: 'load',
+	        value: function load(colors, fonts) {
+	            var path = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '/css/colors.less';
+
+	            clearLocalStorage(path);
+
+	            for (var i = 0; i < colors.length; i++) {
+	                if (!colors[i] || !colors[i].value) {
+	                    return;
+	                }
+
+	                this.vars[colors[i].key] = colors[i].value;
+	            }
+
+	            for (var i = 0; i < fonts.length; i++) {
+	                for (var prop in fonts[i]) {
+	                    if (prop === 'key' || prop === 'isGeneralSelected' || prop === 'isGeneralColorSelected' || prop === 'place' || fonts[i][prop] == null) {
+	                        continue;
+	                    }
+
+	                    if (prop === 'size') {
+	                        this.vars['@' + fonts[i].key + '-' + prop] = fonts[i][prop] + 'px';
+	                    } else {
+	                        this.vars['@' + fonts[i].key + '-' + prop] = fonts[i][prop];
+	                    }
+	                }
+	            }
+
+	            return less.modifyVars(this.vars);
+	        }
+	    }]);
+
+	    return Plugin;
+	}();
+
+	window.LessProcessor = new Plugin();
+
+	function clearLocalStorage(path) {
+	    if (!window.localStorage || !less) {
+	        return;
+	    }
+
+	    var host = window.location.host;
+	    var protocol = window.location.protocol;
+	    var keyPrefix = protocol + '//' + host + path;
+
+	    for (var key in window.localStorage) {
+	        if (!window.localStorage.hasOwnProperty(key)) {
+	            continue;
+	        }
+
+	        if (key.indexOf(keyPrefix) === 0) {
+	            delete window.localStorage[key];
+	        }
+	    }
+	}
+
+/***/ },
+/* 352 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Plugin = function () {
+	    function Plugin() {
+	        _classCallCheck(this, Plugin);
+	    }
+
+	    _createClass(Plugin, null, [{
+	        key: "load",
+	        value: function load(fonts, manifest, publishSettings) {
+	            return new Promise(function (resolve, reject) {
+	                var customFonts = manifest.fonts.map(function (font) {
+	                    return font.fontFamily;
+	                });
+
+	                var familiesToLoad = fonts.map(function (font) {
+	                    return { "fontFamily": font.fontFamily, "variants": ["300", "400", "600"], "place": font.place };
+	                });
+
+	                familiesToLoad = familiesToLoad.filter(function (font, index, array) {
+	                    return array.indexOf(font) == index;
+	                });
+
+	                familiesToLoad = familiesToLoad.filter(function (font) {
+	                    return font.place !== 'none' && !~customFonts.indexOf(font.fontFamily);
+	                });
+
+	                if (!familiesToLoad && !familiesToLoad.length) {
+	                    familiesToLoad = [{ "fontFamily": 'Open Sans', "variants": ["300", "400", "600"], "place": 'google' }];
+	                }
+
+	                var defers = [];
+
+	                //Load theme fonts
+	                defers.push(new Promise(function (resolve, reject) {
+	                    var fontLoaderConfig = {
+	                        active: function active() {
+	                            resolve();
+	                        },
+	                        inactive: function inactive() {
+	                            //added to make possible ofline template loading
+	                            resolve();
+	                        }
+	                    };
+
+	                    if (familiesToLoad.length) {
+	                        for (var i = 0; i < familiesToLoad.length; i++) {
+	                            if (fontLoaderConfig.hasOwnProperty(familiesToLoad[i].place)) {
+	                                fontLoaderConfig[familiesToLoad[i].place].families.push(mapFontName(familiesToLoad[i]));
+	                            } else if (familiesToLoad[i].place === 'custom') {
+	                                fontLoaderConfig.custom = {
+	                                    families: [mapFontName(familiesToLoad[i])],
+	                                    urls: [publishSettings.customFontPlace]
+	                                };
+	                            } else {
+	                                fontLoaderConfig[familiesToLoad[i].place] = {
+	                                    families: [mapFontName(familiesToLoad[i])]
+	                                };
+	                            }
+	                        };
+	                    }
+
+	                    window.WebFont && WebFont.load(fontLoaderConfig);
+	                }));
+
+	                //Load template fonts
+	                if (manifest.fonts && manifest.fonts.length) {
+	                    var manifestFonts;
+
+	                    (function () {
+	                        manifestFonts = manifest.fonts;
+
+
+	                        var fontUrls = manifestFonts.map(function (font) {
+	                            return font.url;
+	                        });
+
+	                        fontUrls = fontUrls.filter(function (url, index, array) {
+	                            return array.indexOf(url) == index;
+	                        });
+
+	                        defers.push(new Promise(function (resolve, reject) {
+	                            var fontLoaderConfig = {
+	                                active: function active() {
+	                                    resolve();
+	                                },
+	                                custom: {
+	                                    families: [],
+	                                    urls: fontUrls
+	                                },
+	                                inactive: function inactive() {
+	                                    //added to make possible ofline template loading
+	                                    resolve();
+	                                }
+	                            };
+
+	                            fontLoaderConfig.custom.families = manifestFonts.map(mapFontName);
+
+	                            window.WebFont && WebFont.load(fontLoaderConfig);
+	                        }));
+	                    })();
+	                }
+
+	                Promise.all(defers).then(function () {
+	                    resolve();
+	                });
+	            });
+	        }
+	    }]);
+
+	    return Plugin;
+	}();
+
+	window.WebFontLoader = Plugin;
+
+	function mapFontName(fontToLoad) {
+	    return fontToLoad.fontFamily + (fontToLoad.variants && fontToLoad.variants.length ? ':' + fontToLoad.variants.join(',') : '');
+	}
+
+/***/ },
+/* 353 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -12270,7 +12520,7 @@
 	}
 
 /***/ },
-/* 351 */
+/* 354 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -12434,7 +12684,7 @@
 	})();
 
 /***/ },
-/* 352 */
+/* 355 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -12451,31 +12701,31 @@
 	    window.onload = function () {
 	        WebFont.load({
 	            google: {
-	                families: ['Open+Sans:400,600:latin,cyrillic-ext']
+	                families: ['Open+Sans:300,400,600:latin,cyrillic-ext']
 	            }
 	        });
 	    };
 	})();
 
 /***/ },
-/* 353 */
+/* 356 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 354 */,
-/* 355 */,
-/* 356 */,
 /* 357 */,
-/* 358 */
+/* 358 */,
+/* 359 */,
+/* 360 */,
+/* 361 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 359 */,
-/* 360 */
+/* 362 */,
+/* 363 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin

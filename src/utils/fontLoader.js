@@ -11,7 +11,7 @@
     window.onload = function(){
         WebFont.load({
             google: {
-                families: ['Open+Sans:400,600:latin,cyrillic-ext']
+                families: ['Open+Sans:300,400,600:latin,cyrillic-ext']
             }
         });
     }    

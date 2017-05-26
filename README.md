@@ -114,7 +114,7 @@ To init plugin just call method init with translations.
 
 ## Configuration reader plugin
 
-This plugin provide functionality of read and merge configurations from Simple Course to *ConfigurationReader* global class.
+This plugin provide functionality of read and merge configurations from template configuration files to *ConfigurationReader* global class.
 Here is list of configurations:
 
 * manifest.json
@@ -157,6 +157,118 @@ Method *init* take configs from *read* method, merge it and return 2 configs:
 
 Where templateSettings is merged **templateSettings** with **themeSetting** and **defaultTemplateSettings** from manifest;
 And translations is merged translations;
+
+## Less processor plugin
+
+The **LessProcessor** plugin provide functionality to rewrite color and font variables in not compiled less files.
+
+### How to use
+
+Method *load* take 3 parameters:
+* colors - array with color variable keys and its value (required):
+  ```javascript
+    [
+        {
+            key: '@color1',
+            value: '#f421ac3'
+        },
+        {
+            key: '@color2',
+            value: '#afafaf'
+        }
+    ]
+  ```
+* fonts - array with font variable keys and its value (required). Some variables and variables with value equal to null will be ignored:
+  ```javascript
+    [
+        {
+            "place": "google", //will be ignored
+            "key": "main-font",
+            "fontFamily": "Arial",
+            "fontWeight": null, //used default value
+            "size": null, //used default value
+            "color": null, //used default value
+            "textBackgroundColor": null, //used default value
+            "fontStyle": null, //used default value
+            "textDecoration": null, //used default value
+            "isGeneralSelected": null, //will be ignored
+            "isGeneralColorSelected": null //will be ignored
+        }, 
+        {
+            "place": "google", //will be ignored
+            "key": "Heading1",
+            "fontFamily": "Arial",
+            "fontWeight": "700",
+            "size": 26,
+            "color": "#666666",
+            "textBackgroundColor": null, //used default value
+            "fontStyle": "normal",
+            "textDecoration": "none",
+            "isGeneralSelected": true, //will be ignored
+            "isGeneralColorSelected": true //will be ignored
+        }
+    ]
+  ```
+* path - path to less file for caching in local storage (default value - "/css/colors.less").
+
+Just call *LessProcessor.load* with this parameters:
+```javascript
+    LessProcessor.load(colors, fonts);
+    //or    
+    LessProcessor.load(colors, fonts, path);
+```
+
+## Web font loader plugin
+
+The **WebFontLoader** plugin provide functionality to load custom fonts from another services. For work it required *WebFont*.
+
+### How to use
+
+Method *load* takes 3 required parameters:
+* fonts - array with fonts settings:
+  ```javascript
+    [
+        {
+            "place": "google",
+            "fontFamily": "Arial",
+            "fontWeight": null,
+            /*not used properties...*/
+        }, 
+        {
+            "place": "google",
+            "fontFamily": "Arial",
+            "fontWeight": "700",
+            /*not used properties...*/
+        }
+    ]
+  ```
+* manifest - object with template settings:
+  ```javascript
+    {
+        "fonts": [
+            {
+                "fontFamily": "Material Icons", //family name
+                "variants": [ //family vatiants to load
+                    "400"
+                ],
+                "url": "./css/fonts.css", //url from what it will be loaded
+                "isLocal": true //is it local template font
+            },
+            /*another template fonts...*/
+        ],
+    }
+  ```
+* publishSettings - object with publish settings:
+  ```javascript
+    {
+        customFontPlace: 'someurl.org/fonts.css' //url where contains custom fonts
+    }
+  ```
+
+For download fonts just call *WebFontLoader.load* with relevant parameters:
+  ```javascript
+    WebFontLoader.load(fonts, manifest, publishSettings); //will be returned promise
+  ```
 
 ## Branchtrack
 Helper for easygenerator templates that support **Scenario question**

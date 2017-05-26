@@ -15,10 +15,12 @@ module.exports = {
         path.resolve(__dirname, 'src/plugins/hotspotOnAnImage/plugin.js'),
         path.resolve(__dirname, 'src/plugins/supportedBrowser/plugin.js'),
         path.resolve(__dirname, 'src/plugins/configurationReader/plugin.js'),
+        path.resolve(__dirname, 'src/plugins/lessProcessor/plugin.js'),
+        path.resolve(__dirname, 'src/plugins/webFontLoader/plugin.js'),
         path.resolve(__dirname, 'src/plugins/translation/plugin.js'),
         path.resolve(__dirname, 'src/libs/ResizeSensor.js'),
         path.resolve(__dirname, 'src/localization/localizationService.js'),
-        path.resolve(__dirname, 'src/fontLoader.js'),
+        path.resolve(__dirname, 'src/utils/fontLoader.js'),
         path.resolve(__dirname, 'src/css/review.less'),
         path.resolve(__dirname, 'src/css/hotspotOnAnImage.less'),
         path.resolve(__dirname, 'src/css/supportedBrowser.less')

@@ -39,7 +39,6 @@ class Plugin {
 }
 
 window.ConfigurationReader = Plugin;
-export default Plugin;
 
 function readConfigurations() {
     return new Promise((resolve, reject) => {
