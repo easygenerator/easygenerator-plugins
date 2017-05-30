@@ -1,6 +1,6 @@
 import PropertyChecker from '../../../../utils/PropertyChecker.js';
 
-let defaultSettings = {
+let fullSettings = {
     masteryScore: {
         score: 100
     },
@@ -37,60 +37,27 @@ export default (settings, themeSettings, manifest) => {
 
     var designSettings = Object.assign(defaultThemeSettings, themeSettings);
     var templateSettings = Object.assign(defaultTemplateSettings, settings);
-    var fullSettings = deepExtend(templateSettings, designSettings);
 
-    PropertyChecker.isPropertiesDefined( fullSettings, { attempt: ['hasLimit', 'limit'] } ) && ( defaultSettings.attempt = fullSettings.attempt );
+    fullSettings = deepExtend(templateSettings, designSettings);
 
-    PropertyChecker.isPropertyDefined( fullSettings, 'languages.customTranslations' ) && ( defaultSettings.languages.customTranslations = fullSettings.languages.customTranslations );
+    PropertyChecker.isPropertiesDefined( fullSettings, { attempt: ['hasLimit', 'limit'] } ) || ( delete fullSettings.attempt );
 
-    PropertyChecker.isPropertyDefined( fullSettings, 'allowLoginViaSocialMedia' ) && ( defaultSettings.allowLoginViaSocialMedia = fullSettings.allowLoginViaSocialMedia );
+    PropertyChecker.isPropertyDefined( fullSettings, 'branding.background' ) && ( fullSettings.background = fullSettings.branding.background );
 
-    PropertyChecker.isPropertyDefined( fullSettings, 'allowContentPagesScoring' ) && ( defaultSettings.allowContentPagesScoring = fullSettings.allowContentPagesScoring );
+    PropertyChecker.isPropertyDefined( fullSettings, 'sectionsLayout.key' ) && ( fullSettings.sectionsLayout = fullSettings.sectionsLayout.key );
 
-    PropertyChecker.isPropertyDefined( fullSettings, 'hideFinishActionButtons' ) && ( defaultSettings.hideFinishActionButtons = fullSettings.hideFinishActionButtons );
+    PropertyChecker.isPropertyDefined( fullSettings, 'branding.logo.url' ) && ( fullSettings.logoUrl = fullSettings.branding.logo.url );
 
-    PropertyChecker.isPropertyDefined( fullSettings, 'allowCrossDeviceSaving' ) && ( defaultSettings.allowCrossDeviceSaving = fullSettings.allowCrossDeviceSaving );
+    PropertyChecker.isPropertyDefined( fullSettings, 'answers.randomize' ) || ( delete fullSettings.answers );
 
-    PropertyChecker.isPropertyDefined( fullSettings, 'showConfirmationPopup' ) && ( defaultSettings.showConfirmationPopup = fullSettings.showConfirmationPopup );
+    PropertyChecker.isPropertyDefined( fullSettings, 'branding.colors' ) && ( fullSettings.colors = fullSettings.branding.colors );
 
-    PropertyChecker.isPropertyDefined( fullSettings, 'branding.background' ) && ( defaultSettings.background = fullSettings.branding.background );
-
-    PropertyChecker.isPropertyDefined( fullSettings, 'languages.selected' ) && ( defaultSettings.languages.selected = fullSettings.languages.selected );
-
-    PropertyChecker.isPropertyDefined( fullSettings, 'sectionsLayout.key' ) && ( defaultSettings.sectionsLayout = fullSettings.sectionsLayout.key );
-
-    PropertyChecker.isPropertyDefined( fullSettings, 'masteryScore.score' ) && ( defaultSettings.masteryScore.score = fullSettings.masteryScore.score );
-
-    PropertyChecker.isPropertyDefined( fullSettings, 'branding.logo.url' ) && ( defaultSettings.logoUrl = fullSettings.branding.logo.url );
-
-    PropertyChecker.isPropertyDefined( fullSettings, 'questionPool.mode' ) && ( defaultSettings.questionPool = fullSettings.questionPool );
-
-    PropertyChecker.isPropertyDefined( fullSettings, 'answers.randomize' ) && ( defaultSettings.answers = fullSettings.answers );
-
-    PropertyChecker.isPropertyDefined( fullSettings, 'showGivenAnswers' ) && ( defaultSettings.showGivenAnswers = fullSettings.showGivenAnswers );
-
-    PropertyChecker.isPropertyDefined( fullSettings, 'branding.colors' ) && ( defaultSettings.colors = fullSettings.branding.colors );
-
-    PropertyChecker.isPropertyDefined( fullSettings, 'assessmentMode' ) && ( defaultSettings.assessmentMode = fullSettings.assessmentMode );
-
-    PropertyChecker.isPropertyDefined( fullSettings, 'treeOfContent' ) && ( defaultSettings.treeOfContent = fullSettings.treeOfContent );
-
-    PropertyChecker.isPropertyDefined( fullSettings, 'timer.enabled' ) && ( defaultSettings.timer = fullSettings.timer );
-
-    PropertyChecker.isPropertyDefined( fullSettings, 'hideTryAgain' ) && ( defaultSettings.hideTryAgain = fullSettings.hideTryAgain );
-
-    PropertyChecker.isPropertyDefined( fullSettings, 'pdfExport' ) && ( defaultSettings.pdfExport = fullSettings.pdfExport );
-
-    PropertyChecker.isPropertyDefined( fullSettings, 'copyright' ) && ( defaultSettings.copyright = fullSettings.copyright );
-
-    PropertyChecker.isPropertyDefined( fullSettings, 'fonts' ) && ( defaultSettings.fonts = fullSettings.fonts );
-    
-    PropertyChecker.isPropertyDefined( fullSettings, 'xApi' ) && ( defaultSettings.xApi = fullSettings.xApi );
+    PropertyChecker.isPropertyDefined( fullSettings, 'timer.enabled' ) || ( delete fullSettings.timer );
 
     updateSettingsFromQueryString();
     updateSettingsByMode();
 
-    return defaultSettings;
+    return fullSettings;
 };
 
 function isNaturalNumber(n) {
@@ -140,14 +107,14 @@ function updateSettingsFromQueryString() {
     var crossDevice = getQueryStringValue('cross-device');
 
     if (isXapiDisabled()) {
-        defaultSettings.xApi.enabled = false;
+        fullSettings.xApi.enabled = false;
     }
     if (isCrossDeviceDisabled()) {
-        defaultSettings.allowCrossDeviceSaving = false;
+        fullSettings.allowCrossDeviceSaving = false;
     }
 
     function isXapiDisabled() {
-        return !defaultSettings.xApi.required &&
+        return !fullSettings.xApi.required &&
             !(xapi === null || xapi === undefined) &&
             xapi.toLowerCase() === 'false';
     }
@@ -161,8 +128,8 @@ function updateSettingsFromQueryString() {
 function updateSettingsByMode() {
     var reviewApiUrl = getQueryStringValue('reviewApiUrl');
     if(location.href.indexOf('/preview/') !== -1 || !!reviewApiUrl){
-        defaultSettings.allowCrossDeviceSaving = false;
-        defaultSettings.xApi.enabled = false;
+        fullSettings.allowCrossDeviceSaving = false;
+        fullSettings.xApi.enabled = false;
     }
 }
 
