@@ -12206,10 +12206,10 @@
 	                });
 
 	                familiesToLoad = familiesToLoad.filter(function (font) {
-	                    return font.place !== 'none' && !~customFonts.indexOf(font.fontFamily);
+	                    return font.place && font.place !== 'none' && !~customFonts.indexOf(font.fontFamily);
 	                });
 
-	                if (!familiesToLoad && !familiesToLoad.length) {
+	                if (!familiesToLoad || !familiesToLoad.length) {
 	                    familiesToLoad = [{ "fontFamily": 'Open Sans', "variants": ["300", "400", "600"], "place": 'google' }];
 	                }
 
