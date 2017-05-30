@@ -11782,7 +11782,6 @@
 	                            resolve({});
 	                        }
 	                    } else {
-	                        console.error('File \'' + filename + '\' is\'t valid or empty (load status: ' + client.status + ')');
 	                        resolve({});
 	                    }
 	                };
