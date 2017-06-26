@@ -4,6 +4,7 @@
     font: 13px 'Open Sans';
     font-weight: 400;
     position: absolute;
+    z-index: 10;
 
     .review-spot {
         width: 32px;
@@ -282,6 +283,10 @@
         border-left: 1px solid #d7d7d7;
         border-top-left-radius: 7px;
         box-shadow: 0 2px 5px #d7d7d7;
+
+        & + .review-spot-wrapper {
+            z-index: 11;
+        }
 
         &.expanded {
             bottom: 0;
