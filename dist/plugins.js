@@ -46,19 +46,19 @@
 
 	__webpack_require__(1);
 	__webpack_require__(297);
-	__webpack_require__(341);
 	__webpack_require__(342);
 	__webpack_require__(343);
 	__webpack_require__(344);
-	__webpack_require__(350);
+	__webpack_require__(345);
 	__webpack_require__(351);
 	__webpack_require__(352);
 	__webpack_require__(353);
-	__webpack_require__(306);
 	__webpack_require__(354);
+	__webpack_require__(306);
 	__webpack_require__(355);
-	__webpack_require__(360);
-	module.exports = __webpack_require__(362);
+	__webpack_require__(356);
+	__webpack_require__(361);
+	module.exports = __webpack_require__(363);
 
 
 /***/ }),
@@ -8088,15 +8088,15 @@
 
 	var _hintController2 = _interopRequireDefault(_hintController);
 
-	var _spotController = __webpack_require__(320);
+	var _spotController = __webpack_require__(321);
 
 	var _spotController2 = _interopRequireDefault(_spotController);
 
-	var _dialogController = __webpack_require__(321);
+	var _dialogController = __webpack_require__(322);
 
 	var _dialogController2 = _interopRequireDefault(_dialogController);
 
-	var _eventTracker = __webpack_require__(339);
+	var _eventTracker = __webpack_require__(340);
 
 	var _eventTracker2 = _interopRequireDefault(_eventTracker);
 
@@ -8230,7 +8230,7 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _clientContext = __webpack_require__(319);
+	var _clientContext = __webpack_require__(320);
 
 	var _clientContext2 = _interopRequireDefault(_clientContext);
 
@@ -8349,7 +8349,7 @@
 
 	var _htmlMarkupProvider2 = _interopRequireDefault(_htmlMarkupProvider);
 
-	var _hint = __webpack_require__(318);
+	var _hint = __webpack_require__(319);
 
 	var _hint2 = _interopRequireDefault(_hint);
 
@@ -9004,6 +9004,10 @@
 
 	var _it2 = _interopRequireDefault(_it);
 
+	var _ca = __webpack_require__(318);
+
+	var _ca2 = _interopRequireDefault(_ca);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var langs = {
@@ -9016,7 +9020,8 @@
 		'pt-br': _ptBr2.default,
 		'ua': _ua2.default,
 		'ru': _ru2.default,
-		'it': _it2.default
+		'it': _it2.default,
+		'ca': _ca2.default
 	};
 
 	exports.default = langs;
@@ -9275,10 +9280,35 @@
 /* 318 */
 /***/ (function(module, exports) {
 
-	module.exports = "<div class=\"review-hint\">\r\n    <div class=\"review-hint-text-wrapper\">\r\n        <div class=\"review-hint-text\"></div>\r\n    </div>\r\n    <div class=\"review-hint-action-wrapper\">\r\n        <button class=\"review-hint-btn btn\">{{gotIt}}</button>\r\n    </div>\r\n</div>\r\n";
+	module.exports = {
+		"commentWasNotSent": "El comentari no va ser enviat.",
+		"commentWasSent": "El comentari va ser enviat",
+		"leaveYourComment": "Deixi el seu comentari",
+		"send": "Afegeix un comentari",
+		"tryAgain": "Intentar de nou",
+		"yourMessage": "Escriu el missatge ...",
+		"identifyMessage": "una sessió",
+		"name": "nom",
+		"email": "Adreça de correu electrònic",
+		"enterValidEmailError": "Una adreça de correu electrònic vàlida",
+		"enterYourNameError": "Introduïu un nom vàlid",
+		"gotIt": "ho tinc",
+		"elementReviewHint": "Feu clic a la icona situat al costat dels elements per deixar el seu comentari.",
+		"generalReviewHint": "Feu clic en aquest panell per deixar el comentari general.",
+		"leaveGeneralComment": "Deixar comentari general",
+		"typeYourCommentHere": "Escriu el teu comentari aquí ...",
+		"cancel": "Cancel",
+		"postComment": "Afegeix un comentari"
+	};
 
 /***/ }),
 /* 319 */
+/***/ (function(module, exports) {
+
+	module.exports = "<div class=\"review-hint\">\r\n    <div class=\"review-hint-text-wrapper\">\r\n        <div class=\"review-hint-text\"></div>\r\n    </div>\r\n    <div class=\"review-hint-action-wrapper\">\r\n        <button class=\"review-hint-btn btn\">{{gotIt}}</button>\r\n    </div>\r\n</div>\r\n";
+
+/***/ }),
+/* 320 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -9317,7 +9347,7 @@
 	module.exports = clientContext;
 
 /***/ }),
-/* 320 */
+/* 321 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9336,11 +9366,11 @@
 
 	var _hintController2 = _interopRequireDefault(_hintController);
 
-	var _dialogController = __webpack_require__(321);
+	var _dialogController = __webpack_require__(322);
 
 	var _dialogController2 = _interopRequireDefault(_dialogController);
 
-	var _SpotCollection = __webpack_require__(334);
+	var _SpotCollection = __webpack_require__(335);
 
 	var _SpotCollection2 = _interopRequireDefault(_SpotCollection);
 
@@ -9412,7 +9442,7 @@
 	exports.default = spotController;
 
 /***/ }),
-/* 321 */
+/* 322 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9423,11 +9453,11 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _dialog = __webpack_require__(322);
+	var _dialog = __webpack_require__(323);
 
 	var _dialog2 = _interopRequireDefault(_dialog);
 
-	var _dialog3 = __webpack_require__(332);
+	var _dialog3 = __webpack_require__(333);
 
 	var _dialog4 = _interopRequireDefault(_dialog3);
 
@@ -9498,7 +9528,7 @@
 	exports.default = dialogController;
 
 /***/ }),
-/* 322 */
+/* 323 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9513,7 +9543,7 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _commentForm = __webpack_require__(323);
+	var _commentForm = __webpack_require__(324);
 
 	var _commentForm2 = _interopRequireDefault(_commentForm);
 
@@ -9521,15 +9551,15 @@
 
 	var _htmlMarkupProvider2 = _interopRequireDefault(_htmlMarkupProvider);
 
-	var _button = __webpack_require__(327);
+	var _button = __webpack_require__(328);
 
 	var _button2 = _interopRequireDefault(_button);
 
-	var _dialogPositioner = __webpack_require__(330);
+	var _dialogPositioner = __webpack_require__(331);
 
 	var _dialogPositioner2 = _interopRequireDefault(_dialogPositioner);
 
-	var _dialog = __webpack_require__(331);
+	var _dialog = __webpack_require__(332);
 
 	var _dialog2 = _interopRequireDefault(_dialog);
 
@@ -9632,7 +9662,7 @@
 	exports.default = Dialog;
 
 /***/ }),
-/* 323 */
+/* 324 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9647,7 +9677,7 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _clientContext = __webpack_require__(319);
+	var _clientContext = __webpack_require__(320);
 
 	var _clientContext2 = _interopRequireDefault(_clientContext);
 
@@ -9655,11 +9685,11 @@
 
 	var _htmlMarkupProvider2 = _interopRequireDefault(_htmlMarkupProvider);
 
-	var _CommentFormControls = __webpack_require__(324);
+	var _CommentFormControls = __webpack_require__(325);
 
 	var _CommentFormControls2 = _interopRequireDefault(_CommentFormControls);
 
-	var _commentForm = __webpack_require__(329);
+	var _commentForm = __webpack_require__(330);
 
 	var _commentForm2 = _interopRequireDefault(_commentForm);
 
@@ -9803,7 +9833,7 @@
 	;
 
 /***/ }),
-/* 324 */
+/* 325 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9816,19 +9846,19 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _control = __webpack_require__(325);
+	var _control = __webpack_require__(326);
 
 	var _control2 = _interopRequireDefault(_control);
 
-	var _message = __webpack_require__(326);
+	var _message = __webpack_require__(327);
 
 	var _message2 = _interopRequireDefault(_message);
 
-	var _button = __webpack_require__(327);
+	var _button = __webpack_require__(328);
 
 	var _button2 = _interopRequireDefault(_button);
 
-	var _textField = __webpack_require__(328);
+	var _textField = __webpack_require__(329);
 
 	var _textField2 = _interopRequireDefault(_textField);
 
@@ -9879,7 +9909,7 @@
 	}
 
 /***/ }),
-/* 325 */
+/* 326 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9965,7 +9995,7 @@
 	exports.default = Control;
 
 /***/ }),
-/* 326 */
+/* 327 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9974,7 +10004,7 @@
 	    value: true
 	});
 
-	var _control = __webpack_require__(325);
+	var _control = __webpack_require__(326);
 
 	var _control2 = _interopRequireDefault(_control);
 
@@ -10001,7 +10031,7 @@
 	exports.default = Message;
 
 /***/ }),
-/* 327 */
+/* 328 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10012,7 +10042,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _control = __webpack_require__(325);
+	var _control = __webpack_require__(326);
 
 	var _control2 = _interopRequireDefault(_control);
 
@@ -10051,7 +10081,7 @@
 	exports.default = Button;
 
 /***/ }),
-/* 328 */
+/* 329 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10062,7 +10092,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _control = __webpack_require__(325);
+	var _control = __webpack_require__(326);
 
 	var _control2 = _interopRequireDefault(_control);
 
@@ -10153,13 +10183,13 @@
 	}
 
 /***/ }),
-/* 329 */
+/* 330 */
 /***/ (function(module, exports) {
 
 	module.exports = "<form class=\"add-comment-form\">\r\n    <div class=\"message-wrapper\">\r\n        <div class=\"add-comment-form-title\">{{leaveYourComment}}</div>\r\n        <textarea class=\"comment-text-block message\" placeholder=\"{{typeYourCommentHere}}\"></textarea>\r\n    </div>\r\n    <div class=\"identify-user-wrapper\">\r\n        <div class=\"identify-user-title\">{{identifyMessage}}</div>\r\n        <div class=\"identify-user-row\">\r\n            <input class=\"name-input\" type=\"text\" />\r\n            <label>{{name}}</label>\r\n            <span class=\"error-message name\">{{enterYourNameError}}</span>\r\n        </div>\r\n        <div class=\"identify-user-row\">\r\n            <input class=\"email-input\" type=\"email\" />\r\n            <label>{{email}}</label>\r\n            <span class=\"error-message email\">{{enterValidEmailError}}</span>\r\n        </div>\r\n    </div>\r\n    <div class=\"comment-action-wrapper\">\r\n        <div class=\"comment-status-message success\" title=\"{{commentWasSent}}\">{{commentWasSent}}</div>\r\n        <div class=\"comment-status-message fail\" title=\"{{commentWasNotSent}}\">{{commentWasNotSent}}<br />{{tryAgain}}</div>\r\n        <div class=\"comment-actions\">\r\n            <button title=\"{{cancel}}\" class=\"cancel-btn\" type=\"reset\">{{cancel}}</button>\r\n            <button title=\"{{postComment}}\" class=\"comment-btn\" type=\"submit\">{{postComment}}</button>\r\n        </div>\r\n    </div>\r\n</form>";
 
 /***/ }),
-/* 330 */
+/* 331 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10212,13 +10242,13 @@
 	exports.default = DialogPositioner;
 
 /***/ }),
-/* 331 */
+/* 332 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class=\"review-dialog element-review-dialog\">\r\n    <button class=\"close-dialog-btn\"></button>\r\n    <form class=\"add-comment-form\">\r\n    </form>\r\n</div>";
 
 /***/ }),
-/* 332 */
+/* 333 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10233,7 +10263,7 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _commentForm = __webpack_require__(323);
+	var _commentForm = __webpack_require__(324);
 
 	var _commentForm2 = _interopRequireDefault(_commentForm);
 
@@ -10241,11 +10271,11 @@
 
 	var _htmlMarkupProvider2 = _interopRequireDefault(_htmlMarkupProvider);
 
-	var _button = __webpack_require__(327);
+	var _button = __webpack_require__(328);
 
 	var _button2 = _interopRequireDefault(_button);
 
-	var _dialog = __webpack_require__(333);
+	var _dialog = __webpack_require__(334);
 
 	var _dialog2 = _interopRequireDefault(_dialog);
 
@@ -10299,13 +10329,13 @@
 	exports.default = Dialog;
 
 /***/ }),
-/* 333 */
+/* 334 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class=\"review-dialog general-review-dialog\">\r\n    <div class=\"comments-header\">\r\n        <div class=\"comment-header-text\">{{leaveGeneralComment}}</div>\r\n        <div class=\"comments-expander\"></div>\r\n    </div>\r\n    <form class=\"add-comment-form\">\r\n    </form>\r\n</div>";
 
 /***/ }),
-/* 334 */
+/* 335 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10316,7 +10346,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _Spot = __webpack_require__(335);
+	var _Spot = __webpack_require__(336);
 
 	var _Spot2 = _interopRequireDefault(_Spot);
 
@@ -10425,7 +10455,7 @@
 	}
 
 /***/ }),
-/* 335 */
+/* 336 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10436,15 +10466,15 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _spotPositioner = __webpack_require__(336);
+	var _spotPositioner = __webpack_require__(337);
 
 	var _spotPositioner2 = _interopRequireDefault(_spotPositioner);
 
-	var _spot = __webpack_require__(337);
+	var _spot = __webpack_require__(338);
 
 	var _spot2 = _interopRequireDefault(_spot);
 
-	var _spotContextValidator = __webpack_require__(338);
+	var _spotContextValidator = __webpack_require__(339);
 
 	var _spotContextValidator2 = _interopRequireDefault(_spotContextValidator);
 
@@ -10456,7 +10486,7 @@
 
 	var _htmlMarkupProvider2 = _interopRequireDefault(_htmlMarkupProvider);
 
-	var _dialogController = __webpack_require__(321);
+	var _dialogController = __webpack_require__(322);
 
 	var _dialogController2 = _interopRequireDefault(_dialogController);
 
@@ -10531,7 +10561,7 @@
 	exports.default = Spot;
 
 /***/ }),
-/* 336 */
+/* 337 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10638,13 +10668,13 @@
 	exports.default = SpotPositioner;
 
 /***/ }),
-/* 337 */
+/* 338 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class=\"review-spot-wrapper\">\r\n    <div class=\"review-spot\"></div>\r\n</div>";
 
 /***/ }),
-/* 338 */
+/* 339 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -10745,7 +10775,7 @@
 	exports.default = SpotContextValidator;
 
 /***/ }),
-/* 339 */
+/* 340 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10756,7 +10786,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _multiEventTracker = __webpack_require__(340);
+	var _multiEventTracker = __webpack_require__(341);
 
 	var _multiEventTracker2 = _interopRequireDefault(_multiEventTracker);
 
@@ -10797,7 +10827,7 @@
 	exports.default = EventTracker;
 
 /***/ }),
-/* 340 */
+/* 341 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -10876,7 +10906,7 @@
 	exports.default = MultiEventTracker;
 
 /***/ }),
-/* 341 */
+/* 342 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -10991,7 +11021,7 @@
 	})();
 
 /***/ }),
-/* 342 */
+/* 343 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -11362,7 +11392,7 @@
 	})();
 
 /***/ }),
-/* 343 */
+/* 344 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -11603,7 +11633,7 @@
 	})(window.supportedBrowser = window.supportedBrowser || {});
 
 /***/ }),
-/* 344 */
+/* 345 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11612,11 +11642,11 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _fileReader = __webpack_require__(345);
+	var _fileReader = __webpack_require__(346);
 
 	var _fileReader2 = _interopRequireDefault(_fileReader);
 
-	var _index = __webpack_require__(346);
+	var _index = __webpack_require__(347);
 
 	var _index2 = _interopRequireDefault(_index);
 
@@ -11746,7 +11776,7 @@
 	}
 
 /***/ }),
-/* 345 */
+/* 346 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -11796,7 +11826,7 @@
 	exports.default = FileReader;
 
 /***/ }),
-/* 346 */
+/* 347 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11805,11 +11835,11 @@
 	    value: true
 	});
 
-	var _templateSettings = __webpack_require__(347);
+	var _templateSettings = __webpack_require__(348);
 
 	var _templateSettings2 = _interopRequireDefault(_templateSettings);
 
-	var _translations = __webpack_require__(349);
+	var _translations = __webpack_require__(350);
 
 	var _translations2 = _interopRequireDefault(_translations);
 
@@ -11829,7 +11859,7 @@
 	}
 
 /***/ }),
-/* 347 */
+/* 348 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11838,7 +11868,7 @@
 	    value: true
 	});
 
-	var _PropertyChecker = __webpack_require__(348);
+	var _PropertyChecker = __webpack_require__(349);
 
 	var _PropertyChecker2 = _interopRequireDefault(_PropertyChecker);
 
@@ -11981,7 +12011,7 @@
 	};
 
 /***/ }),
-/* 348 */
+/* 349 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -12067,7 +12097,7 @@
 	exports.default = PropertyChecker;
 
 /***/ }),
-/* 349 */
+/* 350 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -12099,7 +12129,7 @@
 	};
 
 /***/ }),
-/* 350 */
+/* 351 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -12174,7 +12204,7 @@
 	}
 
 /***/ }),
-/* 351 */
+/* 352 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -12296,7 +12326,7 @@
 	}
 
 /***/ }),
-/* 352 */
+/* 353 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -12369,7 +12399,7 @@
 	}
 
 /***/ }),
-/* 353 */
+/* 354 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -12533,7 +12563,7 @@
 	})();
 
 /***/ }),
-/* 354 */
+/* 355 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -12557,24 +12587,24 @@
 	})();
 
 /***/ }),
-/* 355 */
+/* 356 */
 /***/ (function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 356 */,
 /* 357 */,
 /* 358 */,
 /* 359 */,
-/* 360 */
+/* 360 */,
+/* 361 */
 /***/ (function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 361 */,
-/* 362 */
+/* 362 */,
+/* 363 */
 /***/ (function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
