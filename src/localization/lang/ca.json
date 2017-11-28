@@ -1,0 +1,20 @@
+{
+    "commentWasNotSent": "El comentari no va ser enviat.",
+    "commentWasSent": "El comentari va ser enviat",
+    "leaveYourComment": "Deixi el seu comentari",
+    "send": "Afegeix un comentari",
+    "tryAgain": "Intentar de nou",
+    "yourMessage": "Escriu el missatge ...",
+    "identifyMessage": "una sessió",
+    "name": "nom",
+    "email": "Adreça de correu electrònic",
+    "enterValidEmailError": "Una adreça de correu electrònic vàlida",
+    "enterYourNameError": "Introduïu un nom vàlid",
+    "gotIt": "ho tinc",
+    "elementReviewHint": "Feu clic a la icona situat al costat dels elements per deixar el seu comentari.",
+    "generalReviewHint": "Feu clic en aquest panell per deixar el comentari general.",
+    "leaveGeneralComment": "Deixar comentari general",
+    "typeYourCommentHere": "Escriu el teu comentari aquí ...",
+    "cancel": "Cancel",
+    "postComment": "Afegeix un comentari"
+}
