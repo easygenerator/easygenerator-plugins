@@ -1,8 +1,8 @@
 {
   "name": "easygenerator-plugins",
-  "version": "1.0.3",
+  "version": "2.1.9",
   "description": "Collection of plugins to extend easygenerator templates functionality",
-  "main": "index.js",
+  "main": "dist/plugins.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
