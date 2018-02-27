@@ -9,6 +9,8 @@ import ua from './lang/ua.json';
 import ru from './lang/ru.json';
 import it from './lang/it.json';
 import ca from './lang/ca.json';
+import nbNo from './lang/nb-no.json';
+import nnNo from './lang/nn-no.json';
 
 const langs = {
 	'cn': cn,
@@ -21,7 +23,9 @@ const langs = {
 	'ua': ua,
 	'ru': ru,
 	'it': it,
-	'ca': ca
+	'ca': ca,
+	'nb-no': nbNo,
+	'nn-no': nnNo
 };
 
 export default langs;

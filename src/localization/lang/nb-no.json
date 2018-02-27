@@ -1,0 +1,20 @@
+{
+    "commentWasNotSent": "Kommentaren ble ikke sendt",
+    "commentWasSent": "Kommentaren ble sendt",
+    "leaveYourComment": "Skriv inn din kommentar",
+    "send": "Bekreft",
+    "tryAgain": "Prøv igjen",
+    "yourMessage": "Skriv meldingen din",
+    "identifyMessage": "Identifiser deg",
+    "name": "Navn",
+    "email": "Epost",
+    "enterValidEmailError": "Skriv inn gyldig epost-adresse",
+    "enterYourNameError": "Skriv inn et gyldig navn",
+    "gotIt": "Har forstått",
+    "elementReviewHint": "Klikk på ikonet ved siden av elementet for å skrive kommentar",
+    "generalReviewHint": "Klikk på panelet her for å skrive en generell kommentar",
+    "leaveGeneralComment": "Skriv generell kommentar",
+    "typeYourCommentHere": "Skriv inn din kommentar her …",
+    "cancel": "Avbryt",
+    "postComment": "Bekreft kommentar"
+}
