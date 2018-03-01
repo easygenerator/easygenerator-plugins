@@ -1,6 +1,6 @@
 {
   "name": "easygenerator-plugins",
-  "version": "2.1.12",
+  "version": "2.1.14",
   "description": "Collection of plugins to extend easygenerator templates functionality",
   "main": "dist/plugins.js",
   "scripts": {
