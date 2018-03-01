@@ -341,7 +341,7 @@
   -webkit-box-shadow: 0 2px 5px #d7d7d7;
           box-shadow: 0 2px 5px #d7d7d7;
 }
-.review-dialog.general-review-dialog + .review-spot-wrapper.review-spot {
+.review-dialog.general-review-dialog + .review-spot-wrapper .review-spot {
   z-index: 11;
 }
 .review-dialog.general-review-dialog.expanded {
