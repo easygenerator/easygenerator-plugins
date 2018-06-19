@@ -19,9 +19,6 @@ let constants = {
                 regExpString: '&(?:amp;){0,1}gt;',
                 replacement: '>'
             }
-        },
-        script: {
-            regExpString: '&amp;lt;script&amp;gt;'
         }
     }
 }
