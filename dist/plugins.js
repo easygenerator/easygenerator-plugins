@@ -54,11 +54,12 @@
 	__webpack_require__(355);
 	__webpack_require__(356);
 	__webpack_require__(357);
-	__webpack_require__(307);
 	__webpack_require__(358);
+	__webpack_require__(307);
 	__webpack_require__(359);
-	__webpack_require__(364);
-	module.exports = __webpack_require__(366);
+	__webpack_require__(360);
+	__webpack_require__(365);
+	module.exports = __webpack_require__(367);
 
 
 /***/ },
@@ -12637,6 +12638,96 @@
 
 	'use strict';
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var constants = {
+	    tags: {
+	        encode: {
+	            openSymbol: {
+	                regExpString: '<',
+	                replacement: '&lt;'
+	            },
+	            endSymbol: {
+	                regExpString: '>',
+	                replacement: '&gt;'
+	            }
+	        },
+	        decode: {
+	            openSymbol: {
+	                regExpString: '&(?:amp;){0,1}lt;',
+	                replacement: '<'
+	            },
+	            endSymbol: {
+	                regExpString: '&(?:amp;){0,1}gt;',
+	                replacement: '>'
+	            }
+	        },
+	        script: {
+	            regExpString: '&amp;lt;script&amp;gt;'
+	        }
+	    }
+	};
+
+	var Plugin = function () {
+	    function Plugin() {
+	        _classCallCheck(this, Plugin);
+	    }
+
+	    _createClass(Plugin, null, [{
+	        key: 'encodeTags',
+	        value: function encodeTags(decodedHtmlString) {
+	            var encodedString = '';
+
+	            encodedString = this._replace(decodedHtmlString, constants.tags.encode.openSymbol);
+	            encodedString = this._replace(encodedString, constants.tags.encode.endSymbol);
+
+	            return encodedString;
+	        }
+	    }, {
+	        key: 'decodeTags',
+	        value: function decodeTags(encodedHtmlString) {
+	            debugger;
+	            var decodedString = '';
+
+	            decodedString = this._replace(encodedHtmlString, constants.tags.decode.openSymbol);
+	            decodedString = this._replace(decodedString, constants.tags.decode.endSymbol);
+
+	            return decodedString;
+	        }
+	    }, {
+	        key: '_replace',
+	        value: function _replace(htmlString, _ref) {
+	            var regExpString = _ref.regExpString,
+	                replacement = _ref.replacement;
+
+	            var match = void 0,
+	                regExp = new RegExp(regExpString);
+
+	            while ((match = regExp.exec(htmlString)) !== null) {
+	                if (match.index === regExp.lastIndex) {
+	                    regExp.lastIndex++;
+	                }
+
+	                htmlString = htmlString.replace(match, replacement);
+	            }
+
+	            return htmlString;
+	        }
+	    }]);
+
+	    return Plugin;
+	}();
+
+	window.HtmlEntity = Plugin;
+
+/***/ },
+/* 358 */
+/***/ function(module, exports) {
+
+	'use strict';
+
 	/**
 	 * Copyright Marc J. Schmidt. See the LICENSE file at the top-level
 	 * directory of this distribution and at
@@ -12796,7 +12887,7 @@
 	})();
 
 /***/ },
-/* 358 */
+/* 359 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -12820,24 +12911,24 @@
 	})();
 
 /***/ },
-/* 359 */
+/* 360 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 360 */,
 /* 361 */,
 /* 362 */,
 /* 363 */,
-/* 364 */
+/* 364 */,
+/* 365 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 365 */,
-/* 366 */
+/* 366 */,
+/* 367 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin

@@ -18,6 +18,7 @@ module.exports = {
         path.resolve(__dirname, 'src/plugins/lessProcessor/plugin.js'),
         path.resolve(__dirname, 'src/plugins/webFontLoader/plugin.js'),
         path.resolve(__dirname, 'src/plugins/translation/plugin.js'),
+        path.resolve(__dirname, 'src/plugins/htmlDecoder/plugin.js'),
         path.resolve(__dirname, 'src/libs/ResizeSensor.js'),
         path.resolve(__dirname, 'src/localization/localizationService.js'),
         path.resolve(__dirname, 'src/utils/fontLoader.js'),
