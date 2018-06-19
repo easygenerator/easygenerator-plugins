@@ -12685,7 +12685,6 @@
 	    }, {
 	        key: 'decodeTags',
 	        value: function decodeTags(encodedHtmlString) {
-	            debugger;
 	            var decodedString = '';
 
 	            decodedString = this._replace(encodedHtmlString, constants.tags.decode.openSymbol);

@@ -34,7 +34,6 @@ class Plugin {
     }
 
     static decodeTags(encodedHtmlString) {
-        debugger;
         let decodedString = '';
 
         decodedString = this._replace(encodedHtmlString, constants.tags.decode.openSymbol);
