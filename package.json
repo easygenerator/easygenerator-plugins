@@ -4,7 +4,8 @@
   "description": "Collection of plugins to extend easygenerator templates functionality",
   "main": "dist/plugins.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "resources": "easyresources generate --worksheetName \"Simple course plugins\" --outputPath \"./src/localization/lang\""
   },
   "author": "",
   "license": "ISC",
