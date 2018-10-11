@@ -61,6 +61,10 @@ function readConfigurations() {
             .then(manifest => {
                 configs.manifest = manifest;
 
+                return fileReader.readJSON(pathToSettings + 'customisations.json');
+            }).then(customisations => {
+                configs.customisations = customisations;
+
                 resolve();
             })
             .catch(e => reject(e))

@@ -4,7 +4,6 @@ let fullSettings = {
     masteryScore: {
         score: 100
     },
-    logoUrl: '',
     sectionsLayout: {
         key: ''
     },
@@ -46,7 +45,11 @@ export default (settings, themeSettings, manifest) => {
 
     PropertyChecker.isPropertyDefined( fullSettings, 'sectionsLayout.key' ) && ( fullSettings.sectionsLayout = fullSettings.sectionsLayout.key );
 
-    PropertyChecker.isPropertyDefined( fullSettings, 'branding.logo.url' ) && ( fullSettings.logoUrl = fullSettings.branding.logo.url );
+    PropertyChecker.isPropertyDefined( fullSettings, 'branding.logo.url' ) && ( fullSettings.logo = { url: fullSettings.branding.logo.url } );
+
+    PropertyChecker.isPropertyDefined( fullSettings, 'branding.logo.maxWidth' ) && ( fullSettings.logo.maxWidth = fullSettings.branding.logo.maxWidth );
+
+    PropertyChecker.isPropertyDefined( fullSettings, 'branding.logo.maxHeight' ) && ( fullSettings.logo.maxHeight = fullSettings.branding.logo.maxHeight );
 
     PropertyChecker.isPropertyDefined( fullSettings, 'answers.randomize' ) || ( delete fullSettings.answers );
 

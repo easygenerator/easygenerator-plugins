@@ -30,6 +30,21 @@ class Plugin {
 
         return less.modifyVars(this.vars);
     }
+    loadCustomStyles(styles, path = '/css/customisations.less') {
+        clearLocalStorage(path);
+
+        for(var i = 0; i < styles.length; i++) {
+            for(var prop in styles[i]) {
+                if(prop === 'key' || styles[i][prop] == null) {
+                    continue;
+                }
+                
+                this.vars['@' + styles[i].key + '-' + prop] = styles[i][prop];
+            }
+        }
+
+        return less.modifyVars(this.vars);
+    }
 }
 
 window.LessProcessor = new Plugin();
