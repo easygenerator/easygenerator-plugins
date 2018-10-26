@@ -11953,6 +11953,10 @@
 	        }).then(function (manifest) {
 	            configs.manifest = manifest;
 
+	            return _fileReader2.default.readJSON(pathToSettings + 'customisations.json');
+	        }).then(function (customisations) {
+	            configs.customisations = customisations;
+
 	            resolve();
 	        }).catch(function (e) {
 	            return reject(e);
@@ -12111,7 +12115,6 @@
 	    masteryScore: {
 	        score: 100
 	    },
-	    logoUrl: '',
 	    sectionsLayout: {
 	        key: ''
 	    },
@@ -12153,7 +12156,11 @@
 
 	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'sectionsLayout.key') && (fullSettings.sectionsLayout = fullSettings.sectionsLayout.key);
 
-	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'branding.logo.url') && (fullSettings.logoUrl = fullSettings.branding.logo.url);
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'branding.logo.url') && (fullSettings.logo = { url: fullSettings.branding.logo.url });
+
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'branding.logo.maxWidth') && (fullSettings.logo.maxWidth = fullSettings.branding.logo.maxWidth);
+
+	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'branding.logo.maxHeight') && (fullSettings.logo.maxHeight = fullSettings.branding.logo.maxHeight);
 
 	    _PropertyChecker2.default.isPropertyDefined(fullSettings, 'answers.randomize') || delete fullSettings.answers;
 
@@ -12404,6 +12411,25 @@
 	                    } else {
 	                        this.vars['@' + fonts[i].key + '-' + prop] = fonts[i][prop];
 	                    }
+	                }
+	            }
+
+	            return less.modifyVars(this.vars);
+	        }
+	    }, {
+	        key: 'loadCustomStyles',
+	        value: function loadCustomStyles(styles) {
+	            var path = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '/css/customisations.less';
+
+	            clearLocalStorage(path);
+
+	            for (var i = 0; i < styles.length; i++) {
+	                for (var prop in styles[i]) {
+	                    if (prop === 'key' || styles[i][prop] == null) {
+	                        continue;
+	                    }
+
+	                    this.vars['@' + styles[i].key + '-' + prop] = styles[i][prop];
 	                }
 	            }
 

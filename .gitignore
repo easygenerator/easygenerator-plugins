@@ -201,3 +201,4 @@ FakesAssemblies/
 # Visual Studio Code files
 .vscode/launch.json
 
+.DS_Store
