@@ -70,30 +70,54 @@ function isNaturalNumber(n) {
     return !isNaN(n1) && n2 === n1 && n1.toString() === n;
 }
 
+function isArray(item) {
+    return item.constructor && item.constructor === Array;
+}
+  
+function isObject(item) {
+    return item.constructor && item.constructor === Object;
+}
+
+function hasInternalObjectsOrArrays(object) {
+    let counter = 0;
+    for (let property in object) {
+      if (object[property] && (isObject(object[property]) || isArray(object[property]))) {
+        counter++;
+      }
+    }
+    return counter > 0;
+}
+
 function deepExtend(destination, source) {
     if (destination === null || destination === undefined) {
-        return source;
+      return source;
     }
-
-    for (var property in source) {
-        if (!source.hasOwnProperty(property)) {
-            continue;
-        }
-
-        if (source[property] && source[property].constructor &&
-            (source[property].constructor === Object || source[property].constructor === Array)) {
-            if (destination.hasOwnProperty(property)) {
-                deepExtend(destination[property], source[property]);
-            } else {
-                destination[property] = source[property];
-            }
+  
+    for (let property in source) {
+      if (source[property] && (isObject(source[property]) || isArray(source[property]))) {
+        if (destination.hasOwnProperty(property) && hasInternalObjectsOrArrays(source[property])) {
+          deepExtend(destination[property], source[property]);
         } else {
-            destination[property] = destination.hasOwnProperty(property) ? destination[property] : source[property];
+          if (isArray(destination)) {
+            let index = destination.findIndex(item => item.key === source[property].key);
+            if (index !== -1) {
+              destination.splice(index, 1, source[property]);
+            } else {
+              destination.splice(destination.length, 0, source[property]);
+            }
+            continue;
+          }
+  
+          destination[property] = source[property];
         }
+      } else {
+        destination[property] = destination.hasOwnProperty(property)
+          ? destination[property]
+          : source[property];
+      }
     }
-
     return destination;
-}
+  }
 
 function removeNullsInArray(array) {
     if (array && array.length) {
