@@ -37,7 +37,7 @@ export default (settings, themeSettings, manifest) => {
     var designSettings = Object.assign(defaultThemeSettings, themeSettings);
     var templateSettings = Object.assign(defaultTemplateSettings, settings);
 
-    fullSettings = deepExtend(templateSettings, designSettings);
+    fullSettings = deepExtend(designSettings, templateSettings);
 
     PropertyChecker.isPropertiesDefined( fullSettings, { attempt: ['hasLimit', 'limit'] } ) || ( delete fullSettings.attempt );
 
