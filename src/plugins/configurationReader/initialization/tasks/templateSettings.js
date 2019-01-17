@@ -99,12 +99,8 @@ function deepExtend(destination, source) {
           deepExtend(destination[property], source[property]);
         } else {
           if (isArray(destination)) {
-            let index = destination.findIndex(item => item.key === source[property].key);
-            if (index !== -1) {
-              destination.splice(index, 1, source[property]);
-            } else {
-              destination.splice(destination.length, 0, source[property]);
-            }
+            let { index, deleteNumber } = getItemPositionValues(destination, source[property].key);
+            destination.splice(index, deleteNumber, source[property]);
             continue;
           }
   
@@ -117,7 +113,17 @@ function deepExtend(destination, source) {
       }
     }
     return destination;
-  }
+}
+
+function getItemPositionValues(destination, sourceKey) {
+    let index = destination.findIndex(item => item.key === sourceKey);
+    let shouldReplaceItem = index !== -1;
+
+    return {
+        index: shouldReplaceItem ? index : destination.length,
+        deleteNumber: shouldReplaceItem ? 1 : 0
+    };
+}
 
 function removeNullsInArray(array) {
     if (array && array.length) {
