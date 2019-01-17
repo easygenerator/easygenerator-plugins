@@ -12148,7 +12148,7 @@
 	    var designSettings = Object.assign(defaultThemeSettings, themeSettings);
 	    var templateSettings = Object.assign(defaultTemplateSettings, settings);
 
-	    fullSettings = deepExtend(templateSettings, designSettings);
+	    fullSettings = deepExtend(designSettings, templateSettings);
 
 	    _PropertyChecker2.default.isPropertiesDefined(fullSettings, { attempt: ['hasLimit', 'limit'] }) || delete fullSettings.attempt;
 
@@ -12181,28 +12181,62 @@
 	    return !isNaN(n1) && n2 === n1 && n1.toString() === n;
 	}
 
+	function isArray(item) {
+	    return item.constructor && item.constructor === Array;
+	}
+
+	function isObject(item) {
+	    return item.constructor && item.constructor === Object;
+	}
+
+	function hasInternalObjectsOrArrays(object) {
+	    var counter = 0;
+	    for (var property in object) {
+	        if (object[property] && (isObject(object[property]) || isArray(object[property]))) {
+	            counter++;
+	        }
+	    }
+	    return counter > 0;
+	}
+
 	function deepExtend(destination, source) {
 	    if (destination === null || destination === undefined) {
 	        return source;
 	    }
 
 	    for (var property in source) {
-	        if (!source.hasOwnProperty(property)) {
-	            continue;
-	        }
-
-	        if (source[property] && source[property].constructor && (source[property].constructor === Object || source[property].constructor === Array)) {
-	            if (destination.hasOwnProperty(property)) {
+	        if (source[property] && (isObject(source[property]) || isArray(source[property]))) {
+	            if (destination.hasOwnProperty(property) && hasInternalObjectsOrArrays(source[property])) {
 	                deepExtend(destination[property], source[property]);
 	            } else {
+	                if (isArray(destination)) {
+	                    var _getItemPositionValue = getItemPositionValues(destination, source[property].key),
+	                        index = _getItemPositionValue.index,
+	                        deleteNumber = _getItemPositionValue.deleteNumber;
+
+	                    destination.splice(index, deleteNumber, source[property]);
+	                    continue;
+	                }
+
 	                destination[property] = source[property];
 	            }
 	        } else {
 	            destination[property] = destination.hasOwnProperty(property) ? destination[property] : source[property];
 	        }
 	    }
-
 	    return destination;
+	}
+
+	function getItemPositionValues(destination, sourceKey) {
+	    var index = destination.findIndex(function (item) {
+	        return item.key === sourceKey;
+	    });
+	    var shouldReplaceItem = index !== -1;
+
+	    return {
+	        index: shouldReplaceItem ? index : destination.length,
+	        deleteNumber: shouldReplaceItem ? 1 : 0
+	    };
 	}
 
 	function removeNullsInArray(array) {
