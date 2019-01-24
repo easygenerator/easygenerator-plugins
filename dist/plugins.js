@@ -12182,11 +12182,11 @@
 	}
 
 	function isArray(item) {
-	    return item.constructor && item.constructor === Array;
+	    return item && item.constructor && item.constructor === Array;
 	}
 
 	function isObject(item) {
-	    return item.constructor && item.constructor === Object;
+	    return item && item.constructor && item.constructor === Object;
 	}
 
 	function hasInternalObjectsOrArrays(object) {
@@ -12199,6 +12199,10 @@
 	    return counter > 0;
 	}
 
+	function hasSameNumbersOfKeys(destinationObj, sourceObj) {
+	    return Object.keys(destinationObj).length === Object.keys(sourceObj).length;
+	}
+
 	function deepExtend(destination, source) {
 	    if (destination === null || destination === undefined) {
 	        return source;
@@ -12206,7 +12210,7 @@
 
 	    for (var property in source) {
 	        if (source[property] && (isObject(source[property]) || isArray(source[property]))) {
-	            if (destination.hasOwnProperty(property) && hasInternalObjectsOrArrays(source[property])) {
+	            if (destination.hasOwnProperty(property) && hasInternalObjectsOrArrays(source[property]) || isObject(destination[property]) && isObject(source[property]) && !hasSameNumbersOfKeys(destination[property], source[property])) {
 	                deepExtend(destination[property], source[property]);
 	            } else {
 	                if (isArray(destination)) {
@@ -12221,7 +12225,7 @@
 	                destination[property] = source[property];
 	            }
 	        } else {
-	            destination[property] = destination.hasOwnProperty(property) ? destination[property] : source[property];
+	            destination[property] = source.hasOwnProperty(property) ? source[property] : destination[property];
 	        }
 	    }
 	    return destination;
