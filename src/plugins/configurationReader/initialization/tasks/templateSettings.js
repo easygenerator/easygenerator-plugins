@@ -100,8 +100,11 @@ function deepExtend(destination, source) {
     for (let property in source) {
       if (source[property] && (isObject(source[property]) || isArray(source[property]))) {
         if ((destination.hasOwnProperty(property) && hasInternalObjectsOrArrays(source[property])) ||
-            (isObject(destination[property]) && isObject(source[property]) &&
-                !hasSameNumbersOfKeys(destination[property], source[property])))
+            (!isArray(destination) 
+                && !isArray(source) 
+                && isObject(destination[property]) 
+                && isObject(source[property])
+                && !hasSameNumbersOfKeys(destination[property], source[property])))
         {
 	        deepExtend(destination[property], source[property]);
         } else {
