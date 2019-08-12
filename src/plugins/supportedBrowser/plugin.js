@@ -88,9 +88,9 @@
             matches = ua.match(/(opera|chrome|safari|firefox|msie|trident|opios|crios(?=\/))\/?\s*(\d+)/i) || [],
             browserName = matches[1],
             version = matches[2],
-            temp;
+						temp;
 						
-		// log full user agent value
+		// Temp logging
 		console.log(ua);
 
 		// detect platform
@@ -103,6 +103,7 @@
 			/(mac)/i.exec(ua) ||
 			/(linux)/i.exec(ua) ||
 			/(blackberry)/i.exec(ua) ||
+			/(cros)/i.exec(ua) ||
 			[])[0];
 			
         if (/(ipad|ipod|iphone)/i.exec(platform)) {
