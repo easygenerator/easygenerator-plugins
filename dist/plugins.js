@@ -11723,9 +11723,6 @@
 			    version = matches[2],
 			    temp;
 	
-			// Temp logging
-			console.log(ua);
-	
 			// detect platform
 			var platform = (/(ipad)/i.exec(ua) || /(ipod)/i.exec(ua) || /(iphone)/i.exec(ua) || /(android)/i.exec(ua) || /(windows phone)/i.exec(ua) || /(win)/i.exec(ua) || /(mac)/i.exec(ua) || /(linux)/i.exec(ua) || /(blackberry)/i.exec(ua) || /(cros)/i.exec(ua) || [])[0];
 	
@@ -11763,8 +11760,6 @@
 			} else if (/(opios)/i.exec(browserName)) {
 				browserName = 'opera';
 			}
-	
-			console.log(browserName);
 	
 			return {
 				name: browserName.toLowerCase(),

@@ -90,9 +90,6 @@
             browserName = matches[1],
             version = matches[2],
 						temp;
-						
-		// Temp logging
-		console.log(ua);
 
 		// detect platform
 		var platform = (/(ipad)/i.exec(ua) ||
@@ -142,8 +139,6 @@
 		} else if (/(opios)/i.exec(browserName)) {
 			browserName = 'opera';
 		}
-
-		console.log(browserName);
 
 		return {
             name: browserName.toLowerCase(),
