@@ -10,6 +10,7 @@
 		options.browsers.ios = extend(configurationOptions.browsers.ios || {}, configurationOptions.globalBrowsersInfo);
 		options.browsers.winphone = extend(configurationOptions.browsers.winphone || {}, configurationOptions.globalBrowsersInfo);
 		options.browsers.blackberry = extend(configurationOptions.browsers.blackberry || {}, configurationOptions.globalBrowsersInfo);
+		options.browsers.cros = extend(configurationOptions.browsers.cros || {}, configurationOptions.globalBrowsersInfo); 
 
 		options.mainAppContainerId = configurationOptions.mainAppContainerId;
 		options.debug = configurationOptions.debug;
@@ -89,7 +90,7 @@
             browserName = matches[1],
             version = matches[2],
             temp;
-            
+
 		// detect platform
 		var platform = (/(ipad)/i.exec(ua) ||
 			/(ipod)/i.exec(ua) ||
@@ -100,6 +101,7 @@
 			/(mac)/i.exec(ua) ||
 			/(linux)/i.exec(ua) ||
 			/(blackberry)/i.exec(ua) ||
+			/(cros)/i.exec(ua) ||
 			[])[0];
 			
         if (/(ipad|ipod|iphone)/i.exec(platform)) {
