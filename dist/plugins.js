@@ -11642,6 +11642,7 @@
 			options.browsers.ios = extend(configurationOptions.browsers.ios || {}, configurationOptions.globalBrowsersInfo);
 			options.browsers.winphone = extend(configurationOptions.browsers.winphone || {}, configurationOptions.globalBrowsersInfo);
 			options.browsers.blackberry = extend(configurationOptions.browsers.blackberry || {}, configurationOptions.globalBrowsersInfo);
+			options.browsers.cros = extend(configurationOptions.browsers.cros || {}, configurationOptions.globalBrowsersInfo);
 	
 			options.mainAppContainerId = configurationOptions.mainAppContainerId;
 			options.debug = configurationOptions.debug;
