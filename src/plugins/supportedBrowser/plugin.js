@@ -89,7 +89,7 @@
             matches = ua.match(/(opera|chrome|safari|firefox|msie|trident|opios|crios(?=\/))\/?\s*(\d+)/i) || [],
             browserName = matches[1],
             version = matches[2],
-						temp;
+            temp;
 
 		// detect platform
 		var platform = (/(ipad)/i.exec(ua) ||
