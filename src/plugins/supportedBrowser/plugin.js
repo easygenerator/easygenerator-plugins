@@ -89,7 +89,10 @@
             browserName = matches[1],
             version = matches[2],
             temp;
-            
+						
+		// log full user agent value
+		console.log(ua);
+
 		// detect platform
 		var platform = (/(ipad)/i.exec(ua) ||
 			/(ipod)/i.exec(ua) ||
