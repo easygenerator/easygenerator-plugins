@@ -11763,6 +11763,8 @@
 				browserName = 'opera';
 			}
 
+			console.log(browserName);
+
 			return {
 				name: browserName.toLowerCase(),
 				version: version,
