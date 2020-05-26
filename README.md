@@ -2,7 +2,19 @@
 
 Collection of plugins to extend easygenerator templates functionality.
 
-## Installation
+## Development
+
+1. Run `npm install`
+2. Run `npm run build`
+3. Copy `dist` directory to project that use *easygenerator-plugins* for test
+
+## Bumping version
+
+`npm version major | minor | patch`
+
+This updates a version number in package.json and creates a corresponding tag on GitHub.
+
+## How to use
 
 ### Install with [Bower](http://bower.io) 
 ```

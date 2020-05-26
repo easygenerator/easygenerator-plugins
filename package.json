@@ -5,6 +5,7 @@
   "main": "dist/plugins.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
     "resources": "easyresources generate --worksheetName \"Simple course plugins\" --outputPath \"./src/localization/lang\"",
     "postversion": "git push && git push --tags"
   },
