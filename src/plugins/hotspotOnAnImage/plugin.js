@@ -199,6 +199,7 @@
         that.defaultWidthStyle = parseFloat(element.style.width);
         that.defaultHeightStyle = parseFloat(element.style.height);
         that.text = element.getAttribute('data-text');
+        that.isAlreadyInPercentage = /%/.test(element.style.width);
         
         var tooltip = Tooltip.getInstance();
         
@@ -211,10 +212,17 @@
         };
         
         that.updatePosition = function(defaultWidth, defaultHeight){
-            that.element.style.top = that.defaultTopStyle * 100 / defaultHeight + '%';
-            that.element.style.left = that.defaultLeftStyle * 100 / defaultWidth + '%';
-            that.element.style.width = that.defaultWidthStyle * 100 / defaultWidth + '%';
-            that.element.style.height = that.defaultHeightStyle * 100 / defaultHeight + '%';
+            if(that.isAlreadyInPercentage) {
+                that.element.style.top = that.defaultTopStyle;
+                that.element.style.left = that.defaultLeftStyle;
+                that.element.style.width = that.defaultWidthStyle;
+                that.element.style.height = that.defaultHeightStyle;
+            } else {
+                that.element.style.top = that.defaultTopStyle * 100 / defaultHeight + '%';
+                that.element.style.left = that.defaultLeftStyle * 100 / defaultWidth + '%';
+                that.element.style.width = that.defaultWidthStyle * 100 / defaultWidth + '%';
+                that.element.style.height = that.defaultHeightStyle * 100 / defaultHeight + '%';
+            }
         };
         
         init();
