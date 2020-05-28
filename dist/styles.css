@@ -14,6 +14,11 @@
 .review-spot-wrapper .review-spot:hover {
   background-position: 0px -78px;
 }
+.hyi {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
 .review-hint {
   position: absolute;
   display: none;
