@@ -11457,7 +11457,7 @@
 	        that.defaultLeftStyle = parseFloat(element.style.left);
 	        that.defaultWidthStyle = parseFloat(element.style.width);
 	        that.defaultHeightStyle = parseFloat(element.style.height);
-	        that.text = element.getAttribute('data-text');
+	        that.text = getElementContent(element);
 	        that.isAlreadyInPercentage = /%/.test(element.style.width);
 
 	        var tooltip = Tooltip.getInstance();
@@ -11485,6 +11485,10 @@
 	        };
 
 	        init();
+
+	        function getElementContent(element) {
+	            return element.innerText;
+	        }
 
 	        function init() {
 	            if (that.text !== '' && typeof that.text !== 'undefined') {
