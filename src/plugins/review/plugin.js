@@ -22,7 +22,11 @@ class Plugin{
             throw 'Failed to initialize review plugin. Course id is invalid.';
         }
 
-        reviewService.init(settings.reviewApiUrl, settings.courseId);     
+        if (!settings.authoringToolDomain) {
+            throw 'Failed to initialize review plugin. AuthoringToolDomain is invalid.';
+        }
+
+        reviewService.init(settings.reviewApiUrl, settings.courseId, settings.authoringToolDomain);
         hintController.init();
         dialogController.init();
 
