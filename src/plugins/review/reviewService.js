@@ -16,7 +16,10 @@
               context: context ? JSON.stringify(context) : context,
               authoringToolDomain: this.authoringToolDomain
             },
-            type: 'POST'
+            type: 'POST',
+            headers: {
+              'X-Authoring-Tool-Domain': this.authoringToolDomain
+            }
         });
     }
 
