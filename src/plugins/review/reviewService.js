@@ -13,8 +13,7 @@
               text: message.trim(),
               createdByName: username.trim(),
               createdBy: useremail.trim(),
-              context: context ? JSON.stringify(context) : context,
-              authoringToolDomain: this.authoringToolDomain
+              context: context ? JSON.stringify(context) : context
             },
             type: 'POST',
             headers: {
