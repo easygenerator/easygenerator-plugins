@@ -48,7 +48,7 @@ pluginsLocalizationService.init('en');
 ## Review plugin
 
 Add comments functionality for course in review mode.
-If the course is opened for review, the query string parameter `'reviewApiUrl'` is added to url.
+If the course is opened for review, the query string parameter `'reviewApiUrl'` and `'authoringToolDomain'` is added to url.
 
 ### Mark element for review
 
@@ -67,6 +67,7 @@ var reviewPlugin = new ReviewPlugin();
 
  reviewPlugin.init({
                 reviewApiUrl: decodeURIComponent(reviewApiUrl),
+                authoringToolDomain: decodeURIComponent(authoringToolDomain),
                 courseId: courseId
             });
 ```
