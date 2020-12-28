@@ -8365,17 +8365,20 @@
 	    }, {
 	        key: 'postComment',
 	        value: function postComment(message, username, useremail, context) {
+	            var data = {
+	                courseId: this.courseId,
+	                text: message.trim(),
+	                createdByName: username.trim(),
+	                createdBy: useremail.trim(),
+	                context: context
+	            };
+
 	            return $.ajax({
 	                url: this.getApiUrl('comments'),
-	                data: {
-	                    courseId: this.courseId,
-	                    text: message.trim(),
-	                    createdByName: username.trim(),
-	                    createdBy: useremail.trim(),
-	                    context: context ? JSON.stringify(context) : context
-	                },
+	                data: JSON.stringify(data),
 	                type: 'POST',
 	                headers: {
+	                    'Content-Type': 'application/json',
 	                    'X-Authoring-Tool-Domain': this.authoringToolDomain
 	                }
 	            });
