@@ -6,17 +6,17 @@
     }
 
     postComment(message, username, useremail, context) {
-        const data = {
+        const data = JSON.stringify({
           courseId: this.courseId,
           text: message.trim(),
           createdByName: username.trim(),
           createdBy: useremail.trim(),
           context
-        };
+        });
 
         return $.ajax({
             url: this.getApiUrl('comments'),
-            data: JSON.stringify(data),
+            data,
             type: 'POST',
             headers: {
               'Content-Type': 'application/json',

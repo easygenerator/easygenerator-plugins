@@ -8365,17 +8365,17 @@
 	    }, {
 	        key: 'postComment',
 	        value: function postComment(message, username, useremail, context) {
-	            var data = {
+	            var data = JSON.stringify({
 	                courseId: this.courseId,
 	                text: message.trim(),
 	                createdByName: username.trim(),
 	                createdBy: useremail.trim(),
 	                context: context
-	            };
+	            });
 
 	            return $.ajax({
 	                url: this.getApiUrl('comments'),
-	                data: JSON.stringify(data),
+	                data: data,
 	                type: 'POST',
 	                headers: {
 	                    'Content-Type': 'application/json',
