@@ -11487,7 +11487,7 @@
 	        init();
 
 	        function getElementContent(element) {
-						  return element.innerHTML || element.getAttribute('data-text');
+	            return element.innerHTML || element.getAttribute('data-text');
 	        }
 
 	        function init() {
