@@ -228,7 +228,7 @@
         init();
 
         function getElementContent(element) {
-            return element.innerText;
+            return element.innerHTML || element.getAttribute('data-text');
         }
         
         function init(){
