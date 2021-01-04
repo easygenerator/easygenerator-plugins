@@ -8301,9 +8301,9 @@
 	                throw 'Failed to initialize review plugin. Course id is invalid.';
 	            }
 
-	            //if (!settings.authoringToolDomain) {
-	            //    throw 'Failed to initialize review plugin. AuthoringToolDomain is invalid.';
-	            //}
+	            if (!settings.authoringToolDomain) {
+	                throw 'Failed to initialize review plugin. AuthoringToolDomain is invalid.';
+	            }
 
 	            _reviewService2.default.init(settings.reviewApiUrl, settings.courseId, settings.authoringToolDomain);
 	            _hintController2.default.init();
@@ -8357,17 +8357,30 @@
 
 	    _createClass(ReviewService, [{
 	        key: 'init',
-	        value: function init(reviewApiUrl, courseId) {
+	        value: function init(reviewApiUrl, courseId, authoringToolDomain) {
 	            this.reviewApiUrl = reviewApiUrl;
 	            this.courseId = courseId;
+	            this.authoringToolDomain = authoringToolDomain;
 	        }
 	    }, {
 	        key: 'postComment',
 	        value: function postComment(message, username, useremail, context) {
+	            var data = JSON.stringify({
+	                courseId: this.courseId,
+	                text: message.trim(),
+	                createdByName: username.trim(),
+	                createdBy: useremail.trim(),
+	                context: context
+	            });
+
 	            return $.ajax({
-	                url: this.getApiUrl('api/comment/create'),
-	                data: { courseId: this.courseId, text: message.trim(), createdByName: username.trim(), createdBy: useremail.trim(), context: context ? JSON.stringify(context) : context },
-	                type: 'POST'
+	                url: this.getApiUrl('comments'),
+	                data: data,
+	                type: 'POST',
+	                headers: {
+	                    'Content-Type': 'application/json',
+	                    'X-Authoring-Tool-Domain': this.authoringToolDomain
+	                }
 	            });
 	        }
 	    }, {

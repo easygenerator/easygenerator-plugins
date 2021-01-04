@@ -67,6 +67,7 @@ var reviewPlugin = new ReviewPlugin();
 
  reviewPlugin.init({
                 reviewApiUrl: decodeURIComponent(reviewApiUrl),
+                authoringToolDomain: decodeURIComponent(authoringToolDomain),
                 courseId: courseId
             });
 ```
