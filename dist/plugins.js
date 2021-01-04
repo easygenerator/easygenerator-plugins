@@ -8301,9 +8301,9 @@
 	                throw 'Failed to initialize review plugin. Course id is invalid.';
 	            }
 
-	            //if (!settings.authoringToolDomain) {
-	            //    throw 'Failed to initialize review plugin. AuthoringToolDomain is invalid.';
-	            //}
+	            if (!settings.authoringToolDomain) {
+	                throw 'Failed to initialize review plugin. AuthoringToolDomain is invalid.';
+	            }
 
 	            _reviewService2.default.init(settings.reviewApiUrl, settings.courseId, settings.authoringToolDomain);
 	            _hintController2.default.init();
