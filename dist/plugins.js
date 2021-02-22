@@ -9555,7 +9555,7 @@
 /* 322 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"review-hint\">\n    <div class=\"review-hint-text-wrapper\">\n        <div class=\"review-hint-text\"></div>\n    </div>\n    <div class=\"review-hint-action-wrapper\">\n        <button class=\"review-hint-btn btn\">{{gotIt}}</button>\n    </div>\n</div>\n";
+	module.exports = "<div class=\"review-hint\">\r\n    <div class=\"review-hint-text-wrapper\">\r\n        <div class=\"review-hint-text\"></div>\r\n    </div>\r\n    <div class=\"review-hint-action-wrapper\">\r\n        <button class=\"review-hint-btn btn\">{{gotIt}}</button>\r\n    </div>\r\n</div>\r\n";
 
 /***/ },
 /* 323 */
@@ -10436,7 +10436,7 @@
 /* 333 */
 /***/ function(module, exports) {
 
-	module.exports = "<form class=\"add-comment-form\">\n    <div class=\"message-wrapper\">\n        <div class=\"add-comment-form-title\">{{leaveYourComment}}</div>\n        <textarea class=\"comment-text-block message\" placeholder=\"{{typeYourCommentHere}}\"></textarea>\n    </div>\n    <div class=\"identify-user-wrapper\">\n        <div class=\"identify-user-title\">{{identifyMessage}}</div>\n        <div class=\"identify-user-row\">\n            <input class=\"name-input\" type=\"text\" />\n            <label>{{name}}</label>\n            <span class=\"error-message name\">{{enterYourNameError}}</span>\n        </div>\n        <div class=\"identify-user-row\">\n            <input class=\"email-input\" type=\"email\" />\n            <label>{{email}}</label>\n            <span class=\"error-message email\">{{enterValidEmailError}}</span>\n        </div>\n    </div>\n    <div class=\"comment-action-wrapper\">\n        <div class=\"comment-status-message success\" title=\"{{commentWasSent}}\">{{commentWasSent}}</div>\n        <div class=\"comment-status-message fail\" title=\"{{commentWasNotSent}}\">{{commentWasNotSent}}<br />{{tryAgain}}</div>\n        <div class=\"comment-actions\">\n            <button title=\"{{cancel}}\" class=\"cancel-btn\" type=\"reset\">{{cancel}}</button>\n            <button title=\"{{postComment}}\" class=\"comment-btn\" type=\"submit\">{{postComment}}</button>\n        </div>\n    </div>\n</form>";
+	module.exports = "<form class=\"add-comment-form\">\r\n    <div class=\"message-wrapper\">\r\n        <div class=\"add-comment-form-title\">{{leaveYourComment}}</div>\r\n        <textarea class=\"comment-text-block message\" placeholder=\"{{typeYourCommentHere}}\"></textarea>\r\n    </div>\r\n    <div class=\"identify-user-wrapper\">\r\n        <div class=\"identify-user-title\">{{identifyMessage}}</div>\r\n        <div class=\"identify-user-row\">\r\n            <input class=\"name-input\" type=\"text\" />\r\n            <label>{{name}}</label>\r\n            <span class=\"error-message name\">{{enterYourNameError}}</span>\r\n        </div>\r\n        <div class=\"identify-user-row\">\r\n            <input class=\"email-input\" type=\"email\" />\r\n            <label>{{email}}</label>\r\n            <span class=\"error-message email\">{{enterValidEmailError}}</span>\r\n        </div>\r\n    </div>\r\n    <div class=\"comment-action-wrapper\">\r\n        <div class=\"comment-status-message success\" title=\"{{commentWasSent}}\">{{commentWasSent}}</div>\r\n        <div class=\"comment-status-message fail\" title=\"{{commentWasNotSent}}\">{{commentWasNotSent}}<br />{{tryAgain}}</div>\r\n        <div class=\"comment-actions\">\r\n            <button title=\"{{cancel}}\" class=\"cancel-btn\" type=\"reset\">{{cancel}}</button>\r\n            <button title=\"{{postComment}}\" class=\"comment-btn\" type=\"submit\">{{postComment}}</button>\r\n        </div>\r\n    </div>\r\n</form>";
 
 /***/ },
 /* 334 */
@@ -10495,7 +10495,7 @@
 /* 335 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"review-dialog element-review-dialog\">\n    <button class=\"close-dialog-btn\"></button>\n    <form class=\"add-comment-form\">\n    </form>\n</div>";
+	module.exports = "<div class=\"review-dialog element-review-dialog\">\r\n    <button class=\"close-dialog-btn\"></button>\r\n    <form class=\"add-comment-form\">\r\n    </form>\r\n</div>";
 
 /***/ },
 /* 336 */
@@ -10582,7 +10582,7 @@
 /* 337 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"review-dialog general-review-dialog\">\n    <div class=\"comments-header\">\n        <div class=\"comment-header-text\">{{leaveGeneralComment}}</div>\n        <div class=\"comments-expander\"></div>\n    </div>\n    <form class=\"add-comment-form\">\n    </form>\n</div>";
+	module.exports = "<div class=\"review-dialog general-review-dialog\">\r\n    <div class=\"comments-header\">\r\n        <div class=\"comment-header-text\">{{leaveGeneralComment}}</div>\r\n        <div class=\"comments-expander\"></div>\r\n    </div>\r\n    <form class=\"add-comment-form\">\r\n    </form>\r\n</div>";
 
 /***/ },
 /* 338 */
@@ -10921,7 +10921,7 @@
 /* 341 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"review-spot-wrapper\">\n    <div class=\"review-spot\"></div>\n</div>";
+	module.exports = "<div class=\"review-spot-wrapper\">\r\n    <div class=\"review-spot\"></div>\r\n</div>";
 
 /***/ },
 /* 342 */
@@ -11925,7 +11925,8 @@
 	    translations: {}
 	},
 	    _initialized = false,
-	    pathToSettings = '';
+	    pathToSettings = '',
+	    cacheBuster = new Date().getTime();
 
 	var Plugin = function () {
 	    function Plugin() {
@@ -11934,13 +11935,14 @@
 
 	    _createClass(Plugin, null, [{
 	        key: 'read',
-	        value: function read(path) {
+	        value: function read(path, cacheExpiration) {
 	            return new Promise(function (resolve, reject) {
 	                if (_initialized) {
 	                    resolve(configs);
 	                }
 
 	                pathToSettings = path ? path : '';
+	                cacheBuster = cacheExpiration ? cacheExpiration : new Date().getTime();
 
 	                readConfigurations().then(function () {
 	                    readTranslations().then(function () {
@@ -11968,22 +11970,22 @@
 
 	function readConfigurations() {
 	    return new Promise(function (resolve, reject) {
-	        _fileReader2.default.readJSON(pathToSettings + 'settings.js').then(function (templateSettings) {
+	        _fileReader2.default.readJSON(pathToSettings + 'settings.js', cacheBuster).then(function (templateSettings) {
 	            configs.templateSettings = templateSettings;
 
-	            return _fileReader2.default.readJSON(pathToSettings + 'publishSettings.js');
+	            return _fileReader2.default.readJSON(pathToSettings + 'publishSettings.js', cacheBuster);
 	        }).then(function (publishSettings) {
 	            configs.publishSettings = publishSettings;
 
-	            return _fileReader2.default.readJSON(pathToSettings + 'themeSettings.js');
+	            return _fileReader2.default.readJSON(pathToSettings + 'themeSettings.js', cacheBuster);
 	        }).then(function (themeSettings) {
 	            configs.themeSettings = themeSettings;
 
-	            return _fileReader2.default.readJSON(pathToSettings + 'manifest.json');
+	            return _fileReader2.default.readJSON(pathToSettings + 'manifest.json', cacheBuster);
 	        }).then(function (manifest) {
 	            configs.manifest = manifest;
 
-	            return _fileReader2.default.readJSON(pathToSettings + 'customisations.json');
+	            return _fileReader2.default.readJSON(pathToSettings + 'customisations.json', cacheBuster);
 	        }).then(function (customisations) {
 	            configs.customisations = customisations;
 
@@ -12026,7 +12028,7 @@
 
 	    function _readTranslation(code) {
 	        var langUrl = _getLangUrlByCode(code);
-	        return _fileReader2.default.readJSON(pathToSettings + langUrl);
+	        return _fileReader2.default.readJSON(pathToSettings + langUrl, cacheBuster);
 	    }
 
 	    function _getLangUrlByCode(code) {
@@ -12056,8 +12058,6 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var ticks = new Date().getTime();
-
 	var FileReader = function () {
 	    function FileReader() {
 	        _classCallCheck(this, FileReader);
@@ -12065,10 +12065,10 @@
 
 	    _createClass(FileReader, null, [{
 	        key: 'readJSON',
-	        value: function readJSON(filename) {
+	        value: function readJSON(filename, cacheBuster) {
 	            return new Promise(function (resolve, reject) {
 	                var client = new XMLHttpRequest();
-	                client.open('GET', filename + '?_=' + ticks);
+	                client.open('GET', filename + '?_=' + cacheBuster);
 	                client.onload = function () {
 	                    if (client.status == 200 && client.responseText.length > 0) {
 	                        try {

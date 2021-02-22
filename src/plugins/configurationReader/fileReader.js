@@ -1,10 +1,8 @@
-let ticks = new Date().getTime();
-
 class FileReader {
-    static readJSON(filename){
+    static readJSON(filename, cacheBuster){
         return new Promise((resolve, reject) => {
             let client = new XMLHttpRequest();
-            client.open('GET', filename + '?_=' + ticks);
+            client.open('GET', filename + '?_=' + cacheBuster);
             client.onload = function() {
                 if(client.status == 200 && client.responseText.length > 0) {
                     try{

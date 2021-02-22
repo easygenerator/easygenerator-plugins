@@ -9,16 +9,18 @@ let configs = {
         translations: {}
     },
     _initialized = false,
-    pathToSettings = '';
+    pathToSettings = '',
+    cacheBuster = new Date().getTime();
 
 class Plugin {
-    static read(path) {
+    static read(path, cacheExpiration) {
         return new Promise((resolve, reject) => {
             if (_initialized) {
                 resolve(configs);
             }
 
             pathToSettings = path ? path : '';
+            cacheBuster = cacheExpiration ? cacheExpiration : new Date().getTime();
 
             readConfigurations().then(() => {
                 readTranslations().then(() => {
@@ -42,26 +44,26 @@ window.ConfigurationReader = Plugin;
 
 function readConfigurations() {
     return new Promise((resolve, reject) => {
-        fileReader.readJSON(pathToSettings + 'settings.js')
+        fileReader.readJSON(pathToSettings + 'settings.js', cacheBuster)
             .then(templateSettings => {
                 configs.templateSettings = templateSettings;
 
-                return fileReader.readJSON(pathToSettings + 'publishSettings.js');
+                return fileReader.readJSON(pathToSettings + 'publishSettings.js', cacheBuster);
             })
             .then(publishSettings => {
                 configs.publishSettings = publishSettings;
 
-                return fileReader.readJSON(pathToSettings + 'themeSettings.js');
+                return fileReader.readJSON(pathToSettings + 'themeSettings.js', cacheBuster);
             })
             .then(themeSettings => {
                 configs.themeSettings = themeSettings;
 
-                return fileReader.readJSON(pathToSettings + 'manifest.json');
+                return fileReader.readJSON(pathToSettings + 'manifest.json', cacheBuster);
             })
             .then(manifest => {
                 configs.manifest = manifest;
 
-                return fileReader.readJSON(pathToSettings + 'customisations.json');
+                return fileReader.readJSON(pathToSettings + 'customisations.json', cacheBuster);
             }).then(customisations => {
                 configs.customisations = customisations;
 
@@ -105,7 +107,7 @@ function readTranslations() {
 
     function _readTranslation(code) {
         var langUrl = _getLangUrlByCode(code);
-        return fileReader.readJSON(pathToSettings + langUrl);
+        return fileReader.readJSON(pathToSettings + langUrl, cacheBuster);
     }
 
     function _getLangUrlByCode(code) {
