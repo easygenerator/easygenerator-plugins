@@ -1,0 +1,20 @@
+{
+    "commentWasNotSent": "Kommenttia ei lähetetty.",
+    "commentWasSent": "Kommentti lähetettiin",
+    "leaveYourComment": "Jätä kommentti",
+    "send": "Julkaise kommentti",
+    "tryAgain": "Yritä uudelleen",
+    "yourMessage": "Kirjoita viestisi…",
+    "identifyMessage": "Kerro, kuka olet",
+    "name": "Nimi",
+    "email": "Sähköpostiosoite",
+    "enterValidEmailError": "Kirjoita oikea sähköpostiosoite",
+    "enterYourNameError": "Kirjoita oikea nimi",
+    "gotIt": "Valmis",
+    "elementReviewHint": "Klikkaa kuvaketta jättääksesi kommentin",
+    "generalReviewHint": "Klikkaa tätä paneelia jättääksesi yleisen kommentin",
+    "leaveGeneralComment": "Jätä yleinen kommentti",
+    "typeYourCommentHere": "Kirjoita kommenttisi tähän…",
+    "cancel": "Peruuta",
+    "postComment": "Julkaise kommentti"
+}

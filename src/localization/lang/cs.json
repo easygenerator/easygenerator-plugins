@@ -1,0 +1,20 @@
+{
+    "commentWasNotSent": "Komentář nebyl odeslán.",
+    "commentWasSent": "Komentář byl odeslán",
+    "leaveYourComment": "Zanechte svůj komentář",
+    "send": "Odeslat komentář",
+    "tryAgain": "Zkusit znovu",
+    "yourMessage": "Zadejte svou zprávu...",
+    "identifyMessage": "Prosím, identifikujte se",
+    "name": "Jméno",
+    "email": "E-mail",
+    "enterValidEmailError": "Zadejte platný e-mail",
+    "enterYourNameError": "Zadejte platné jméno",
+    "gotIt": "Mám to",
+    "elementReviewHint": "Klikněte na ikonu v blízkosti prvků pro zanechání komentáře.",
+    "generalReviewHint": "Klikněte na panel pro zanechání obecného komentáře.",
+    "leaveGeneralComment": "Zanechat obecné komentáře",
+    "typeYourCommentHere": "Zadejte svůj komentář zde...",
+    "cancel": "Zrušit",
+    "postComment": "Odeslat komentář"
+}

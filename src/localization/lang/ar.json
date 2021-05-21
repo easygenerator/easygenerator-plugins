@@ -1,0 +1,20 @@
+{
+    "commentWasNotSent": "التعليق لم يرسل.",
+    "commentWasSent": "تم إرسال التعليق",
+    "leaveYourComment": "اترك تعليقك",
+    "send": "أضف تعليقا",
+    "tryAgain": "حاول مجددا",
+    "yourMessage": "اكتب رسالتك ...",
+    "identifyMessage": "يرجى تحديد هويتك",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "enterValidEmailError": "أدخل بريد إلكتروني صالح",
+    "enterYourNameError": "أدخل اسمًا صالحًا",
+    "gotIt": "فهمتك",
+    "elementReviewHint": "انقر على الأيقونة القريبة من العناصر لترك تعليق.",
+    "generalReviewHint": "انقر على اللوحة هنا لترك تعليق عام.",
+    "leaveGeneralComment": "اترك تعليقات عامة",
+    "typeYourCommentHere": "اكتب تعليقك هنا...",
+    "cancel": "إلغاء",
+    "postComment": "أضف تعليقا"
+}

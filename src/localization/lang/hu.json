@@ -1,0 +1,20 @@
+{
+    "commentWasNotSent": "A komment nem lett elküldve.",
+    "commentWasSent": "A komment el lett küldve",
+    "leaveYourComment": "Komment írása",
+    "send": "Komment beküldése",
+    "tryAgain": "Próbáld meg újra",
+    "yourMessage": "Írd be az üzenetedet…",
+    "identifyMessage": "Kérjük azonosítsd magad",
+    "name": "Név",
+    "email": "Email",
+    "enterValidEmailError": "Írj be egy érvényes email címet",
+    "enterYourNameError": "Írj be egy érvényes nevet",
+    "gotIt": "Rendben",
+    "elementReviewHint": "Kattints az ikonra az elemek mellett a kommenteléshez",
+    "generalReviewHint": "Kattints a panelre itt, hogy egy általános kommentet írhass",
+    "leaveGeneralComment": "Általános komment írása",
+    "typeYourCommentHere": "Írd be a kommentedet ide",
+    "cancel": "Törlés",
+    "postComment": "Komment elküldése"
+}

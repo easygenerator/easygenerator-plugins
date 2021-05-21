@@ -1,0 +1,20 @@
+{
+    "commentWasNotSent": "Komentārs netika nosūtīts.",
+    "commentWasSent": "Komentārs nosūtīts",
+    "leaveYourComment": "Atstājiet savu komentāru",
+    "send": "Iesniegt komentāru",
+    "tryAgain": "Mēģiniet vēlreiz",
+    "yourMessage": "Ievadiet savu ziņu...",
+    "identifyMessage": "Lūdzu, identificējiet sevi",
+    "name": "Vārds",
+    "email": "E-pasts",
+    "enterValidEmailError": "Ievadiet derīgu e-pastu",
+    "enterYourNameError": "Ievadiet derīgu vārdu",
+    "gotIt": "Sapratu",
+    "elementReviewHint": "Lai atstātu komentāru, noklikšķiniet uz ikonas blakus elementiem.",
+    "generalReviewHint": "Noklikšķiniet uz šī paneļa, lai atstātu vispārīgu komentāru.",
+    "leaveGeneralComment": "Atstājiet vispārīgus komentārus",
+    "typeYourCommentHere": "Ievadiet savu komentāru šeit...",
+    "cancel": "Atcelt",
+    "postComment": "Iesniegt komentāru"
+}
