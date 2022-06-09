@@ -436,3 +436,12 @@ To turn on the debug mode set `debug` parameter to true.
 ```
 In debug mode on page load will be shown the `alert` with current browser info.
 When you have problem with configuration (you don't know how current browser detected) you should turn on the debug mode.
+
+### Resources
+
+First, install NPM dependencies with `npm ci`. Then run
+
+```bash
+npm run resources -- --token <localise_api_token>
+```
+You can get API key from 1Password.
