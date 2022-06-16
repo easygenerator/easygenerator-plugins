@@ -1,0 +1,9 @@
+# Lokalise CLI v2 config
+
+# Default Project ID
+# If set, used for all endpoints requiring project-id flag
+project-id: '14769641629f2e47ba8f43.88339163'
+
+# Debug API requests.
+# Default is false.
+#debug: true

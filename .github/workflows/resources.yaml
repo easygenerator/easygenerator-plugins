@@ -1,0 +1,62 @@
+name: Update resources
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update-resources:
+    name: Update resources
+    runs-on:
+      - "self-hosted"
+      - "linux"
+      - "size-s"
+    container: 714418391833.dkr.ecr.eu-central-1.amazonaws.com/operations/actions-runner:2022.02.07.master-ed5228d5-1806459516
+    steps:
+      - name: Retrieve secrets from Vault
+        uses: hashicorp/vault-action@v2.4.0
+        id: vault
+        with:
+          url: ${{ secrets.VAULT_ADDRESS }}
+          method: approle
+          roleId: ${{ secrets.VAULT_ROLE }}
+          secretId: ${{ secrets.VAULT_SECRET }}
+          exportEnv: false
+          secrets: |
+            operations/data/github github-repo-token | github-repo-token ;
+            operations/data/github github-app-id | github-app-id ;
+            operations/data/github github-app-installation-id | github-app-installation-id ;
+            operations/data/github github-app-private-key | github-app-private-key ;
+            operations/data/github localise-api-token | localise-api-token
+      - name: Checkout project
+        uses: actions/checkout@v2
+        with:
+          token: ${{ steps.vault.outputs.github-repo-token }}
+          fetch-depth: 0
+      - name: Prepare actions
+        uses: docker://714418391833.dkr.ecr.eu-central-1.amazonaws.com/operations/automation:2022.04.11.master-69e0d5f2e4-actions
+      - name: Generate token
+        id: generate_token
+        uses: ./.github/actions/github-app-token
+        with:
+          app-id: ${{ steps.vault.outputs.github-app-id }}
+          installation-id: ${{ steps.vault.outputs.github-app-installation-id }}
+          private-key: ${{ steps.vault.outputs.github-app-private-key }}
+      - name: Pull resources
+        run: npm run resources -- --token ${{ steps.vault.outputs.localise-api-token }}
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
+          commit-message: 'chore: update resources'
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          branch: update-resources
+          delete-branch: true
+          team-reviewers: product-owners
+          title: 'chore: update resources'
+          body: 'Auto-updated localization resources'
+          labels: |
+            automated pr
+          draft: false

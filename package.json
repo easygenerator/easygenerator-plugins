@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "resources": "easyresources generate --worksheetName \"Simple course plugins\" --outputPath \"./src/localization/lang\"",
+    "resources": "lokalise2 file download --unzip-to ./src/localization --directory-prefix lang --config ./localise.config.yml --format json --all-platforms true --export-sort first_added --indentation 4sp --json-unescaped-slashes true --add-newline-eof true --export-empty-as base --replace-breaks=false --language-mapping '[{\"original_language_iso\": \"zh-CN\",\"custom_language_iso\": \"cn\"}, {\"original_language_iso\": \"uk\",\"custom_language_iso\": \"ua\"}, {\"original_language_iso\": \"nb_NO\",\"custom_language_iso\": \"nb-no\"}, {\"original_language_iso\": \"nn_NO\",\"custom_language_iso\": \"nn-no\"}, {\"original_language_iso\": \"pt-BR\",\"custom_language_iso\": \"pt-br\"}]'",
     "preversion": "npm run build && git add .",
     "postversion": "git push && git push --tags"
   },

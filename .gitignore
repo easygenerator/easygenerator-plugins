@@ -203,3 +203,4 @@ FakesAssemblies/
 
 .DS_Store
 .idea
+.github/actions
