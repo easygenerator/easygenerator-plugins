@@ -15,7 +15,7 @@ class Plugin {
 
         for( var i = 0; i < fonts.length; i++ ) {
             for( var prop in fonts[i] ) {
-                if (prop === 'key' || prop === 'isGeneralSelected' || prop === 'isGeneralColorSelected'
+                if (prop === 'key' || prop === 'isGeneralSelected' || prop === 'isGeneralColorSelected' 
                 || prop === 'place' || fonts[i][prop] == null) {
                     continue;
                 }
@@ -27,39 +27,8 @@ class Plugin {
                 }
             }
         }
-      return less.modifyVars(this.vars);
-    }
 
-    loadMappedStyle(colors, fonts, path = '/css/colors.less') {
-      clearLocalStorage(path);
-
-      let lessVars = {};
-
-      for (let i = 0; i < colors.length; i++) {
-        if (!colors[i] || !colors[i].value) {
-          return;
-        }
-
-        lessVars[colors[i].key.toLowerCase()] = colors[i].value;
-      }
-
-      for (let i = 0; i < fonts.length; i++) {
-        for (const prop in fonts[i]) {
-          if (['key',
-            'isGeneralSelected',
-            'isGeneralColorSelected',
-            'place'].includes(prop) || fonts[i][prop] === null) {
-            continue;
-          }
-          if (prop === 'size') {
-            lessVars['@' + fonts[i].key.toLowerCase() + '-' + mappedStyleProp(prop)] = fonts[i][prop] + 'px';
-          } else {
-            lessVars['@' + fonts[i].key.toLowerCase() + '-' + mappedStyleProp(prop)] = fonts[i][prop];
-          }
-        }
-      }
-
-      less.modifyVars(lessVars);
+        return less.modifyVars(this.vars);
     }
     loadCustomStyles(styles, path = '/css/customisations.less') {
         clearLocalStorage(path);
@@ -69,7 +38,7 @@ class Plugin {
                 if(prop === 'key' || styles[i][prop] == null) {
                     continue;
                 }
-
+                
                 this.vars['@' + styles[i].key + '-' + prop] = styles[i][prop];
             }
         }
@@ -98,8 +67,4 @@ function clearLocalStorage(path) {
             delete window.localStorage[key];
         }
     }
-}
-
-function mappedStyleProp(prop) {
-  return (prop.replace(/([A-Z])/g, '-$1')).toLowerCase();
 }
