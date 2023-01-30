@@ -12488,6 +12488,8 @@
 	        value: function loadMappedStyle(colors, fonts) {
 	            var path = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '/css/colors.less';
 
+	            clearLocalStorage(path);
+
 	            var lessVars = {};
 
 	            for (var i = 0; i < colors.length; i++) {

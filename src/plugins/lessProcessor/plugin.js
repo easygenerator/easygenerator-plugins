@@ -31,6 +31,8 @@ class Plugin {
     }
 
     loadMappedStyle(colors, fonts, path = '/css/colors.less') {
+      clearLocalStorage(path);
+
       let lessVars = {};
 
       for (let i = 0; i < colors.length; i++) {
