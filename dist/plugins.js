@@ -12459,8 +12459,7 @@
 	            var path = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '/css/colors.less';
 
 	            clearLocalStorage(path);
-	            console.log('colors', JSON.stringify(colors));
-	            console.log('fonts', JSON.stringify(fonts));
+
 	            for (var i = 0; i < colors.length; i++) {
 	                if (!colors[i] || !colors[i].value) {
 	                    return;
@@ -12468,7 +12467,7 @@
 
 	                this.vars[colors[i].key] = colors[i].value;
 	            }
-	            console.log('vars 1', JSON.stringify(this.vars));
+
 	            for (var i = 0; i < fonts.length; i++) {
 	                for (var prop in fonts[i]) {
 	                    if (prop === 'key' || prop === 'isGeneralSelected' || prop === 'isGeneralColorSelected' || prop === 'place' || fonts[i][prop] == null) {
@@ -12482,40 +12481,37 @@
 	                    }
 	                }
 	            }
-	            console.log('vars 2', JSON.stringify(this.vars));
-
-	            //const lessStyle = less.modifyVars(this.vars);
-	            //lessStyle.then(res => console.log(">>", JSON.stringify(res)));
-	            //
-	            console.log('fuck niga 8)');
 	            return less.modifyVars(this.vars);
 	        }
 	    }, {
-	        key: 'loadStyle',
-	        value: function loadStyle(colors, fonts) {
+	        key: 'loadMappedStyle',
+	        value: function loadMappedStyle(colors, fonts) {
 	            var path = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '/css/colors.less';
 
-	            var vars = {};
-	            for (var i = 0; i < fonts.length; i++) {
-	                for (var prop in fonts[i]) {
-	                    if (['key', 'isGeneralSelected', 'isGeneralColorSelected', 'place'].includes(prop) || fonts[i][prop] === null) {
+	            var lessVars = {};
+
+	            for (var i = 0; i < colors.length; i++) {
+	                if (!colors[i] || !colors[i].value) {
+	                    return;
+	                }
+
+	                lessVars[colors[i].key.toLowerCase()] = colors[i].value;
+	            }
+
+	            for (var _i = 0; _i < fonts.length; _i++) {
+	                for (var prop in fonts[_i]) {
+	                    if (['key', 'isGeneralSelected', 'isGeneralColorSelected', 'place'].includes(prop) || fonts[_i][prop] === null) {
 	                        continue;
 	                    }
-	                    console.log(prop, fonts[i].key, fonts[i][prop]);
 	                    if (prop === 'size') {
-	                        vars['@' + fonts[i].key.toLowerCase() + '-' + this.mappedProp(prop)] = fonts[i][prop] + 'px';
+	                        lessVars['@' + fonts[_i].key.toLowerCase() + '-' + mappedStyleProp(prop)] = fonts[_i][prop] + 'px';
 	                    } else {
-	                        vars['@' + fonts[i].key.toLowerCase() + '-' + this.mappedProp(prop)] = fonts[i][prop];
+	                        lessVars['@' + fonts[_i].key.toLowerCase() + '-' + mappedStyleProp(prop)] = fonts[_i][prop];
 	                    }
 	                }
 	            }
-	            console.log('>>>', vars);
-	            less.modifyVars(vars);
-	        }
-	    }, {
-	        key: 'mappedProp',
-	        value: function mappedProp(prop) {
-	            return prop.replace(/([A-Z])/g, '-$1').toLowerCase();
+
+	            less.modifyVars(lessVars);
 	        }
 	    }, {
 	        key: 'loadCustomStyles',
@@ -12557,11 +12553,14 @@
 	            continue;
 	        }
 
-	        console.log(key.indexOf(keyPrefix));
 	        if (key.indexOf(keyPrefix) === 0) {
 	            delete window.localStorage[key];
 	        }
 	    }
+	}
+
+	function mappedStyleProp(prop) {
+	    return prop.replace(/([A-Z])/g, '-$1').toLowerCase();
 	}
 
 /***/ },
