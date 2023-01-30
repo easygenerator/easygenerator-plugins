@@ -29,10 +29,11 @@ class Plugin {
         }
       return less.modifyVars(this.vars);
     }
-    loadMappedStyle(colors, fonts, path = '/css/colors.less'){
+
+    loadMappedStyle(colors, fonts, path = '/css/colors.less') {
       let lessVars = {};
 
-      for( let i = 0; i < colors.length; i++ ) {
+      for (let i = 0; i < colors.length; i++) {
         if (!colors[i] || !colors[i].value) {
           return;
         }
@@ -40,7 +41,7 @@ class Plugin {
         lessVars[colors[i].key.toLowerCase()] = colors[i].value;
       }
 
-      for( let i = 0; i < fonts.length; i++ ) {
+      for (let i = 0; i < fonts.length; i++) {
         for (const prop in fonts[i]) {
           if (['key',
             'isGeneralSelected',
