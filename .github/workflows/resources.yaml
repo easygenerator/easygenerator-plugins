@@ -7,13 +7,13 @@ jobs:
   update-resources:
     name: Update resources
     runs-on:
+      runs-on:
       - "self-hosted"
       - "linux"
-      - "size-s"
-    container: 714418391833.dkr.ecr.eu-central-1.amazonaws.com/operations/actions-runner:2022.02.07.master-ed5228d5-1806459516
+      - "build"
     steps:
       - name: Retrieve secrets from Vault
-        uses: hashicorp/vault-action@v2.4.0
+        uses: hashicorp/vault-action@v2.5.0
         id: vault
         with:
           url: ${{ secrets.VAULT_ADDRESS }}
@@ -28,24 +28,24 @@ jobs:
             operations/data/github github-app-private-key | github-app-private-key ;
             operations/data/github localise-api-token | localise-api-token
       - name: Checkout project
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3.3.0
         with:
           token: ${{ steps.vault.outputs.github-repo-token }}
           fetch-depth: 0
       - name: Prepare actions
-        uses: docker://714418391833.dkr.ecr.eu-central-1.amazonaws.com/operations/automation:2022.04.11.master-69e0d5f2e4-actions
+        uses: docker://714418391833.dkr.ecr.eu-central-1.amazonaws.com/operations/automation:2023.04.05.master-2c1688d3a4-actions
       - name: Generate token
         id: generate_token
         uses: ./.github/actions/github-app-token
         with:
           app-id: ${{ steps.vault.outputs.github-app-id }}
-          installation-id: ${{ steps.vault.outputs.github-app-installation-id }}
           private-key: ${{ steps.vault.outputs.github-app-private-key }}
+          installation-id: ${{ steps.vault.outputs.github-app-installation-id }}
       - name: Pull resources
         run: npm run resources -- --token ${{ steps.vault.outputs.localise-api-token }}
       - name: Create Pull Request
         id: cpr
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ steps.generate_token.outputs.token }}
           commit-message: 'chore: update resources'
