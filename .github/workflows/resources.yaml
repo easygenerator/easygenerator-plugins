@@ -33,7 +33,7 @@ jobs:
           token: ${{ steps.vault.outputs.github-repo-token }}
           fetch-depth: 0
       - name: Prepare actions
-        uses: docker://714418391833.dkr.ecr.eu-central-1.amazonaws.com/operations/automation:2023.04.05.master-2c1688d3a4-actions
+        uses: docker://714418391833.dkr.ecr.eu-central-1.amazonaws.com/operations/automation:2023.12.12.master-ed531aadb1-actions
       - name: Generate token
         id: generate_token
         uses: ./.github/actions/github-app-token
